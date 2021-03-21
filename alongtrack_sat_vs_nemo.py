@@ -95,14 +95,13 @@ if __name__ == '__main__':
     (Nj,Ni) = xlat_m.shape
     if xlon_m.shape != (Nj,Ni) or mask_m.shape != (Nj,Ni): MsgExit('shape disagreement for model arrays')
     xlon_m = nmp.mod(xlon_m, 360.) ; # forces longitude to be in the [0,360] range...
-    #if ldebug: Save2Dfield( 'mask_model.nc', mask_m, name='mask' ) #lolodbg
+    #if ldebug: gz.Save2Dfield( 'mask_model.nc', mask_m, name='mask' ) #lolodbg
 
     # Get distortion angle of model grid:
     cf_angle = 'grid_angle_model.nc'
-    xangle_m = gz.GridAngle( xlat_m, xlon_m )
+    xangle_m = gz.GridAngle( xlat_m, xlon_m )    
+    if ldebug: gz.Save2Dfield( cf_angle, xangle_m, name='angle', mask=mask_m )
     #xangle_m = nmp.zeros(xlat_m.shape) ; print(' NOOOOOOT    => done!\n'); #lolodbg
-    if ldebug: Save2Dfield( cf_angle, xangle_m, name='angle', mask=mask_m )
-
 
     # Relevant satellite time slice:
     jts_1, jts_2 = gz.scan_idx_sat( itime_s, it_min, it_max )
@@ -121,13 +120,13 @@ if __name__ == '__main__':
     if len(itime_s)!=Nt_s or len(vlat_s)!=Nt_s or len(vlon_s)!=Nt_s: MsgExit('problem with satellite record length')
     
     
-    ##LOLOdbg: test SaveTimeSeriesNC :
+    ##LOLOdbg: test gz.SaveTimeSeriesNC :
     #vd1 = nmp.zeros(Nt_s) ; vd1[:] = nmp.sin(itime_s.astype(nmp.float32))
     #vd2 = nmp.zeros(Nt_s) ; vd2[:] = nmp.cos(itime_s.astype(nmp.float32))
     #vvar   = ['sin','cos']
     #vunits = ['bullshit', 'bullshit']
     #vlongN = ['Sine of unix time','Cosine of unix time']
-    #iw = SaveTimeSeriesNC( itime_s, nmp.array([vd1,vd2]), vvar, 'test.nc', time_units='seconds since 1970-01-01 00:00:00', \
+    #iw = gz.SaveTimeSeriesNC( itime_s, nmp.array([vd1,vd2]), vvar, 'test.nc', time_units='seconds since 1970-01-01 00:00:00', \
     #                       vunits=vunits, vlnm=vlongN, missing_val=-9999. )
     #
     # Getting satellite data to include in file to write:
@@ -143,7 +142,7 @@ if __name__ == '__main__':
     #vunits = [     'm'           ,          'm'          ,    'm'                 ]
     #vlongN = [ c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data' ] 
     #
-    #iw = SaveTimeSeriesNC( itime_s, nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, 'test.nc', \
+    #iw = gz.SaveTimeSeriesNC( itime_s, nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, 'test.nc', \
     #                       time_units='seconds since 1970-01-01 00:00:00', \
     #                       vunits=vunits, vlnm=vlongN, missing_val=-9999. )
     #exit(0)
@@ -180,7 +179,7 @@ if __name__ == '__main__':
         xnp_msk[nmp.where(mask_m==0)] = -100.
         xmsk_tmp = nmp.zeros((Nj,Ni))
         xmsk_tmp[nmp.where(xnp_msk>-110.)] = 1
-        Save2Dfield( 'xnp_msk.nc', xnp_msk, xlon=xlon_m, xlat=xlat_m, name='nb', mask=xmsk_tmp )
+        gz.Save2Dfield( 'xnp_msk.nc', xnp_msk, xlon=xlon_m, xlat=xlat_m, name='nb', mask=xmsk_tmp )
         del xmsk_tmp
 
 
@@ -268,14 +267,6 @@ if __name__ == '__main__':
     #exit(0)
 
 
-
-
-
-    print('LOLO: nmp.shape(vssh_m_bl) = ', nmp.shape(vssh_m_bl))
-    print('LOLO: nmp.shape(vssh_m_np) = ', nmp.shape(vssh_m_np))
-    print('LOLO: nmp.shape(vssh_s) = ', nmp.shape(vssh_s))
-
-        
     c1 = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
     vvar   = [ name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           ]
     vunits = [     'm'           ,          'm'          ,    'm'                 ]
@@ -284,9 +275,9 @@ if __name__ == '__main__':
 
     print('LOLO: nmp.shape(nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] )) = ', nmp.shape(nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] )) )
     
-    iw = SaveTimeSeriesNC( itime_s[:Nt_s], nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, 'test.nc', \
-                           time_units='seconds since 1970-01-01 00:00:00', \
-                           vunits=vunits, vlnm=vlongN, missing_val=-9999. )
+    iw = gz.SaveTimeSeriesNC( itime_s[:Nt_s], nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, 'test.nc', \
+                              time_units='seconds since 1970-01-01 00:00:00', \
+                              vunits=vunits, vlnm=vlongN, missing_val=-9999. )
 
 
 

@@ -13,7 +13,8 @@ from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 
 import numpy as nmp
 
-from .utils  import Haversine,find_j_i_min
+from .config  import ldebug
+from .utils   import Haversine, find_j_i_min, degE_to_degWE, degE_to_degWE_1d
 
 
 def Heading( plata,plona, platb,plonb ):
