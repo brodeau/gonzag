@@ -19,6 +19,8 @@ from .ncio   import *
 from .bilin_mapping import BilinTrack
 
 # Should be command-line arguments:
+res_model_dg = 1. ; # rough order of magnitude of the resolutio of the model grid in degrees !
+#
 np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
 dist_found = 100. ; # threshold distance for found [km] ! ""    ""
 l_dump_np_track_on_model_grid = True
@@ -58,6 +60,10 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     xlon_m = nmp.mod(xlon_m, 360.) ; # forces longitude to be in the [0,360] range...
     #if ldebug: Save2Dfield( 'mask_model.nc', mask_m, name='mask' ) #lolodbg
 
+    # Now we have to decide whether it looks like a global or regional domain:
+    l_glob_lon_wize, lon_we_min, lon_we_max = IsGlobalLongitudeWise( xlon_m, resd=res_model_dg )
+    #exit(0)
+    
     # Get distortion angle of model grid:
     cf_angle = 'grid_angle_model.nc'
     xangle_m = GridAngle( xlat_m, xlon_m )    
@@ -101,7 +107,6 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
                 PlotMesh( (vlon_s[jt],vlat_s[jt]), xlat_m, xlon_m, BT.SM[jt,:,:], BT.WB[jt,:], \
                              fig_name='mesh_jt'+'%5.5i'%(jt)+'.png' )
     #################################################################################################
-    MsgExit('boo!!!')
     
     if l_dump_np_track_on_model_grid:
         # Show the satellite track on the model grid:

@@ -24,11 +24,11 @@ def degE_to_degWE( x ):
     '''
     return copysign(1., 180.-x)*min(x, abs(x-360.))
 
-def degE_to_degWE_1d( vx ):
+def degE_to_degWE_vctr( X ):
     '''
     # From longitude in 0 -- 360 frame to -180 -- +180 frame...
     '''
-    return nmp.copysign(1., 180.-vx[:])*nmp.minimum(vx[:], nmp.abs(vx[:]-360.))
+    return nmp.copysign(1., 180.-X)*nmp.minimum(X, nmp.abs(X-360.))
 
 def find_j_i_min(x):
     '''
@@ -38,6 +38,36 @@ def find_j_i_min(x):
     k = x.argmin()
     ny = x.shape[1]
     return k//ny, k%ny
+
+
+def IsGlobalLongitudeWise( X, resd=1. ):
+    '''
+    # X    : the 2D array of the model grid longitude
+    # resd : rough order of magnitude of the resolutio of the model grid in degrees
+    # RETURNS: boolean + lon_min and lon_max in the [-180:+180] frame
+    '''
+    X = nmp.mod(X, 360.) ; # no concern, it should already have been done earlier anyway...
+    xmin1 = nmp.amin(degE_to_degWE_vctr(X)) ; # in [-180:+180] frame...
+    xmax1 = nmp.amax(degE_to_degWE_vctr(X)) ; #     "      "
+    xmin2 = nmp.amin(X) ; # in [0:360] frame...
+    xmax2 = nmp.amax(X) ; #     "     "
+    #print(' xmin2, xmax2 =', xmin2, xmax2 )
+    #print(' xmin1, xmax1 =', xmin1, xmax1 )
+    l1 = ( xmin1<0. and xmin1>5.*resd-180 ) or ( xmax1>0. and xmax1<180.-5.*resd )
+    l2 = ( xmin2<1.5*resd and xmax2>360.-1.5*resd )
+    #print('l1, l2 =', l1, l2)
+    if not l1:
+        if l2 :
+            lglobal = True
+            print(' *** From model longitude => looks like global setup (longitude-wise)', xmin1, xmax1,'\n')
+        else:
+            MsgExit('cannot find if regional or global source domain...')
+    else:
+        print(' *** From model longitude => looks like regional setup (longitude-wise)', xmin1, xmax1)
+        lglobal = False
+        print('     => will disregard alongtrack points with lon < '+str(xmin1)+' and lon > '+str(xmax1),'\n')
+    #
+    return lglobal, xmin1, xmax1
 
 
 
