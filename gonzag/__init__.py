@@ -9,3 +9,4 @@ from .config import *
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
+from .mod2sat import Model2SatTrack

@@ -5,7 +5,7 @@
 ############################################################################
 
 
-ldebug = False
+ldebug = True
 
 deg2km = 111.11 ; # Converts degrees to km
 
