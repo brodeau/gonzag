@@ -148,8 +148,6 @@ def RadiusEarth( lat ):
     Returns the radius of Earth in km as a function of latitude provided in degree N.
     '''
     latr = radians(lat) #converting into radians
-    #R_eq    = 6378.137  #Radius at sea level at equator
-    #R_pl    = 6356.752  #Radius at poles
     c    = (R_eq**2*cos(latr))**2
     d    = (R_pl**2*sin(latr))**2
     e    = (R_eq*cos(latr))**2
