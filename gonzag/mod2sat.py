@@ -24,13 +24,12 @@ res_model_dg = 1. ; # rough order of magnitude of the resolutio of the model gri
 np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
 dist_found = 100. ; # threshold distance for found [km] ! ""    ""
 l_dump_np_track_on_model_grid = True
-ew_per=2 ; # east-west periodicity of source/model grid...
 if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
 
 
 
 def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mod, name_lsm_mod, \
-                    file_out='mod2sat.nc' ):
+                    ew_prd_mod=-1, file_out='mod2sat.nc' ):
 
     # Checking existence of input files:
     chck4f(file_sat)
@@ -61,8 +60,9 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         print(' jts_2 =', jts_2, '  ==> itime_s[jts_2] =', itime_s[jts_2],'\n' )
 
 
+
     # LIMITATION #2: SPACE => if model is a regional box then a lot can be removed from satellite data
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # Get model coordinates and land-sea mask:
     xlat_m = GetModelCoor( file_mod,  'latitude' )
@@ -76,45 +76,44 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     # Global or regional config ?
     l_glob_lon_wize, l360, lon_min, lon_max = IsGlobalLongitudeWise( xlon_m, resd=res_model_dg )
     lat_min = nmp.amin(xlat_m) ; lat_max = nmp.amax(xlat_m)
-    print('LONG:', l_glob_lon_wize, l360, lon_min, lon_max )
-    print('LAT:', lat_min, lat_max )
+    #
+    cw = 'regional'
+    if l_glob_lon_wize: cw = 'global'
+    print(' *** Seems like the model domain is '+cw+' (in terms of longitude span)...')
+    print('     => lon_min, lon_max = ', lon_min, lon_max, '\n')
 
-    exit(0)
+    if ew_prd_mod>=0 and not l_glob_lon_wize:
+        print('\n  WARNING: forcing East-West periodicity to NONE (ew_prd_mod=-1) because regional domain!\n')
     
-    # Get satellite track lat,lon for the relevant time slice:
-    vlat_s = GetSatCoord( file_sat, jts_1,jts_2, 'latitude'  )
-    vlon_s = GetSatCoord( file_sat, jts_1,jts_2, 'longitude' )
-
-    keep_lat = nmp.where( (vlat_s[:]>=lat_min) & (vlat_s[:]<=lat_max) )
-
-    print( keep_lat )
-    
-
-    exit(0)
-
-
-
-
-
-
-    
-    #print('BEFORE: itime_s[0]=',itime_s[0])
+    # Get satellite data during the relevant time slice:
+    vdate_s = vdate_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period
     itime_s = itime_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period
+    #
+    vlat_s  = GetSatCoord( file_sat, jts_1,jts_2, 'latitude'  )
+    vlon_s  = GetSatCoord( file_sat, jts_1,jts_2, 'longitude' )
+    if l360:
+        vlon_s = nmp.mod(vlon_s, 360.)
+    else:
+        vlon_s = degE_to_degWE( vlon_s )
+    #
+    id_sat = Dataset(file_sat)
+    vssh_s = id_sat.variables[name_ssh_sat][jts_1:jts_1+Nt_s]
+    id_sat.close()
+    #
+    if itime_s.shape!=(Nt_s,) or vlat_s.shape!=(Nt_s,) or vlon_s.shape!=(Nt_s,) or vssh_s.shape!=(Nt_s,):
+        MsgExt('satellite arrays do not agree in shape after time slicing')
+               
+    print(' *** Track size before removing points outside of model domain: '+str(len(vlon_s)))
+    keep_lat = nmp.where( (vlat_s[:]>=lat_min) & (vlat_s[:]<=lat_max) & (vlon_s[:]>=lon_min) & (vlon_s[:]<=lon_max) )    
+    itime_s = itime_s[keep_lat]
+    vlat_s  = vlat_s[keep_lat]
+    vlon_s  = vlon_s[keep_lat]
+    vssh_s  = vssh_s[keep_lat]
+    (Nt_s,) = vssh_s.shape
+
+    print('   => Track size AFTER removing points outside of model domain: '+str(len(vlon_s))+'\n')
 
     
-
-
-
-
-
-
-
-
-
-
-    
-
-
     
     # Get distortion angle of model grid:
     cf_angle = 'grid_angle_model.nc'
@@ -122,21 +121,14 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     if ldebug: Save2Dfield( cf_angle, xangle_m, name='angle', mask=mask_m )
     #xangle_m = nmp.zeros(xlat_m.shape) ; print(' NOOOOOOT    => done!\n'); #lolodbg
 
-
-    # S A T E L L I T E
-    ###################
     
-    #print('AFTER: itime_s[0]=',itime_s[0])    
-    if len(itime_s)!=Nt_s or len(vlat_s)!=Nt_s or len(vlon_s)!=Nt_s: MsgExit('problem with satellite record length')
-    
-    jt_stop = 10000 ; Nt_s = len(vlat_s[:jt_stop]) ; # lolodbg
-    #jt_stop = len(vlat_s)
-
+    #jt_stop = 10000 ; Nt_s = len(vlat_s[:jt_stop]) ; # lolodbg
+    jt_stop = Nt_s
     
     startTime = time.time()
 
     BT = BilinTrack( vlat_s[:jt_stop], vlon_s[:jt_stop], xlat_m, xlon_m, src_grid_local_angle=xangle_m, \
-                        k_ew_per=2, rd_found_km=dist_found, np_box_r=np_box_radius, freq_talk=if_talk )
+                        k_ew_per=ew_prd_mod, rd_found_km=dist_found, np_box_r=np_box_radius, freq_talk=if_talk )
 
     print('\n *** Execution time to build the mapping: ', time.time() - startTime, '\n')
 
@@ -240,9 +232,6 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
 
     # Getting satellite data for reference purposes:
-    id_sat = Dataset(file_sat)
-    vssh_s = id_sat.variables[name_ssh_sat][jts_1:jts_1+Nt_s]
-    id_sat.close()
 
     #print('nmp.shape(vssh_s) =', nmp.shape(vssh_s))    
     #exit(0)
@@ -253,6 +242,10 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     vunits = [     'm'           ,          'm'          ,    'm'                 ]
     vlongN = [ c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data' ] 
 
+
+    if nmp.ma.is_masked(vssh_s):
+        idxma = nmp.where( nmp.ma.getmask(vssh_s) )
+        vssh_s[idxma] = -9999.
 
     iw = SaveTimeSeriesNC( itime_s[:Nt_s], nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, file_out, \
                               time_units='seconds since 1970-01-01 00:00:00', \

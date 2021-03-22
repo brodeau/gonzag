@@ -104,6 +104,7 @@ def IsGlobalLongitudeWise( X, resd=1. ):
     if xmin<1.5*resd and xmax>360.-1.5*resd:
         # Global longitude domain
         lglobal = True
+        xmin=0. ; xmax=360.
         #
     elif (xminB%360. > xmaxB%360.) and (imax < imin):
         # (xminB%360. > xmaxB%360.) is True in the 2 singular cases: domain icludes Greenwhich Meridian or -180:180 transition...
