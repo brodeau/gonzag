@@ -13,7 +13,7 @@
 import time ; # to check the execution speed...
 #
 #import gonzag as gz
-from .config import ldebug
+from .config import ldebug, rmissval
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
@@ -145,7 +145,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     
     if l_dump_np_track_on_model_grid:
         # Show the satellite track on the model grid:
-        xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = -9999.
+        xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = rmissval
         for jt in range(len(vlat_s[:jt_stop])):
             [jj,ji] = BT.NP[jt,:]
             xnp_msk[jj,ji] = float(jt)
@@ -163,6 +163,8 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     vssh_m_np = nmp.zeros(Nt_s) ; # vector to store the model data interpolated in time and space (nearest-point) on the satellite track...
     vssh_m_bl = nmp.zeros(Nt_s) ; # vector to store the model data interpolated in time and space (bilinear) on the satellite track...
 
+    vssh_m_np[:] = rmissval
+    vssh_m_bl[:] = rmissval
 
     
     # Time increment on the satellite time:
@@ -207,21 +209,23 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         print('   => Model data is interpolated at current time out of model records '+str(jtm1+1)+' & '+str(jtm2+1))
         xvar = xvar1[:,:] + xslope[:,:]*float(itt - itime_m[jtm1])
 
-
         [ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ] = BT.SM[jts,:,:]
         [w1, w2, w3, w4]                    = BT.WB[jts,:]
 
-        # Nearest-point "interpolation":
-        vssh_m_np[jts] = xvar[j1,i1]
-        
-        # Bilinear interpolation:
-        Sw = nmp.sum([w1, w2, w3, w4])
-        if abs(Sw-1.)> 0.001:
-            print('    FLAGGING MISSING VALUE at jts = '+str(jts)+' !!!')
-            vssh_m_bl[jts] = -9999.
-            #MsgExit('Sum of weights not equal to 1.: '+str(Sw))
-        else:
-            vssh_m_bl[jts] = w1*xvar[j1,i1] + w2*xvar[j2,i2] + w3*xvar[j3,i3] + w4*xvar[j4,i4]
+        Sm = mask_m[j1,i1] + mask_m[j2,i2] + mask_m[j3,i3] + mask_m[j4,i4]
+
+        if Sm == 4:
+            # All 4 model points are ocean point !
+            
+            # Nearest-point "interpolation":
+            vssh_m_np[jts] = xvar[j1,i1]
+            
+            # Bilinear interpolation:
+            Sw = nmp.sum([w1, w2, w3, w4])
+            if abs(Sw-1.)> 0.001:
+                print('    FLAGGING MISSING VALUE at jts = '+str(jts)+' !!!')
+            else:
+                vssh_m_bl[jts] = w1*xvar[j1,i1] + w2*xvar[j2,i2] + w3*xvar[j3,i3] + w4*xvar[j4,i4]
         
         jtm1_o = jtm1 ; jtm2_o = jtm2
 
@@ -245,11 +249,11 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
     if nmp.ma.is_masked(vssh_s):
         idxma = nmp.where( nmp.ma.getmask(vssh_s) )
-        vssh_s[idxma] = -9999.
+        vssh_s[idxma] = rmissval
 
     iw = SaveTimeSeriesNC( itime_s[:Nt_s], nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, file_out, \
                               time_units='seconds since 1970-01-01 00:00:00', \
-                              vunits=vunits, vlnm=vlongN, missing_val=-9999. )
+                              vunits=vunits, vlnm=vlongN, missing_val=rmissval )
 
 
 
