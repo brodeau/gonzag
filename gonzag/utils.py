@@ -36,38 +36,82 @@ def find_j_i_min(x):
     # it is faster this way!
     '''
     k = x.argmin()
-    ny = x.shape[1]
-    return k//ny, k%ny
+    nx = x.shape[1]
+    return k//nx, k%nx
+
+def find_j_i_max(x):
+    '''
+    # Yes, reinventing the wheel here, but it turns out
+    # it is faster this way!
+    '''
+    k = x.argmax()
+    nx = x.shape[1]
+    return k//nx, k%nx
+
+
+#def IsGlobalLongitudeWise( X, resd=1. ):
+#    '''
+#    # X    : the 2D array of the model grid longitude
+#    # resd : rough order of magnitude of the resolutio of the model grid in degrees
+#    # RETURNS: boolean + lon_min and lon_max in the [-180:+180] frame
+#    '''
+#    X = nmp.mod(X, 360.) ; # no concern, it should already have been done earlier anyway...
+#    print( 'X =', X)
+#    print( 'X =', degE_to_degWE_vctr(X))
+#    xmin1 = nmp.amin(degE_to_degWE_vctr(X)) ; # in [-180:+180] frame...
+#    xmax1 = nmp.amax(degE_to_degWE_vctr(X)) ; #     "      "
+#    xmin2 = nmp.amin(X) ; # in [0:360] frame...
+#    xmax2 = nmp.amax(X) ; #     "     "
+#    print(' xmin2, xmax2 =', xmin2, xmax2 )
+#    print(' xmin1, xmax1 =', xmin1, xmax1 )
+#    l1 = ( xmin1<0. and xmin1>5.*resd-180 ) or ( xmax1>0. and xmax1<180.-5.*resd )
+#    l2 = ( xmin2<1.5*resd and xmax2>360.-1.5*resd )
+#    #print('l1, l2 =', l1, l2)
+#    if not l1:
+#        if l2 :
+#            lglobal = True
+#            print(' *** From model longitude => looks like global setup (longitude-wise)', xmin1, xmax1,'\n')
+#        else:
+#            MsgExit('cannot find if regional or global source domain...')
+##    else:
+#        print(' *** From model longitude => looks like regional setup (longitude-wise)', xmin1, xmax1)
+#        lglobal = False
+#        print('     => will disregard alongtrack points with lon < '+str(xmin1)+' and lon > '+str(xmax1),'\n')
+#    #
+#    return lglobal, xmin1, xmax1
 
 
 def IsGlobalLongitudeWise( X, resd=1. ):
     '''
+    # LIMITATION: longitude has to increase in the x-direction (second dimension) of X (i increases => lon increases)
     # X    : the 2D array of the model grid longitude
     # resd : rough order of magnitude of the resolutio of the model grid in degrees
-    # RETURNS: boolean + lon_min and lon_max in the [-180:+180] frame
+    # RETURNS: boolean, boolean, lon_min, lon_max
     '''
-    X = nmp.mod(X, 360.) ; # no concern, it should already have been done earlier anyway...
-    xmin1 = nmp.amin(degE_to_degWE_vctr(X)) ; # in [-180:+180] frame...
-    xmax1 = nmp.amax(degE_to_degWE_vctr(X)) ; #     "      "
-    xmin2 = nmp.amin(X) ; # in [0:360] frame...
-    xmax2 = nmp.amax(X) ; #     "     "
-    #print(' xmin2, xmax2 =', xmin2, xmax2 )
-    #print(' xmin1, xmax1 =', xmin1, xmax1 )
-    l1 = ( xmin1<0. and xmin1>5.*resd-180 ) or ( xmax1>0. and xmax1<180.-5.*resd )
-    l2 = ( xmin2<1.5*resd and xmax2>360.-1.5*resd )
-    #print('l1, l2 =', l1, l2)
-    if not l1:
-        if l2 :
-            lglobal = True
-            print(' *** From model longitude => looks like global setup (longitude-wise)', xmin1, xmax1,'\n')
-        else:
-            MsgExit('cannot find if regional or global source domain...')
-    else:
-        print(' *** From model longitude => looks like regional setup (longitude-wise)', xmin1, xmax1)
-        lglobal = False
-        print('     => will disregard alongtrack points with lon < '+str(xmin1)+' and lon > '+str(xmax1),'\n')
     #
-    return lglobal, xmin1, xmax1
+    nx   = X.shape[1]
+    X    = nmp.mod(X, 360.) ; # no concern, it should already have been done earlier anyway...
+    xmin = nmp.amin(X) ; # in [0:360] frame...
+    xmax = nmp.amax(X) ; #     "     "
+    imin = nmp.argmin(X)%nx
+    imax = nmp.argmax(X)%nx
+    #
+    xminB = nmp.amin(degE_to_degWE_vctr(X)) ; # in [-180:+180] frame...
+    xmaxB = nmp.amax(degE_to_degWE_vctr(X)) ; #     "      "    
+    #
+    l360    = True   ; # we'll be in the [0:360] frame...
+    lglobal = False    
+    if xmin<1.5*resd and xmax>360.-1.5*resd:
+        # Global longitude domain
+        lglobal = True
+        #
+    elif (xminB%360. > xmaxB%360.) and (imax < imin):
+        # (xminB%360. > xmaxB%360.) is True in the 2 singular cases: domain icludes Greenwhich Meridian or -180:180 transition...
+        l360 = False
+        xmin = xminB
+        xmax = xmaxB
+    #
+    return lglobal, l360, xmin, xmax
 
 
 

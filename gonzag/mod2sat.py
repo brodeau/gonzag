@@ -42,14 +42,27 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         chck4f(file_lsm_mod)
     print('\n Satellite: '+file_sat+'\n Model: '+file_mod+'\n')
 
-    # Calendar/time vectors:
+
+    # LIMITATION #1: TIME => overlap time-periode beteen model and satellite data
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     vdate_s, itime_s = GetTimeVector( file_sat )
     vdate_m, itime_m = GetTimeVector( file_mod )
     
-    # Work period, i.e. the time overlap for the two time-series:
+    # Work period, i.e. the time overlap for the two time-series, if any...
     it_min, it_max = GetTimeOverlapBounds( itime_s, itime_m )
     print(' *** Time overlap for Model and Track data:', it_min, it_max,'\n')
 
+    # Relevant period in terms of record index for satellite data:
+    jts_1, jts_2 = scan_idx_sat( itime_s, it_min, it_max )
+    Nt_s = jts_2 - jts_1 + 1
+    if ldebug:
+        print(' jts_1 =', jts_1, '  ==> itime_s[jts_1] =', itime_s[jts_1] )
+        print(' jts_2 =', jts_2, '  ==> itime_s[jts_2] =', itime_s[jts_2],'\n' )
+
+
+    # LIMITATION #2: SPACE => if model is a regional box then a lot can be removed from satellite data
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # Get model coordinates and land-sea mask:
     xlat_m = GetModelCoor( file_mod,  'latitude' )
@@ -60,9 +73,48 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     xlon_m = nmp.mod(xlon_m, 360.) ; # forces longitude to be in the [0,360] range...
     #if ldebug: Save2Dfield( 'mask_model.nc', mask_m, name='mask' ) #lolodbg
 
-    # Now we have to decide whether it looks like a global or regional domain:
-    l_glob_lon_wize, lon_we_min, lon_we_max = IsGlobalLongitudeWise( xlon_m, resd=res_model_dg )
-    #exit(0)
+    # Global or regional config ?
+    l_glob_lon_wize, l360, lon_min, lon_max = IsGlobalLongitudeWise( xlon_m, resd=res_model_dg )
+    lat_min = nmp.amin(xlat_m) ; lat_max = nmp.amax(xlat_m)
+    print('LONG:', l_glob_lon_wize, l360, lon_min, lon_max )
+    print('LAT:', lat_min, lat_max )
+
+    exit(0)
+    
+    # Get satellite track lat,lon for the relevant time slice:
+    vlat_s = GetSatCoord( file_sat, jts_1,jts_2, 'latitude'  )
+    vlon_s = GetSatCoord( file_sat, jts_1,jts_2, 'longitude' )
+
+    keep_lat = nmp.where( (vlat_s[:]>=lat_min) & (vlat_s[:]<=lat_max) )
+
+    print( keep_lat )
+    
+
+    exit(0)
+
+
+
+
+
+
+    
+    #print('BEFORE: itime_s[0]=',itime_s[0])
+    itime_s = itime_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+
+
     
     # Get distortion angle of model grid:
     cf_angle = 'grid_angle_model.nc'
@@ -70,19 +122,10 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     if ldebug: Save2Dfield( cf_angle, xangle_m, name='angle', mask=mask_m )
     #xangle_m = nmp.zeros(xlat_m.shape) ; print(' NOOOOOOT    => done!\n'); #lolodbg
 
-    # Relevant satellite time slice:
-    jts_1, jts_2 = scan_idx_sat( itime_s, it_min, it_max )
-    Nt_s = jts_2 - jts_1 + 1
-    if ldebug:
-        print(' jts_1 =', jts_1, '  ==> itime_s[jts_1] =', itime_s[jts_1] )
-        print(' jts_2 =', jts_2, '  ==> itime_s[jts_2] =', itime_s[jts_2],'\n' )
 
-    # Get satellite track lat,lon for the relevant time slice:
-    vlat_s = GetSatCoord( file_sat, jts_1,jts_2, 'latitude'  )
-    vlon_s = GetSatCoord( file_sat, jts_1,jts_2, 'longitude' )
-
-    #print('BEFORE: itime_s[0]=',itime_s[0])
-    itime_s = itime_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period
+    # S A T E L L I T E
+    ###################
+    
     #print('AFTER: itime_s[0]=',itime_s[0])    
     if len(itime_s)!=Nt_s or len(vlat_s)!=Nt_s or len(vlon_s)!=Nt_s: MsgExit('problem with satellite record length')
     

@@ -11,6 +11,7 @@ import numpy as nmp
 from netCDF4 import Dataset, num2date, default_fillvals
 from calendar import timegm
 from datetime import datetime as dtm
+from .config import ldebug
 
 cabout_nc = 'Created with `alongtrack_sat_vs_nemo.py` of XXXX!'
 
@@ -22,6 +23,7 @@ def GetTimeVector( ncfile ):
     #  => vdate: time as a "strftime" type
     #  => itime: time as UNIX epoch time (integer)
     '''
+    if ldebug: print(' *** reading and converting time vector into '+ncfile+' ...')
     id_f = Dataset(ncfile)
     list_var = id_f.variables.keys()
     for cv in [ 'time', 'time_counter', 'none' ]:
@@ -37,6 +39,7 @@ def GetTimeVector( ncfile ):
     itime = nmp.zeros(Nt, dtype=nmp.int64)
     cfrmt = '%Y-%m-%d %H:%M:%S'
     for jt in range(Nt): itime[jt] = timegm( dtm.strptime( vdate[jt].strftime(cfrmt) , cfrmt ).timetuple() )
+    if ldebug: print('      => Done!\n')
     #
     return vdate, itime
 
