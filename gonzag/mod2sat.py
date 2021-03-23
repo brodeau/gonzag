@@ -9,7 +9,7 @@
 
 import time ; # to report execution speed of certain parts of the code...
 #
-from .config import deg2km, search_box_w_km, l_dump_np_track_on_model_grid, ldebug, rmissval, if_talk
+from .config import deg2km, rfactor, search_box_w_km, l_dump_np_track_on_model_grid, ldebug, rmissval, if_talk
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
@@ -69,7 +69,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     # Rough estimate of the resolution of the model grid:
     res_model_dg = GetModelResolution( xlon_m )
     if res_model_dg>5. or res_model_dg<0.001: MsgExit('Model resolution found is surprising, prefer to stop => check "GetModelResolution()" in utils.py')
-    d_found_km = 0.65*res_model_dg*deg2km
+    d_found_km = rfactor*res_model_dg*deg2km
     print('   ==> "found" distance criterion when searching for nearest point is ', d_found_km, ' km\n')
 
     
@@ -78,8 +78,9 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     lat_min = nmp.amin(xlat_m) ; lat_max = nmp.amax(xlat_m)
     cw = 'regional'
     if l_glob_lon_wize: cw = 'global'
-    print(' *** Seems like the model domain is '+cw+' (in terms of longitude span)...')
+    print('     => lat_min, lat_max = ', lat_min, lat_max)
     print('     => lon_min, lon_max = ', lon_min, lon_max, '\n')
+    print(' *** Seems like the model domain is '+cw+' (in terms of longitude span)...')
     if ew_prd_mod>=0 and not l_glob_lon_wize:
         print('\n  WARNING: forcing East-West periodicity to NONE (ew_prd_mod=-1) because regional domain!\n')
 
@@ -143,8 +144,12 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         for jt in range(len(vlat_s[:jt_stop])):
             if jt%if_talk==0:
                 print('   ==> plot for jt =', jt, ' / ', len(vlat_s[:jt_stop]))
-                PlotMesh( (vlon_s[jt],vlat_s[jt]), xlat_m, xlon_m, BT.SM[jt,:,:], BT.WB[jt,:], \
-                             fig_name='mesh_jt'+'%5.5i'%(jt)+'.png' )
+                [jj,ji] = BT.NP[jt,:]
+                if (jj,ji) == (-1,-1):
+                    print('      ===> NO! Was not found!')
+                else:
+                    PlotMesh( (vlon_s[jt],vlat_s[jt]), xlat_m, xlon_m, BT.SM[jt,:,:], BT.WB[jt,:], \
+                              fig_name='mesh_jt'+'%5.5i'%(jt)+'.png' )
     #################################################################################################
     
     if l_dump_np_track_on_model_grid:

@@ -162,7 +162,7 @@ def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_
         jy, jx = find_j_i_min( xd )
         lfound = ( xd[jy,jx] < rfnd )
         if igo>1 and not lfound:
-            rfnd = 1.2*rfnd ; # increasing validation distance criterion by 20 %
+            rfnd = 1.25*rfnd ; # increasing validation distance criterion by 25 %
     if igo==1:
         jy, jx = jy+j1, jx+i1 ; # found in the zoom box => translate to indices in whole domain:
     #

@@ -14,6 +14,9 @@ R_pl = 6356.752 ; # radius of earth at the poles
 
 rmissval = -9999. ; # Flag missing values in NetCDF files...
 
+rfactor = 0.75 ; # this is multiplied to the model grid resolution to obtain the "found distance criterion"
+#                #  => the larger the easier to find a nearest point (but maybe not the absolute nearest then...)
+
 search_box_w_km = 500. ; # width (in km) of the small zoom-box on the source (model) domain
 #                        # in which NearestPoint() will initially attempt to locate  the nearest point,
 #                        # before falling back on the whole source (model) domain if unsuccessful.
