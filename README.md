@@ -1,6 +1,6 @@
 # gonzag
 
-A Python3 package for the nterpolation of 2D (O)GCM gridded dataset onto 1D satellite tracks.
+A Python3 package for the interpolation of 2D (O)GCM gridded dataset onto 1D satellite tracks.
 
 
 ## What I do
@@ -20,7 +20,7 @@ As an output gonzag ...
 
 ## Why
 
-Ocean model horizontal grids are notorious for being twisted/distorded, hence, in gonzag,
+Ocean model horizontal grids are notorious for being twisted/distorted, hence, in gonzag,
 special effort is put on thorough research of nearest point and source mesh
 grid prior to bilinear interpolations.
 <br>
@@ -43,7 +43,7 @@ The following Python3 modules/packages are needed:
 ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png) <br>
 *Figure 1: Example of a plot produced in debug-mode: `gonzag` let you know where each
 nearest- and surrounding- points, as well as bilinear weights associated to each
-of the 4 surounding points, were taken to perform the bilinear interpolation.*
+of the 4 surrounding points, were taken to perform the bilinear interpolation.*
 
 <br>
 
@@ -74,16 +74,16 @@ Check out the `xnp_msk.nc` file generated to see nearest-point satellite track o
 In the output file `results.nc`, you will find time-series of model `ssh` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
 ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg) <br>
-*Figure 2: nearest-point of the satellite track located on the ORCA1 gridded domain, as found in this example...*
+*Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example...*
 
 <br>
 
 #### Heavier example, SSH in eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
 
 	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4 -n adt_unfiltered \
-                                -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
-                                -l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -k tmask \
-                                -p -1
+	                            -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
+	                            -l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -k tmask \
+	                            -p -1
 
 * `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
@@ -99,7 +99,7 @@ In the output file `results.nc`, you will find time-series of model `sossheig` i
 
 
 ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br>
-*Figure 3: nearest-point of the satellite track located on the ORCA1 gridded domain, as found in this example...*
+*Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example...*
 
 <br>
 
@@ -108,9 +108,4 @@ In the output file `results.nc`, you will find time-series of model `sossheig` i
 ## Production
 
 Set `ldebug = False` in `gonzag/config.py` !
-
-
-
-
-
 

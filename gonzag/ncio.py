@@ -13,7 +13,7 @@ from calendar import timegm
 from datetime import datetime as dtm
 from .config import ldebug
 
-cabout_nc = 'Created with `alongtrack_sat_vs_nemo.py` of XXXX!'
+cabout_nc = 'Created with `alongtrack_sat_vs_nemo.py` of Gonzag => https://github.com/brodeau/gonzag'
 
 
 def GetTimeVector( ncfile ):
