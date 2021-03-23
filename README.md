@@ -41,9 +41,10 @@ The following Python3 modules/packages are needed:
 ## How
 
 ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png) <br>
-*Figure X: Example of a plot produced in debug-mode: `gonzag` let you know where each
+*Figure 1: Example of a plot produced in debug-mode: `gonzag` let you know where each
 nearest- and surrounding- points, as well as bilinear weights associated to each
 of the 4 surounding points, were taken to perform the bilinear interpolation.*
+
 <br>
 
 
@@ -73,8 +74,9 @@ Check out the `xnp_msk.nc` file generated to see nearest-point satellite track o
 In the output file `results.nc`, you will find time-series of model `ssh` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
 ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg) <br>
-*Figure 1: nearest-point track as found for this example...*
+*Figure 2: nearest-point of the satellite track located on the ORCA1 gridded domain, as found in this example...*
 
+<br>
 
 #### Heavier example, SSH in eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
 
@@ -95,7 +97,12 @@ Check out the `xnp_msk.nc` file generated to see nearest-point satellite track o
 
 In the output file `results.nc`, you will find time-series of model `sossheig` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
+
+![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br>
+*Figure 3: nearest-point of the satellite track located on the ORCA1 gridded domain, as found in this example...*
+
 <br>
+
 
 
 ## Production
