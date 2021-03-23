@@ -82,7 +82,8 @@ In the output file `results.nc`, you will find time-series of model `ssh` interp
 <p align="center">
   <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
 </p>
-*Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example...*
+
+_Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example..._
 
 <br>
 
@@ -110,7 +111,8 @@ In the output file `results.nc`, you will find time-series of model `sossheig` i
 <p align="center">
   <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
 </p>
-*Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example...*
+
+_Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example..._
 
 <br>
 
