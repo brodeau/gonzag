@@ -152,14 +152,18 @@ def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_
     j1=max(j_prv-np_box_r,0) ; j2=min(j_prv+np_box_r+1,Ny)
     i1=max(i_prv-np_box_r,0) ; i2=min(i_prv+np_box_r+1,Nx)
     lfound = False
+    rfnd = rd_found_km
     igo = 0
     while not lfound:
         igo = igo + 1
-        if igo==2: (j1,i1 , j2,i2) = (0,0 , Ny,Nx) ; # Falling back on whole domain for second pass...
+        if igo>1: (j1,i1 , j2,i2) = (0,0 , Ny,Nx) ; # Falling back on whole domain for second pass...
         xd = Haversine( yT, xT,  Ys[j1:j2,i1:i2], Xs[j1:j2,i1:i2] )
         jy, jx = find_j_i_min( xd )
-        lfound = ( xd[jy,jx] < rd_found_km )
-        if igo==2 and not lfound:
+        lfound = ( xd[jy,jx] < rfnd )
+        if igo>1 and not lfound:
+            rfnd = 1.2*rfnd ; # increasing validation distance criterion by 20 %
+            print('LOLO increase DIST !!!!! => ', rfnd)
+        if igo==9 and not lfound:
             print('ERROR: NearestPoint() => Fuck up #1!\n ==> maybe your "dist_found" too small?\n')
             sys.exit(0)
     if igo==1: jy=jy+j1 ; jx=jx+i1 ; # Translate to indices in whole domain:

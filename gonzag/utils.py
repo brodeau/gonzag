@@ -49,6 +49,21 @@ def find_j_i_max(x):
     return k//nx, k%nx
 
 
+
+def GetModelResolution( X ):
+    '''
+    # X    : the 2D array of the model grid longitude
+    '''
+    ny = X.shape[0]
+    vx = nmp.abs(X[ny//2,1:] - X[ny//2,:-1])
+    res = nmp.mean( vx[nmp.where(vx < 5.)] )
+    print(' *** Based on the longitude array of the model, the model resolutions ~= ', res, ' degrees \n')
+    return res
+
+
+
+    
+
 #def IsGlobalLongitudeWise( X, resd=1. ):
 #    '''
 #    # X    : the 2D array of the model grid longitude

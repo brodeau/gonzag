@@ -13,16 +13,13 @@
 import time ; # to check the execution speed...
 #
 #import gonzag as gz
-from .config import ldebug, rmissval
+from .config import deg2km, ldebug, rmissval
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
 
 # Should be command-line arguments:
-res_model_dg = 1. ; # rough order of magnitude of the resolutio of the model grid in degrees !
-#
 np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
-dist_found = 100. ; # threshold distance for found [km] ! ""    ""
 l_dump_np_track_on_model_grid = True
 if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
 
@@ -73,6 +70,13 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     xlon_m = nmp.mod(xlon_m, 360.) ; # forces longitude to be in the [0,360] range...
     #if ldebug: Save2Dfield( 'mask_model.nc', mask_m, name='mask' ) #lolodbg
 
+    # Rough estimate of the resolution of the model grid:
+    res_model_dg = GetModelResolution( xlon_m )
+    if res_model_dg>5. or res_model_dg<0.001: MsgExit('Model resolution found is surprising, prefer to stop => check "GetModelResolution()" in utils.py')
+    d_found_km = 0.65*res_model_dg*deg2km
+    print('   ==> "found" distance criterion when searching for nearest point is ', d_found_km, ' km\n')
+
+    
     # Global or regional config ?
     l_glob_lon_wize, l360, lon_min, lon_max = IsGlobalLongitudeWise( xlon_m, resd=res_model_dg )
     lat_min = nmp.amin(xlat_m) ; lat_max = nmp.amax(xlat_m)
@@ -128,7 +132,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     startTime = time.time()
 
     BT = BilinTrack( vlat_s[:jt_stop], vlon_s[:jt_stop], xlat_m, xlon_m, src_grid_local_angle=xangle_m, \
-                        k_ew_per=ew_prd_mod, rd_found_km=dist_found, np_box_r=np_box_radius, freq_talk=if_talk )
+                        k_ew_per=ew_prd_mod, rd_found_km=d_found_km, np_box_r=np_box_radius, freq_talk=if_talk )
 
     print('\n *** Execution time to build the mapping: ', time.time() - startTime, '\n')
 
