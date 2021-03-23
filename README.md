@@ -41,8 +41,8 @@ The following Python3 modules/packages are needed:
 ## How
 
 ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png) <br>
-*Figure 1: Example of a plot produced in debug-mode: `gonzag` let you know where each
-nearest- and surrounding- points, as well as bilinear weights associated to each
+*Figure 1: Example of a plot produced in debug-mode: `gonzag` lets you know where each
+nearest- and surrounding- points, as well as the bilinear weights associated to each
 of the 4 surrounding points, were taken to perform the bilinear interpolation.*
 
 <br>
