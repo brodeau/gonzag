@@ -43,7 +43,7 @@ The following Python3 modules/packages are needed:
 <!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png)  -->
 
 <p align="center">
-  <img width="500" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png">
 </p>
 <br>
 
@@ -81,7 +81,7 @@ In the output file `results.nc`, you will find time-series of model `ssh` interp
 
 <!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg) <br> -->
 <p align="center">
-  <img width="800" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
+  <img width="600" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
 </p>
 *Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example...*
 
@@ -109,7 +109,7 @@ In the output file `results.nc`, you will find time-series of model `sossheig` i
 
 <!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br> -->
 <p align="center">
-  <img width="800" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
+  <img width="600" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
 </p>
 *Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example...*
 
