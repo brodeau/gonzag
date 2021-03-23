@@ -140,7 +140,7 @@ def AlfaBeta( vy, vx ):
     return rA, rB
 
 
-def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_r=4 ):
+def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_r=10 ):
     '''
     # * pcoor_trg : GPS coordinates (lat,lon) of target point    ([real],[real])
     # * Ys        : array of source grid latitude            2D numpy.array [real]
@@ -149,12 +149,13 @@ def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_
     (yT,xT) = pcoor_trg
     (Ny,Nx) = Ys.shape
     #
+    jy, jx = -1,-1 ; # Flag value...
     j1=max(j_prv-np_box_r,0) ; j2=min(j_prv+np_box_r+1,Ny)
     i1=max(i_prv-np_box_r,0) ; i2=min(i_prv+np_box_r+1,Nx)
     lfound = False
     rfnd = rd_found_km
     igo = 0
-    while not lfound:
+    while (not lfound) and igo<5 :
         igo = igo + 1
         if igo>1: (j1,i1 , j2,i2) = (0,0 , Ny,Nx) ; # Falling back on whole domain for second pass...
         xd = Haversine( yT, xT,  Ys[j1:j2,i1:i2], Xs[j1:j2,i1:i2] )
@@ -162,12 +163,13 @@ def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_
         lfound = ( xd[jy,jx] < rfnd )
         if igo>1 and not lfound:
             rfnd = 1.2*rfnd ; # increasing validation distance criterion by 20 %
-            print('LOLO increase DIST !!!!! => ', rfnd)
-        if igo==9 and not lfound:
-            print('ERROR: NearestPoint() => Fuck up #1!\n ==> maybe your "dist_found" too small?\n')
-            sys.exit(0)
-    if igo==1: jy=jy+j1 ; jx=jx+i1 ; # Translate to indices in whole domain:
-    if jy<0 or jy<0 or jy>=Ny or jx>=Nx: MsgExit('NearestPoint() => Fuck up #2')
+    if igo==1:
+        jy, jx = jy+j1, jx+i1 ; # found in the zoom box => translate to indices in whole domain:
+    #
+    if jy<0 or jx<0 or jy>=Ny or jx>=Nx or igo==5:
+        print(' WARNING: did not find a nearest point for target point ',yT,xT,' !')
+        print('          => last tested distance criterions =', rfnd,' km\n')
+        jy, jx = -1,-1        
     return [jy,jx]
 
 

@@ -17,3 +17,28 @@ share a common time-period.
 
 As an output gonzag ...
 
+
+## Why
+
+Ocean model horizontal grids are notorious for being twisted/distorded, hence, in gonzag,
+special effort is put on thourough research of nearest point and source mesh
+grid prior to bilinear interpolations.
+
+
+## Getting started
+
+Best way it to perform the small tests...
+
+
+eNATL60, zoom over the Faroe Islands:
+
+
+    ./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4 -n adt_unfiltered \
+                                -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
+                                -l mesh_mask_eNATL60_Faroe.nc -p -1
+
+* `-p -1` : it's a rectangular extraction, so a regional region, so no East-West perdiodicity
+* `-l mesh_mask_eNATL60_Faroe.nc` : we get the model land-sea mask in this file
+
+
+

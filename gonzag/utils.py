@@ -62,6 +62,21 @@ def GetModelResolution( X ):
 
 
 
+def SearchBoxSize( res_mod, width_box ):
+    '''
+    # Returns half of the width, in number of grid points, of the small zoom-box 
+    # of the source (model) domain in which NearestPoint() will initially attempt
+    # to locate  the nearest point, before falling back on the whole source (model)
+    # domain if unsuccessful.                           
+    #  => the smaller the faster the search...
+    #
+    # * res_mod:   horizontal resolution of the model data, in km
+    # * width_box: width of the zoom-box in km
+    #
+    # TODO: shoud take into account the speed of the satellite
+    '''
+    return int(0.5*width_box/res_mod)
+
     
 
 #def IsGlobalLongitudeWise( X, resd=1. ):

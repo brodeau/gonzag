@@ -7,19 +7,15 @@
 #
 ############################################################################
 
-#from sys import exit
-#import numpy as nmp
-#from netCDF4 import Dataset
-import time ; # to check the execution speed...
+import time ; # to report execution speed of certain parts of the code...
 #
-#import gonzag as gz
-from .config import deg2km, ldebug, rmissval
+from .config import deg2km, search_box_w_km, l_dump_np_track_on_model_grid, ldebug, rmissval, if_talk
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
 
 # Should be command-line arguments:
-np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
+#np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
 l_dump_np_track_on_model_grid = True
 if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
 
@@ -80,14 +76,18 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     # Global or regional config ?
     l_glob_lon_wize, l360, lon_min, lon_max = IsGlobalLongitudeWise( xlon_m, resd=res_model_dg )
     lat_min = nmp.amin(xlat_m) ; lat_max = nmp.amax(xlat_m)
-    #
     cw = 'regional'
     if l_glob_lon_wize: cw = 'global'
     print(' *** Seems like the model domain is '+cw+' (in terms of longitude span)...')
     print('     => lon_min, lon_max = ', lon_min, lon_max, '\n')
-
     if ew_prd_mod>=0 and not l_glob_lon_wize:
         print('\n  WARNING: forcing East-West periodicity to NONE (ew_prd_mod=-1) because regional domain!\n')
+
+
+    # Size of the search zoom box:
+    np_box_radius = SearchBoxSize( res_model_dg*deg2km, search_box_w_km )
+    print(' *** Will use zoom boxes of width of '+str(2*np_box_radius+1)+' points for 1st attempts of nearest-point location...\n')
+
     
     # Get satellite data during the relevant time slice:
     vdate_s = vdate_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period

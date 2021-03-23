@@ -7,18 +7,8 @@
 #
 ############################################################################
 
-#import numpy as nmp
-#from netCDF4 import Dataset
-#import time ; # to check the execution speed...
-#
 import gonzag as gz
 from gonzag.config import ldebug
-
-# Should be command-line arguments:
-#np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
-#dist_found = 100. ; # threshold distance for found [km] ! ""    ""
-#l_dump_np_track_on_model_grid = True
-#if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
 
 def argument_parsing():
     '''
@@ -39,8 +29,8 @@ def argument_parsing():
     #
     args = parser.parse_args()
     print('')
-    print(' *** Satellinte file and variable:\n', '  => ', args.fsat, '"'+args.vsat+'"')
-    print(' ***    Model   file and variable:\n', '  => ', args.fmod, '"'+args.vmod,'"\n')
+    print(' *** Satellite file and variable:\n', '  => ', args.fsat, '"'+args.vsat+'"')
+    print(' ***   Model   file and variable:\n', '  => ', args.fmod, '"'+args.vmod,'"\n')
     #
     flsm = args.fmsk
     vlsm = args.vmsk
@@ -55,11 +45,6 @@ if __name__ == '__main__':
 
     file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm, name_lsm, kEWper = argument_parsing()
 
-
-
-
-
-
     # If Model2SatTrack were to be made independant of NetCDF interface, would provide it with:
     # * itime_s, itime_m
     # * xlat_m, xlon_m, mask_m
@@ -68,5 +53,5 @@ if __name__ == '__main__':
     # * xssh_s[t,:,:]   => NOT ok, way too big!
 
     ii = gz.Model2SatTrack( file_sat, name_ssh_sat, file_mod, name_ssh_mod, file_lsm, name_lsm, \
-                            ew_prd_mod=kEWper, file_out='test.nc' )
+                            ew_prd_mod=kEWper, file_out='result.nc' )
 

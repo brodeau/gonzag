@@ -14,3 +14,13 @@ R_pl = 6356.752 ; # radius of earth at the poles
 
 rmissval = -9999. ; # Flag missing values in NetCDF files...
 
+search_box_w_km = 500. ; # width (in km) of the small zoom-box on the source (model) domain
+#                        # in which NearestPoint() will initially attempt to locate  the nearest point,
+#                        # before falling back on the whole source (model) domain if unsuccessful.
+#                        # => see "SearchBoxSize()" in "utils.py" for more !
+
+
+l_dump_np_track_on_model_grid = True
+
+if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
+
