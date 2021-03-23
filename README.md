@@ -40,12 +40,12 @@ The following Python3 modules/packages are needed:
 
 ## How
 
-![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png) <br>
+<!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png)  -->
 
 <p align="center">
-  <img width="460" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png">
+  <img width="500" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png">
 </p>
-
+<br>
 
 *Figure 1: Example of a plot produced in debug-mode: `gonzag` lets you know where each
 nearest- and surrounding- points, as well as the bilinear weights associated to each
@@ -79,7 +79,10 @@ Check out the `xnp_msk.nc` file generated to see nearest-point satellite track o
 
 In the output file `results.nc`, you will find time-series of model `ssh` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
-![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg) <br>
+<!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg) <br> -->
+<p align="center">
+  <img width="800" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
+</p>
 *Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example...*
 
 <br>
@@ -104,7 +107,10 @@ Check out the `xnp_msk.nc` file generated to see nearest-point satellite track o
 In the output file `results.nc`, you will find time-series of model `sossheig` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
 
-![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br>
+<!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br> -->
+<p align="center">
+  <img width="800" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
+</p>
 *Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example...*
 
 <br>
