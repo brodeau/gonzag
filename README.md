@@ -81,9 +81,9 @@ In the output file `results.nc`, you will find time-series of model `ssh` interp
 #### Heavier example, SSH in eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
 
 	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4 -n adt_unfiltered \
-							    -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
-	                            -l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -k tmask \
-	                            -p -1
+                                -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
+                                -l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -k tmask \
+                                -p -1
 
 * `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
