@@ -8,12 +8,12 @@ A Python3 package for the interpolation of 2D (O)GCM gridded dataset onto 1D sat
 I interpolate, in space and time, the SSH (or any other 2D field) from a
 non-regular structured gridded domain of an OGCM onto a satellite track.  The
 satellite track is provided as time-series of the form time(t), longitude(t),
-latitude(s), as usually found in along-track satellite product.
+latitude(t), as usually found in along-track satellite data product.
 
-Both SSH 2D+time data and along track data are provided as netCDF file and must
+Both SSH `2D+time` data and along track data are provided as netCDF files and must
 share a common time-period.
 
-2D space interpolation is done via the bilinear method.
+2D space interpolation is performed through the bilinear method.
 
 As an output gonzag ...
 <br>
