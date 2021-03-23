@@ -3,7 +3,7 @@
 GONZAG_DATA_DIR="/MEDIA/data/gonzag_input"
 
 # eNATL60 Faroe:
-F_S="${GONZAG_DATA_DIR}/dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4"
+F_S="${GONZAG_DATA_DIR}/dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc"
 
 F_M="${GONZAG_DATA_DIR}/sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc"
 

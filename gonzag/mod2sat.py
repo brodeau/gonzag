@@ -161,7 +161,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         xnp_msk[nmp.where(mask_m==0)] = -100.
         xmsk_tmp = nmp.zeros((Nj,Ni))
         xmsk_tmp[nmp.where(xnp_msk>-110.)] = 1
-        Save2Dfield( 'xnp_msk.nc', xnp_msk, xlon=xlon_m, xlat=xlat_m, name='nb', mask=xmsk_tmp )
+        Save2Dfield( 'xnp_msk.nc', xnp_msk, xlon=xlon_m, xlat=xlat_m, name='track', mask=xmsk_tmp )
         del xmsk_tmp
 
 
