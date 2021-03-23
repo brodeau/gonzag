@@ -1,6 +1,6 @@
 # gonzag
 
-Interpolation of 2D GCM gridded data onto 1D satellite tracks
+A Python3 package for the nterpolation of 2D (O)GCM gridded dataset onto 1D satellite tracks.
 
 
 ## What I do
@@ -21,39 +21,46 @@ As an output gonzag ...
 ## Why
 
 Ocean model horizontal grids are notorious for being twisted/distorded, hence, in gonzag,
-special effort is put on thourough research of nearest point and source mesh
+special effort is put on thorough research of nearest point and source mesh
 grid prior to bilinear interpolations.
+
+
+## Dependencies
+
+
+
+
 
 
 ## Getting started
 
-Download the test data:
-
-
+First download the archive containing the input files for the test suite:
+https://drive.google.com/u/1/uc?id=1M5SBsMbUV29-3rGuh16X112hdI5NJ9qq&export=download
 
 Best way is to learn from the examples! So let's perform some of the small following tests.
 
-
-
-#### Light example,  global ORCA1 ssh interpolated to SARAL-AltiKa track
+#### Light example,  global ORCA1 SSH interpolated to SARAL-AltiKa track
 
     ./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc4 -n adt_unfiltered \
                                 -m ssh_ORCA1_20170101_20171231_grid_T.nc4 -v ssh \
                                 -l 0 \
                                 -p 2
 
-* `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4`: the file containing the 1D (time,lat,lon) satellite track
+* `-s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc4`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
-* `-m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc` the file containing the 2D+t model variable to interpolate, with 2D latitude and longitude arrays
-* `-v sossheig` name of variable of interest in model file
-* `-l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc` : we get the model land-sea mask in this file
-* `-k tmask`: name of land-sea mask variable is `tmask`
-* `-p 2` : ORCA1 is a global NEMO ORCA-type grid so there is an East-West perdiodicity of 2 overlaping points !
+* `-m ssh_ORCA1_20170101_20171231_grid_T.nc4` the file containing the 2D+t model variable to interpolate, with 2D latitude and longitude arrays
+* `-v ssh` : name of variable of interest in model file
+* `-l 0` : we get the model land-sea mask from the NetCDF `_FillValue` argument of the field `ssh`
+* `-p 2` : ORCA1 is a global NEMO ORCA-type gridded domain, so there is an East-West periodicity of 2 overlapping points !
+
+Check out the `xnp_msk.nc` file generated to see nearest-point satellite track on the 2D model grid.
+
+In the output file `results.nc`, you will find time-series of model `ssh` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
 
 
 
-#### eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
+#### Heavier example, SSH in eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
 
 	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4 -n adt_unfiltered \
 							    -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
@@ -65,8 +72,26 @@ Best way is to learn from the examples! So let's perform some of the small follo
 * `-m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc` the file containing the 2D+t model variable to interpolate, with 2D latitude and longitude arrays
 * `-v sossheig` name of variable of interest in model file
 * `-l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc` : we get the model land-sea mask in this file
-* `-k tmask`: name of land-sea mask variable is `tmask`
-* `-p -1` : it's a rectangular extraction, so a regional region, so no East-West perdiodicity
+* `-k tmask`: name of land-sea mask  in file `dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc` variable is `tmask`
+* `-p -1` : it's a rectangular extraction, so a regional region, so NO East-West periodicity!
+
+Check out the `xnp_msk.nc` file generated to see nearest-point satellite track on the 2D model grid.
+
+In the output file `results.nc`, you will find time-series of model `sossheig` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
 
+
+
+## Production
+
+Set `ldebug = False` in `gonzag/config.py` !
+
+
+
+
+
+![**plot**](https://github.com/brodeau/gonzag/blob/master/doc/figs/mesh_jt10500.png) <br>
+*Example of a plot produced in debug-mode: `gonzag` let you know where each
+nearest- and surrounding- points, as well as bilinear weights associated to each
+of the 4 surounding points, were taken to perform the bilinear interpolation.
 
