@@ -7,7 +7,7 @@
 from sys import exit
 from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 import numpy as nmp
-
+from .config import R_eq, R_pl
 
 def MsgExit( cmsg ):
     print('\n ERROR: '+cmsg+' !\n')
@@ -249,6 +249,7 @@ def haversine_sclr( lat1, lon1, lat2, lon2 ):
 
 def Haversine( plat, plon, xlat, xlon ):
     '''
+    # ! VECTOR VERSION !
     # Returns the distance in km at the surface of the earth
     # between two GPS points (degreesN, degreesE)
     # (plat,plon)  : a point
@@ -262,9 +263,9 @@ def Haversine( plat, plon, xlat, xlon ):
     #R = RadiusEarth( plat ) ; # it's the target location that matters...
     R = 6360.
     #
-    a1 = nmp.sin( 0.5 * ((xlat[:,:] - plat)*to_rad) )
-    a2 = nmp.sin( 0.5 * ((xlon[:,:] - plon)*to_rad) )
-    a3 = nmp.cos( xlat[:,:]*to_rad ) * cos(plat*to_rad)
+    a1 = nmp.sin( 0.5 * ((xlat - plat)*to_rad) )
+    a2 = nmp.sin( 0.5 * ((xlon - plon)*to_rad) )
+    a3 = nmp.cos( xlat*to_rad ) * cos(plat*to_rad)
     #
     return 2.*R*nmp.arcsin( nmp.sqrt( a1*a1 + a3 * a2*a2 ) )
 

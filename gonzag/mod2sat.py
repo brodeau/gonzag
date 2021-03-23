@@ -9,7 +9,7 @@
 
 import time ; # to report execution speed of certain parts of the code...
 #
-from .config import deg2km, rfactor, search_box_w_km, l_dump_np_track_on_model_grid, ldebug, rmissval, if_talk
+from .config import ldebug, if_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_dump_np_track_on_model_grid, l_plot_meshes, rmissval
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
@@ -46,11 +46,11 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     print(' *** Time overlap for Model and Track data:', it_min, it_max,'\n')
 
     # Relevant period in terms of record index for satellite data:
-    jts_1, jts_2 = scan_idx_sat( itime_s, it_min, it_max )
-    Nt_s = jts_2 - jts_1 + 1
+    jt_1, jt_2 = scan_idx_sat( itime_s, it_min, it_max )
+    Nt_s = jt_2 - jt_1 + 1
     if ldebug:
-        print(' jts_1 =', jts_1, '  ==> itime_s[jts_1] =', itime_s[jts_1] )
-        print(' jts_2 =', jts_2, '  ==> itime_s[jts_2] =', itime_s[jts_2],'\n' )
+        print(' jt_1 =', jt_1, '  ==> itime_s[jt_1] =', itime_s[jt_1] )
+        print(' jt_2 =', jt_2, '  ==> itime_s[jt_2] =', itime_s[jt_2],'\n' )
 
 
 
@@ -91,18 +91,18 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
     
     # Get satellite data during the relevant time slice:
-    vdate_s = vdate_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period
-    itime_s = itime_s[jts_1:jts_2+1] ; # trimming satellite time vector to usefull period
+    vdate_s = vdate_s[jt_1:jt_2+1] ; # trimming satellite time vector to usefull period
+    itime_s = itime_s[jt_1:jt_2+1] ; # trimming satellite time vector to usefull period
     #
-    vlat_s  = GetSatCoord( file_sat, jts_1,jts_2, 'latitude'  )
-    vlon_s  = GetSatCoord( file_sat, jts_1,jts_2, 'longitude' )
+    vlat_s  = GetSatCoord( file_sat, jt_1,jt_2, 'latitude'  )
+    vlon_s  = GetSatCoord( file_sat, jt_1,jt_2, 'longitude' )
     if l360:
         vlon_s = nmp.mod(vlon_s, 360.)
     else:
         vlon_s = degE_to_degWE( vlon_s )
     #
     id_sat = Dataset(file_sat)
-    vssh_s = id_sat.variables[name_ssh_sat][jts_1:jts_1+Nt_s]
+    vssh_s = id_sat.variables[name_ssh_sat][jt_1:jt_1+Nt_s]
     id_sat.close()
     #
     if itime_s.shape!=(Nt_s,) or vlat_s.shape!=(Nt_s,) or vlon_s.shape!=(Nt_s,) or vssh_s.shape!=(Nt_s,):
@@ -139,7 +139,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
     #################################################################################################
     # Debug part to see if mapping/weights was correctly done:
-    if ldebug:
+    if ldebug and l_plot_meshes:
         print('\n *** ploting meshes...')
         for jt in range(len(vlat_s[:jt_stop])):
             if jt%if_talk==0:
@@ -171,98 +171,102 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
     vssh_m_np = nmp.zeros(Nt_s) ; # vector to store the model data interpolated in time and space (nearest-point) on the satellite track...
     vssh_m_bl = nmp.zeros(Nt_s) ; # vector to store the model data interpolated in time and space (bilinear) on the satellite track...
-
+    vdistance = nmp.zeros(Nt_s)
+    
     vssh_m_np[:] = rmissval
     vssh_m_bl[:] = rmissval
+    #vdistance[:] = rmissval
 
     
     # Time increment on the satellite time:
     id_mod = Dataset(file_mod)    
-    jtm1   = 0   ; jtm2   = 0
-    jtm1_o = -10 ; jtm2_o = -10
+    ktm1   = 0   ; ktm2   = 0
+    ktm1_o = -10 ; ktm2_o = -10
     
-    for jts in range(Nt_s):
+    for jt in range(Nt_s):
 
-        rtd = vdate_s[jts] ; # formatted
-        itt = itime_s[jts] ; # unix time
+        # kt* : index for model
+        # jt* : index for sat. track...
+        
+        rtd = vdate_s[jt] ; # formatted
+        itt = itime_s[jt] ; # unix time
 
         # Get surrounding records for model:
-        jt = jtm1
-        while not (itime_m[jt]<=itt and itime_m[jt+1]>itt): jt=jt+1
-        jtm1 = jt ; jtm2 = jt+1
-        
-        print('\n *** Satelite time at jt = '+'%5.5i'%(jts)+' ==> ',rtd, itt)
-        print('   => surounding jt for model: ', jtm1, jtm2, '(',vdate_m[jtm1],vdate_m[jtm2],') / ', \
-              itime_m[jtm1],itime_m[jtm2] )
+        kt = ktm1
+        while not (itime_m[kt]<=itt and itime_m[kt+1]>itt): kt=kt+1
+        ktm1 = kt ; ktm2 = kt+1
 
-        # If first time we have these jtm1 & jtm2, getting the two surrounding fields:
-        if (jtm1>jtm1_o) and (jtm2>jtm2_o):
-            if (jtm1_o == -10) or (jtm1 > jtm2_o):
+        if jt%if_talk==0:
+            print('\n *** Satelite time at jt = '+'%5.5i'%(jt)+' ==> ',rtd, itt)
+            print('   => surounding kt for model: ', ktm1, ktm2, '(',vdate_m[ktm1],vdate_m[ktm2],') / ', \
+                  itime_m[ktm1],itime_m[ktm2] )
+
+        # If first time we have these ktm1 & ktm2, getting the two surrounding fields:
+        if (ktm1>ktm1_o) and (ktm2>ktm2_o):
+            if (ktm1_o == -10) or (ktm1 > ktm2_o):
                 print(' *** Reading '+name_ssh_mod+' in '+file_mod)
-                print('    => at jtm1=', jtm1)
+                print('    => at ktm1=', ktm1)
                 #lilo
-                xvar1 = id_mod.variables[name_ssh_mod][jtm1,:,:]
+                xvar1 = id_mod.variables[name_ssh_mod][ktm1,:,:]
                 #if l_use_anomaly: xvar1 = xvar1 - xmean
             else:
                 xvar1[:,:] = xvar2[:,:]
             #
             print(' *** Reading '+name_ssh_mod+' in '+file_mod)
-            print('    => at jtm2=', jtm2)
-            xvar2 = id_mod.variables[name_ssh_mod][jtm2,:,:]
+            print('    => at ktm2=', ktm2)
+            xvar2 = id_mod.variables[name_ssh_mod][ktm2,:,:]
             #if l_use_anomaly ) xvar2 = xvar2 - xmean
 
             # slope only needs to be calculated when xvar2 and xvar1 have been updated:
-            xslope = (xvar2 - xvar1) / float(itime_m[jtm2] - itime_m[jtm1])
+            xslope = (xvar2 - xvar1) / float(itime_m[ktm2] - itime_m[ktm1])
 
         # Linear interpolation of field at time itt:
-        print('   => Model data is interpolated at current time out of model records '+str(jtm1+1)+' & '+str(jtm2+1))
-        xvar = xvar1[:,:] + xslope[:,:]*float(itt - itime_m[jtm1])
+        if jt%if_talk==0: print('   => Model data is interpolated at current time out of model records '+str(ktm1+1)+' & '+str(ktm2+1))
+        xvar = xvar1[:,:] + xslope[:,:]*float(itt - itime_m[ktm1])
 
-        [ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ] = BT.SM[jts,:,:]
-        [w1, w2, w3, w4]                    = BT.WB[jts,:]
-
-        Sm = mask_m[j1,i1] + mask_m[j2,i2] + mask_m[j3,i3] + mask_m[j4,i4]
-
+        [ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ] = BT.SM[jt,:,:]
+        [w1, w2, w3, w4]                    = BT.WB[jt,:]
+        
+        Sm = mask_m[j1,i1] + mask_m[j2,i2] + mask_m[j3,i3] + mask_m[j4,i4]        
         if Sm == 4:
             # All 4 model points are ocean point !
             
             # Nearest-point "interpolation":
-            vssh_m_np[jts] = xvar[j1,i1]
+            vssh_m_np[jt] = xvar[j1,i1]
             
             # Bilinear interpolation:
             Sw = nmp.sum([w1, w2, w3, w4])
             if abs(Sw-1.)> 0.001:
-                print('    FLAGGING MISSING VALUE at jts = '+str(jts)+' !!!')
+                print('    FLAGGING MISSING VALUE at jt = '+str(jt)+' !!!')
             else:
-                vssh_m_bl[jts] = w1*xvar[j1,i1] + w2*xvar[j2,i2] + w3*xvar[j3,i3] + w4*xvar[j4,i4]
+                # Bilin interpolation !
+                vssh_m_bl[jt] = w1*xvar[j1,i1] + w2*xvar[j2,i2] + w3*xvar[j3,i3] + w4*xvar[j4,i4]
         
-        jtm1_o = jtm1 ; jtm2_o = jtm2
+        ktm1_o = ktm1 ; ktm2_o = ktm2
 
-    # end of loop on jts
+    # end of loop on jt
     id_mod.close()
 
 
+    # Distance parcourue since first point:
+    for jt in range(1,Nt_s):
+        vdistance[jt] = vdistance[jt-1] + haversine_sclr( vlat_s[jt], vlon_s[jt], vlat_s[jt-1], vlon_s[jt-1] )
 
 
-    # Getting satellite data for reference purposes:
-
-    #print('nmp.shape(vssh_s) =', nmp.shape(vssh_s))    
-    #exit(0)
-
-
+    # Output file
+    
     c1 = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
-    vvar   = [ name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           ]
-    vunits = [     'm'           ,          'm'          ,    'm'                 ]
-    vlongN = [ c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data' ] 
-
+    vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           , 'distance' ]
+    vunits = [ 'deg.N'   , 'deg.E'    ,   'm'           ,          'm'          ,    'm'                   ,    'km'    ]
+    vlongN = [ 'Latitude', 'Longitude',  c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data', 'Cumulated distance since first point' ] 
 
     if nmp.ma.is_masked(vssh_s):
         idxma = nmp.where( nmp.ma.getmask(vssh_s) )
         vssh_s[idxma] = rmissval
 
-    iw = SaveTimeSeriesNC( itime_s[:Nt_s], nmp.array( [vssh_m_bl, vssh_m_np, vssh_s] ), vvar, file_out, \
-                              time_units='seconds since 1970-01-01 00:00:00', \
-                              vunits=vunits, vlnm=vlongN, missing_val=rmissval )
+    iw = SaveTimeSeriesNC( itime_s[:Nt_s], nmp.array( [vlat_s, vlon_s, vssh_m_bl, vssh_m_np, vssh_s, vdistance] ), vvar, file_out, \
+                           time_units='seconds since 1970-01-01 00:00:00', \
+                           vunits=vunits, vlnm=vlongN, missing_val=rmissval )
 
 
 

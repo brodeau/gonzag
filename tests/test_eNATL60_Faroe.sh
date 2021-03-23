@@ -1,16 +1,18 @@
 #!/bin/bash
 
+GONZAG_DATA_DIR="/MEDIA/data/gonzag_input"
 
 # eNATL60 Faroe:
-F_S="/MEDIA/data/data/SATELLITE/dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4"
-#F_S="/MEDIA/data/data/SATELLITE/SARAL_light_20170107-20170114.nc"
+F_S="${GONZAG_DATA_DIR}/dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4"
 
-F_M="/MEDIA/data/eNATL60/ZOOMs/Faroe/sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc"
-#F_L="/MEDIA/data/eNATL60/ZOOMs/Faroe/mesh_mask_eNATL60_Faroe.nc"
-F_L="/MEDIA/data/eNATL60/ZOOMs/Faroe/sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc"
+F_M="${GONZAG_DATA_DIR}/sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc"
+
+F_L=${F_M}
+V_L="tmask"
+
 ewper="-1"
 
 ./alongtrack_sat_vs_nemo.py -s ${F_S} -n adt_unfiltered \
                             -m ${F_M} -v sossheig \
-                            -l ${F_L} -k tmask \
+                            -l ${F_L} -k ${V_L} \
                             -p ${ewper}

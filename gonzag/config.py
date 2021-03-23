@@ -6,6 +6,10 @@
 
 ldebug = True
 
+if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
+
+l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `if_talk` frequency
+
 deg2km = 111.11 ; # Converts degrees to km
 
 R_v  = 6371.0   ; # Volumetric mean radius (km)
@@ -25,5 +29,5 @@ search_box_w_km = 500. ; # width (in km) of the small zoom-box on the source (mo
 
 l_dump_np_track_on_model_grid = True
 
-if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
+
 

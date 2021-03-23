@@ -28,7 +28,12 @@ grid prior to bilinear interpolations.
 ## Dependencies
 
 
+## How
 
+![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png) <br>
+*Figure X: Example of a plot produced in debug-mode: `gonzag` let you know where each
+nearest- and surrounding- points, as well as bilinear weights associated to each
+of the 4 surounding points, were taken to perform the bilinear interpolation.*
 
 
 
@@ -90,8 +95,4 @@ Set `ldebug = False` in `gonzag/config.py` !
 
 
 
-![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png) <br>
-*Example of a plot produced in debug-mode: `gonzag` let you know where each
-nearest- and surrounding- points, as well as bilinear weights associated to each
-of the 4 surounding points, were taken to perform the bilinear interpolation.
 
