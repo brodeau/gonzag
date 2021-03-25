@@ -262,3 +262,16 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     return 1
 
 
+
+
+
+##############
+
+
+# Ideally:
+
+# def Model2SatTrack( ClassSatInput, ClassModInput ):
+#     '''
+#     in which ClassSatInput is already trimmed in time and space / model data...
+#
+#     =>  returns an object of class "Result" which contains all the stuffs we currentlty pass to SaveTimeSeries !
