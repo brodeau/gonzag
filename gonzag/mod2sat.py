@@ -47,7 +47,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
     # Relevant period in terms of record index for satellite data:
     jt_1, jt_2 = scan_idx_sat( itime_s, it_min, it_max )
-    Nt_s = jt_2 - jt_1 + 1
+    Nt = jt_2 - jt_1 + 1
     if ldebug:
         print(' jt_1 =', jt_1, '  ==> itime_s[jt_1] =', itime_s[jt_1] )
         print(' jt_2 =', jt_2, '  ==> itime_s[jt_2] =', itime_s[jt_2],'\n' )
@@ -102,10 +102,10 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         vlon_s = degE_to_degWE( vlon_s )
     #
     id_sat = Dataset(file_sat)
-    vssh_s = id_sat.variables[name_ssh_sat][jt_1:jt_1+Nt_s]
+    vssh_s = id_sat.variables[name_ssh_sat][jt_1:jt_1+Nt]
     id_sat.close()
     #
-    if itime_s.shape!=(Nt_s,) or vlat_s.shape!=(Nt_s,) or vlon_s.shape!=(Nt_s,) or vssh_s.shape!=(Nt_s,):
+    if itime_s.shape!=(Nt,) or vlat_s.shape!=(Nt,) or vlon_s.shape!=(Nt,) or vssh_s.shape!=(Nt,):
         MsgExt('satellite arrays do not agree in shape after time slicing')
 
     print(' *** Track size before removing points outside of model domain: '+str(len(vlon_s)))
@@ -114,9 +114,9 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     vlat_s  = vlat_s[keep_lat]
     vlon_s  = vlon_s[keep_lat]
     vssh_s  = vssh_s[keep_lat]
-    (Nt_s,) = vssh_s.shape
+    (Nt,)   = vssh_s.shape
 
-    print('   => Track size AFTER removing points outside of model domain: '+str(len(vlon_s))+'\n')
+    print('   => Track size AFTER removing points outside of model domain: '+str(Nt)+'\n')
 
 
 
@@ -127,15 +127,10 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     #xangle_m = nmp.zeros(xlat_m.shape) ; print(' NOOOOOOT    => done!\n'); #lolodbg
 
 
-    #jt_stop = 10000 ; Nt_s = len(vlat_s[:jt_stop]) ; # lolodbg
-    jt_stop = Nt_s
-
-
-
     # The BIG GUY:
     startTime = time.time()
 
-    BT = BilinTrack( vlat_s[:jt_stop], vlon_s[:jt_stop], xlat_m, xlon_m, src_grid_local_angle=xangle_m, \
+    BT = BilinTrack( vlat_s, vlon_s, xlat_m, xlon_m, src_grid_local_angle=xangle_m, \
                      k_ew_per=ew_prd_mod, rd_found_km=d_found_km, np_box_r=np_box_radius, freq_talk=if_talk )
 
     time_bl_mapping = time.time() - startTime
@@ -146,9 +141,9 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     # Debug part to see if mapping/weights was correctly done:
     if ldebug and l_plot_meshes:
         print('\n *** ploting meshes...')
-        for jt in range(len(vlat_s[:jt_stop])):
+        for jt in range(Nt):
             if jt%if_talk==0:
-                print('   ==> plot for jt =', jt, ' / ', len(vlat_s[:jt_stop]))
+                print('   ==> plot for jt =', jt, ' / ', Nt)
                 [jj,ji] = BT.NP[jt,:]
                 if (jj,ji) == (-1,-1):
                     print('      ===> NO! Was not found!')
@@ -160,7 +155,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     if l_dump_np_track_on_model_grid:
         # Show the satellite track on the model grid:
         xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = rmissval
-        for jt in range(len(vlat_s[:jt_stop])):
+        for jt in range(Nt):
             [jj,ji] = BT.NP[jt,:]
             xnp_msk[jj,ji] = float(jt)
         xnp_msk[nmp.where(mask_m==0)] = -100.
@@ -174,9 +169,9 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     # All bi-linear mapping stuff is done it's time
     # => read satellite SSH at time t_s
 
-    vssh_m_np = nmp.zeros(Nt_s) ; vssh_m_np[:] = rmissval; # vector to store the model data interpolated in time and space (nearest-point) on the satellite track...
-    vssh_m_bl = nmp.zeros(Nt_s) ; vssh_m_bl[:] = rmissval; # vector to store the model data interpolated in time and space (bilinear) on the satellite track...
-    vdistance = nmp.zeros(Nt_s)
+    vssh_m_np = nmp.zeros(Nt) ; vssh_m_np[:] = rmissval; # vector to store the model data interpolated in time and space (nearest-point) on the satellite track...
+    vssh_m_bl = nmp.zeros(Nt) ; vssh_m_bl[:] = rmissval; # vector to store the model data interpolated in time and space (bilinear) on the satellite track...
+    vdistance = nmp.zeros(Nt)
 
     # Time increment on the satellite time:
     id_mod = Dataset(file_mod)
@@ -185,7 +180,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
 
     startTime = time.time()
 
-    for jt in range(Nt_s):
+    for jt in range(Nt):
 
         # kt* : index for model
         # jt* : index for sat. track...
@@ -245,7 +240,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
     time_bl_interp = time.time() - startTime
 
     # Distance parcourue since first point:
-    for jt in range(1,Nt_s):
+    for jt in range(1,Nt):
         vdistance[jt] = vdistance[jt-1] + haversine_sclr( vlat_s[jt], vlon_s[jt], vlat_s[jt-1], vlon_s[jt-1] )
 
 
@@ -260,13 +255,13 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
         idxma = nmp.where( nmp.ma.getmask(vssh_s) )
         vssh_s[idxma] = rmissval
 
-    iw = SaveTimeSeries( itime_s[:Nt_s], nmp.array( [vlat_s, vlon_s, vssh_m_bl, vssh_m_np, vssh_s, vdistance] ), vvar, file_out, \
+    iw = SaveTimeSeries( itime_s, nmp.array( [vlat_s, vlon_s, vssh_m_bl, vssh_m_np, vssh_s, vdistance] ), vvar, file_out, \
                          time_units='seconds since 1970-01-01 00:00:00', \
                          vunits=vunits, vlnm=vlongN, missing_val=rmissval )
 
     print('\n *** Time report:')
     print('     - Construction of the source-target bilinear mapping took: '+str(round(time_bl_mapping,0))+' s')
-    print('     - Interpolation of model data on the '+str(Nt_s)+' satellite points took: '+str(round(time_bl_interp,0))+' s \n')
+    print('     - Interpolation of model data on the '+str(Nt)+' satellite points took: '+str(round(time_bl_interp,0))+' s \n')
 
     return 1
 
