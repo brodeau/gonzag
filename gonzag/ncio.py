@@ -13,15 +13,15 @@ from calendar import timegm
 from datetime import datetime as dtm
 from .config import ldebug
 
-cabout_nc = 'Created with `alongtrack_sat_vs_nemo.py` of Gonzag => https://github.com/brodeau/gonzag'
+cabout_nc = 'Created with Gonzag package => https://github.com/brodeau/gonzag'
 
 
 def GetTimeVector( ncfile ):
     '''
     # Get the time vector in the netCDF file and
-    # returns it as a vector of type datetime object...
+    # returns it in 2 different interpretations:
     #  => vdate: time as a "strftime" type
-    #  => itime: time as UNIX epoch time (integer)
+    #  => itime: time as UNIX epoch time, aka "seconds since 1970-01-01 00:00:00" (integer)
     '''
     if ldebug: print(' *** reading and converting time vector into '+ncfile+' ...')
     id_f = Dataset(ncfile)
@@ -73,6 +73,8 @@ def GetModelCoor( ncfile, what ):
 
 def GetModelLSM( ncfile, what ):
     '''
+    # Returns the land-sea mask on the source/moded domain: "1" => ocean point, "0" => land point
+    # => 2D array [integer]
     '''
     print('\n *** what we use to define model land-sea mask:\n    => "'+what+'" in "'+ncfile+'"\n')
     l_fill_val = (what[:10]=='_FillValue')
@@ -112,7 +114,7 @@ def GetSatCoord( ncfile, it1, it2, what ):
     #
     nb_dim = len(id_f.variables[ncvar].dimensions)
     if nb_dim==1: vwhat = id_f.variables[ncvar][it1:it2+1]
-    else: MsgExit('FIX ME! Satellite '+what+' has a weird number of dimensions (we expect only 1)')
+    else: MsgExit('FIX ME! Satellite '+what+' has a weird number of dimensions (we expect only 1: the time-record!)')
     id_f.close()
     print(' *** Satellite '+what+' var is: "'+ncvar+'", of size',nmp.shape(vwhat),'\n')
     #
@@ -148,7 +150,7 @@ def Save2Dfield( ncfile, XFLD, xlon=[], xlat=[], name='field', unit='', long_nam
     return
 
 
-def SaveTimeSeriesNC( ivt, xd, vvar, ncfile, time_units='unknown', vunits=[], vlnm=[], missing_val=-9999. ):
+def SaveTimeSeries( ivt, xd, vvar, ncfile, time_units='unknown', vunits=[], vlnm=[], missing_val=-9999. ):
     '''
     #  * ivt: time vector (integer)
     #  *  xd: 2D numpy array that contains Nf time series of length Nt
@@ -158,8 +160,8 @@ def SaveTimeSeriesNC( ivt, xd, vvar, ncfile, time_units='unknown', vunits=[], vl
     #  * missing_val: value for missing values...
     '''
     (Nf,Nt) = xd.shape
-    if len(ivt) != Nt: MsgExit('SaveTimeSeriesNC() => disagreement in the number of records between "ivt" and "xd"')
-    if len(vvar)!= Nf: MsgExit('SaveTimeSeriesNC() => disagreement in the number of fields between "vvar" and "xd"')
+    if len(ivt) != Nt: MsgExit('SaveTimeSeries() => disagreement in the number of records between "ivt" and "xd"')
+    if len(vvar)!= Nf: MsgExit('SaveTimeSeries() => disagreement in the number of fields between "vvar" and "xd"')
     l_f_units = (nmp.shape(vunits)==(Nf,)) ; l_f_lnm = (nmp.shape(vlnm)==(Nf,))
     #
     print('\n *** About to write file "'+ncfile+'"...')
