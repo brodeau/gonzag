@@ -62,8 +62,8 @@ Best way is to learn from the examples! So let's perform some of the small follo
 
 #### Light example,  global ORCA1 SSH interpolated to SARAL-AltiKa track
 
-    ./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc4 -n adt_unfiltered \
-                                -m ssh_ORCA1_20170101_20171231_grid_T.nc4 -v ssh \
+    ./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc -n adt_unfiltered \
+                                -m ssh_ORCA1_20170101_20171231_grid_T.nc -v ssh \
                                 -l 0 \
                                 -p 2
 
@@ -89,9 +89,9 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
 
 #### Heavier example, SSH in eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
 
-	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4 -n adt_unfiltered \
+	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -n adt_unfiltered \
 	                            -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
-	                            -l dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -k tmask \
+	                            -l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -k tmask \
 	                            -p -1
 
 * `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc4`: the file containing the 1D (time,lat,lon) satellite track
