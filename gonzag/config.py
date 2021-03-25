@@ -27,7 +27,7 @@ search_box_w_km = 500. ; # width (in km) of the small zoom-box on the source (mo
 #                        # => see "SearchBoxSize()" in "utils.py" for more !
 
 
-l_dump_np_track_on_model_grid = True
+l_save_track_on_model_grid = True
 
 
 

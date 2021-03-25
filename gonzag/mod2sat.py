@@ -9,15 +9,11 @@
 
 import time ; # to report execution speed of certain parts of the code...
 #
-from .config import ldebug, if_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_dump_np_track_on_model_grid, l_plot_meshes, rmissval
+from .config import ldebug, if_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_save_track_on_model_grid, l_plot_meshes, rmissval
 from .utils  import *
 from .ncio   import *
 from .bilin_mapping import BilinTrack
 
-# Should be command-line arguments:
-#np_box_radius = 4 ; # in number of points... (should give km and get this one based on ocean model res...)
-l_dump_np_track_on_model_grid = True
-if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
 
 
 
@@ -152,7 +148,7 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
                               fig_name='mesh_jt'+'%5.5i'%(jt)+'.png' )
     #################################################################################################
 
-    if l_dump_np_track_on_model_grid:
+    if l_save_track_on_model_grid:
         # Show the satellite track on the model grid:
         xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = rmissval
         for jt in range(Nt):
