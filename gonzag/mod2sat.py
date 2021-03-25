@@ -265,8 +265,8 @@ def Model2SatTrack( file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mo
                          vunits=vunits, vlnm=vlongN, missing_val=rmissval )
 
     print('\n *** Time report:')
-    print('     - Construction of the source-target bilinear mapping took: '+str(time_bl_mapping)+' s')
-    print('     - Interpolation of model data on the '+str(Nt_s)+' satellite points took: '+str(time_bl_interp)+' s \n')
+    print('     - Construction of the source-target bilinear mapping took: '+str(round(time_bl_mapping,0))+' s')
+    print('     - Interpolation of model data on the '+str(Nt_s)+' satellite points took: '+str(round(time_bl_interp,0))+' s \n')
 
     return 1
 
