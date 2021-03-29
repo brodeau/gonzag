@@ -248,12 +248,13 @@ def Save2Dfield( ncfile, XFLD, xlon=[], xlat=[], name='field', unit='', long_nam
 
 def SaveTimeSeries( ivt, xd, vvar, ncfile, time_units='unknown', vunits=[], vlnm=[], missing_val=-9999. ):
     '''
-    #  * ivt: time vector (integer)
-    #  *  xd: 2D numpy array that contains Nf time series of length Nt
-    #        hence of shape (Nf,Nt)
-    #  * vvar: 1D array of the variable names
-    #  * vunits, vlnm: 1D arrays of the variable units and long names
-    #  * missing_val: value for missing values...
+    #  * ivt: time vector of length Nt, unit: UNIX Epoch time            [integer]
+    #         => aka "seconds since 1970-01-01 00:00:00"
+    #  *  xd: 2D numpy array that contains Nf time series of length Nt   [real]
+    #          => hence of shape (Nf,Nt)
+    #  * vvar: vector of length Nf of the Nf variable names                         [string]
+    #  * vunits, vlnm: vectors of length Nf of the Nf variable units and long names [string]
+    #  * missing_val: value for missing values...                        [real]
     '''
     (Nf,Nt) = xd.shape
     if len(ivt) != Nt: MsgExit('SaveTimeSeries() => disagreement in the number of records between "ivt" and "xd"')
