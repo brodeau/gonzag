@@ -10,9 +10,8 @@ F_M="${GONZAG_DATA_DIR}/sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc"
 F_L=${F_M}
 V_L="tmask"
 
-ewper="-1"
+#ewper="-1"
 
 ./alongtrack_sat_vs_nemo.py -s ${F_S} -n adt_unfiltered \
                             -m ${F_M} -v sossheig \
-                            -l ${F_L} -k ${V_L} \
-                            -p ${ewper}
+                            -l ${F_L} -k ${V_L}

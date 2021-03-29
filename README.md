@@ -64,15 +64,14 @@ Best way is to learn from the examples! So let's perform some of the small follo
 
     ./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc -n adt_unfiltered \
                                 -m ssh_ORCA1_20170101_20171231_grid_T.nc -v ssh \
-                                -l 0 \
-                                -p 2
+                                -l 0
 
 * `-s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
 * `-m ssh_ORCA1_20170101_20171231_grid_T.nc` the file containing the 2D+t model variable to interpolate, with 2D latitude and longitude arrays
 * `-v ssh` : name of variable of interest in model file
 * `-l 0` : we get the model land-sea mask from the NetCDF `_FillValue` argument of the field `ssh`
-* `-p 2` : ORCA1 is a global NEMO ORCA-type gridded domain, so there is an East-West periodicity of 2 overlapping points !
+<!-- * `-p 2` : ORCA1 is a global NEMO ORCA-type gridded domain, so there is an East-West periodicity of 2 overlapping points ! -->
 
 Check out the `xnp_msk.nc` file generated to see nearest-point satellite track on the 2D model grid.
 
@@ -91,8 +90,8 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
 
 	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -n adt_unfiltered \
 	                            -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
-	                            -l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -k tmask \
-	                            -p -1
+	                            -l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -k tmask
+
 
 * `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
@@ -100,7 +99,8 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
 * `-v sossheig` name of variable of interest in model file
 * `-l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc` : we get the model land-sea mask in this file
 * `-k tmask`: name of land-sea mask  in file `dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc` variable is `tmask`
-* `-p -1` : it's a rectangular extraction, so a regional region, so NO East-West periodicity!
+
+<!-- * `-p -1` : it's a rectangular extraction, so a regional region, so NO East-West periodicity! -->
 
 Check out the `xnp_msk.nc` file generated to see nearest-point satellite track on the 2D model grid.
 

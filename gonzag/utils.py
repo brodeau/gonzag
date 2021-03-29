@@ -7,7 +7,7 @@
 from sys import exit
 from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 import numpy as nmp
-from .config import R_eq, R_pl
+from .config import ldebug, R_eq, R_pl, deg2km
 
 def MsgExit( cmsg ):
     print('\n ERROR: '+cmsg+' !\n')
@@ -30,6 +30,15 @@ def degE_to_degWE_vctr( X ):
     '''
     return nmp.copysign(1., 180.-X)*nmp.minimum(X, nmp.abs(X-360.))
 
+
+def EpochT2Str( itime ):
+    # Input: UNIX epoch time (integer)
+    # Returns: a string of the date understandable by mamals...
+    from datetime import datetime as dtm
+    #
+    return dtm.utcfromtimestamp(itime).strftime('%c')
+
+
 def find_j_i_min(x):
     '''
     # Yes, reinventing the wheel here, but it turns out
@@ -50,15 +59,32 @@ def find_j_i_max(x):
 
 
 
-def GetModelResolution( X ):
+def GridResolution( X ):
     '''
     # X    : the 2D array of the model grid longitude
     '''
     ny = X.shape[0]
     vx = nmp.abs(X[ny//2,1:] - X[ny//2,:-1])
-    res = nmp.mean( vx[nmp.where(vx < 5.)] )
-    print(' *** Based on the longitude array of the model, the model resolutions ~= ', res, ' degrees \n')
+    res = nmp.mean( vx[nmp.where(vx < 120.)] )
+    if ldebug: print(' *** [GridResolution()] Based on the longitude array, the model resolution ~= ', res, ' degrees \n')
     return res
+
+
+def IsEastWestPeriodic( X ):
+    '''
+    # X    : the 2D array of the model grid longitude [0:360]
+    #  RETURNS: iper: -1 => no E-W periodicity ; iper>=0 => E-W periodicity with iper overlaping points!
+    '''
+    ny = X.shape[0]
+    jj = ny//2 ; # we test at the center...
+    iper = -1
+    dx = X[jj,1] - X[jj,0]
+    lon_last_p1 = (X[jj,-1]+dx)%360.
+    for it in range(5):
+        if lon_last_p1 == X[jj,it]%360.:
+            iper = it
+            break
+    return iper
 
 
 
@@ -147,28 +173,32 @@ def IsGlobalLongitudeWise( X, resd=1. ):
 
 
 
-def GetTimeOverlapBounds( itsat, itmod ):
-    kt1_s = itsat[0]
-    kt2_s = itsat[-1]
-    kt1_m = itmod[0]
-    kt2_m = itmod[-1]
-    #print('\n *** Earliest/latest dates:\n => for satellite data:',kt1_s,kt2_s,'\n => for model     data:',kt1_m,kt2_m)
+def GetEpochTimeOverlap( irange_sat, irange_mod ):
+    '''
+    # * irange_sat: time coverage in epoch Unix time for satellite data: (int,int)
+    # * irange_sat: time coverage in epoch Unix time for model     data: (int,int)
+    '''
+    (kt1_s,kt2_s) = irange_sat
+    (kt1_m,kt2_m) = irange_mod
+    if ldebug: print('\n *** [GetEpochTimeOverlap()] Earliest/latest dates:\n   => for satellite data:',kt1_s,kt2_s,'\n   => for model     data:',kt1_m,kt2_m,'\n')
     if (kt1_m >= kt2_s) or (kt1_s >= kt2_m) or (kt2_m <= kt1_s) or (kt2_s <= kt1_m):
         MsgExit('No time overlap for Model and Track file')
     return max(kt1_s, kt1_m), min(kt2_s, kt2_m)
 
 
-def scan_idx_sat( itsat, it1, it2 ):
+def scan_idx( ivt, it1, it2 ):
     '''
     # Finding indices when we can start and stop when scanning the track file:
+    # * ivt: vector containing dates as Epoch UNIX time [integer]
+    # * it1, it2: the 2 dates of interest (first and last) [integer]
+    # RETURNS: the two corresponding position indices 
     '''
-    Nt0 = len(itsat)
-    for kt1 in range(  0, Nt0-1):
-        if  (itsat[kt1] <= it1) and (itsat[kt1+1] > it1): break
-    for kt2 in range(kt1, Nt0-1):
-         if (itsat[kt2] <= it2) and (itsat[kt2+1] > it2): break
+    nt = len(ivt)
+    for kt1 in range(  0, nt-1):
+        if  (ivt[kt1] <= it1) and (ivt[kt1+1] > it1): break
+    for kt2 in range(kt1, nt-1):
+         if (ivt[kt2] <= it2) and (ivt[kt2+1] > it2): break
     kt2 = kt2 + 1
-    #
     return kt1, kt2
 
 
@@ -293,3 +323,165 @@ def PlotMesh( pcoor_trg, Ys, Xs, isrc_msh, wghts, fig_name='mesh.png' ):
     ax1.legend(loc='center left', bbox_to_anchor=(1.07, 0.5), fancybox=True)
     plt.savefig(fig_name, dpi=100, transparent=False)
     plt.close(1)
+
+
+
+
+# C L A S S E S
+
+
+    
+class ModGrid:
+    '''
+    # Will provide: size=nt, shape=(ny,nx), time[:], lat[:,:], lon[:,:] of Model data...
+    # mask
+    # domain_bounds (= [ lat_min, lon_min, lat_max, lon_max ])
+    '''
+    def __init__( self, ncfile, itime1, itime2, nclsm, varlsm ):
+        '''
+        # * ncfile: netCDF file containing satellite track
+        # * itime1: Epoch UNIX time to start getting time from (included) [integer]
+        # * itime2: Epoch UNIX time to stop  getting time from (included) [integer]
+        # * nclsm, varlsm: file and variable to get land-sea mask...
+        '''
+        from .ncio import GetTimeEpochVector, GetModelCoor, GetModelLSM, Save2Dfield
+
+        chck4f( ncfile )
+
+        self.file = ncfile
+        
+        ivt = GetTimeEpochVector( ncfile )
+        jt1, jt2 = scan_idx( ivt, itime1, itime2 )
+        self.size = jt2 - jt1 + 1        
+        self.time = GetTimeEpochVector( ncfile, kt1=jt1, kt2=jt2 )
+
+        self.lat  =          GetModelCoor( ncfile, 'latitude' )
+        self.lon  = nmp.mod( GetModelCoor( ncfile, 'longitude') , 360. )
+        if self.lat.shape != self.lon.shape: MsgExit('[SatTrack()] => lat and lon disagree in shape')
+        self.shape = self.lat.shape
+
+
+        # Land-sea mask
+        chck4f( nclsm )
+        self.mask = GetModelLSM( nclsm, varlsm ) ; 
+        if self.mask.shape != self.shape: MsgExit('model land-sea mask has a wrong shape')
+        if ldebug: Save2Dfield( 'mask_model.nc', self.mask, name='mask' )
+        
+        # Horizontal resolution
+        self.HResDeg = GridResolution( self.lon )
+        if self.HResDeg>5. or self.HResDeg<0.001: MsgExit('Model resolution found is surprising, prefer to stop => check "GetModelResolution()" in utils.py')        
+        self.HResKM  = self.HResDeg*deg2km
+
+        # Globality and East-West periodicity ?
+        self.IsLonGlobal, self.l360, lon_min, lon_max = IsGlobalLongitudeWise( self.lon, resd=self.HResDeg )
+        if self.IsLonGlobal:
+            self.EWPer = IsEastWestPeriodic( self.lon )
+        else:
+            self.EWPer = -1
+
+        lat_min = nmp.amin(self.lat)
+        lat_max = nmp.amax(self.lat)
+
+        # Local distortion angle:
+        self.xangle = GridAngle( self.lat, self.lon )
+        if ldebug: Save2Dfield( 'model_grid_disortion.nc', self.xangle, name='angle', mask=self.mask )
+        
+
+        
+        # Summary:
+        print('\n *** About model gridded (source) domain:')
+        print('     * shape = ',self.shape)
+        print('     * horizontal resolution: ',self.HResDeg,' degrees or ',self.HResKM,' km')
+        print('     * lon_min, lon_max = ', lon_min, lon_max)
+        print('     * Is this a global domain w.r.t longitude: ', self.IsLonGlobal)
+        if self.IsLonGlobal:
+            print('       ==> East West periodicity: ', (self.EWPer>=0), ', with an overlap of ',self.EWPer,' points')
+        else:
+            print('       ==> this is a regional domain')
+            if self.l360:
+                print('       ==> working in the [0:360] frame...')
+            else:
+                print('       ==> working in the [-180:180] frame...')
+        print('     * lat_min, lat_max = ', round(lat_min,2), round(lat_max,2))
+        print('     * number of time records of interest for the interpolation to come: ', self.size)
+        print('       ==> time record indices: '+str(jt1)+' to '+str(jt2)+', included\n')
+
+        self.domain_bounds = [ lat_min, lon_min, lat_max, lon_max ]
+
+
+
+
+
+
+
+class SatTrack:
+    '''
+    # Will provide: size, time[:], lat[:], lon[:] of Satellite track
+    '''
+    def __init__( self, ncfile, itime1, itime2, Np=0, domain_bounds=[-90.,0. , 90.,360.], l_0_360=True ):
+        '''
+        # *  ncfile: netCDF file containing satellite track
+        # *  itime1: Epoch UNIX time to start getting time from (included) [integer]
+        # *  itime2: Epoch UNIX time to stop  getting time from (included) [integer]
+        # ** Np:     number of points (size) of track in netCDF file...
+        # ** domain_bounds: bound of region we are interested in => [ lat_min, lon_min, lat_max, lon_max ]
+        '''
+        from .ncio import GetTimeEpochVector, GetSatCoord
+
+        chck4f( ncfile )
+
+        self.file = ncfile
+
+        print(' *** [SatTrack()] Analyzing the time vector in '+ncfile+' ...')
+        if Np<2500:
+            # Can afford to read whole time vector, not a problem with such as small of number of records to read
+            ivt = GetTimeEpochVector( ncfile, lquiet=True )
+            jt1, jt2 = scan_idx( ivt, itime1, itime2 )
+        else:
+            # Subsampling with increment of 500 for first pass...
+            kss = 500
+            ivt = GetTimeEpochVector( ncfile, isubsamp=kss, lquiet=True ) ; # WAY faster to read a subsampled array with NetCDF-4 !
+            j1, j2 = scan_idx( ivt, itime1, itime2 )
+            j1 = j1*kss ; j2 = j2*kss ; # shorter new range in which to search
+            ivt = GetTimeEpochVector( ncfile, kt1=j1, kt2=j2, lquiet=True ) ; # reading without subsampling but a shorter slice now!
+            jt1, jt2 = scan_idx( ivt, itime1, itime2 )
+            jt1 = jt1+j1 ; jt2 = jt2+j1 ; # convert in term of whole length
+            del j1, j2, kss
+        
+        nt = jt2 - jt1 + 1        
+
+        self.jt1   = jt1
+        self.jt2   = jt2
+        
+        vtime = GetTimeEpochVector( ncfile, kt1=jt1, kt2=jt2 )
+        vlat  =        GetSatCoord( ncfile, 'latitude' , jt1,jt2 )
+        vlon  =        GetSatCoord( ncfile, 'longitude', jt1,jt2 )
+
+        # Make sure we are in the same convention as model data
+        # (model data can be in [-180:180] range if regional domain that crosses Greenwhich meridian...
+        if l_0_360:
+            vlon = nmp.mod( vlon, 360. )
+        else:
+            vlon = degE_to_degWE_vctr( vlon )
+            
+        #print(' lolo: track size before removing points outside of model domain: '+str(len(vtime)))
+        [ ymin,xmin , ymax,xmax ] = domain_bounds
+        #print('lolo: lat_min, lat_max =', ymin, ymax)
+        #print('lolo: lon_min, lon_max =', xmin, xmax)
+        keepit = nmp.where( (vlat[:]>=ymin) & (vlat[:]<=ymax) & (vlon[:]>=xmin) & (vlon[:]<=xmax) )
+        #print(' lolo: keepit =', keepit )
+
+        self.time  = vtime[keepit]
+        self.lat   =  vlat[keepit]
+        self.lon   =  vlon[keepit]
+        
+        self.size = len(self.time)
+        self.keepit = keepit
+
+        del vtime, vlat, vlon
+        #print(' lolo: track size AFTER removing points outside of model domain: '+str(self.size))
+        
+        print('\n *** About satellite track (target) domain:')
+        print('     * number of time records of interest for the interpolation to come: ', self.size)
+        print('       ==> time record indices: '+str(jt1)+' to '+str(jt2)+', included\n')
+        
