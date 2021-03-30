@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
-
-############################################################################
+#
+#   ///// https://github.com/brodeau/gonzag \\\\\
 #
 #       L. Brodeau, 2021
 #
@@ -120,7 +120,7 @@ def Model2SatTrack( MG, name_ssh_mod, ST, name_ssh_sat, file_out='mod2sat.nc' ):
             Xa = (Xm2 - Xm1) / float(MG.time[ktm2] - MG.time[ktm1])
 
         # Linear interpolation of field at time itt:
-        if jt%if_talk==0: print('   => Model data is interpolated at current time out of model records '+str(ktm1+1)+' & '+str(ktm2+1))
+        if jt%if_talk==0: print('   => Model data is interpolated at current time out of model records '+str(ktm1)+' & '+str(ktm2))
         Xm = Xm1[:,:] + Xa[:,:]*float(itt - MG.time[ktm1])
 
         [ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ] = BT.SM[jt,:,:]

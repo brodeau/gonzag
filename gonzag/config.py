@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 #
+#   ///// https://github.com/brodeau/gonzag \\\\\
+#
 #       L. Brodeau, 2021
+#
 ############################################################################
 
 ldebug = True

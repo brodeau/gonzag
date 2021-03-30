@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 #
+#   ///// https://github.com/brodeau/gonzag \\\\\
+#
 #       L. Brodeau, 2021
+#
 ############################################################################
 
 from sys import exit
@@ -173,17 +176,22 @@ def IsGlobalLongitudeWise( X, resd=1. ):
 
 
 
-def GetEpochTimeOverlap( irange_sat, irange_mod ):
+def GetEpochTimeOverlap( ncfile_sat, ncfile_mod ):
     '''
     # * irange_sat: time coverage in epoch Unix time for satellite data: (int,int)
     # * irange_sat: time coverage in epoch Unix time for model     data: (int,int)
     '''
+    from .ncio import GetTimeInfo
+    #
+    nts, irange_sat = GetTimeInfo( ncfile_sat )
+    ntm, irange_mod = GetTimeInfo( ncfile_mod )
+    #
     (kt1_s,kt2_s) = irange_sat
     (kt1_m,kt2_m) = irange_mod
     if ldebug: print('\n *** [GetEpochTimeOverlap()] Earliest/latest dates:\n   => for satellite data:',kt1_s,kt2_s,'\n   => for model     data:',kt1_m,kt2_m,'\n')
     if (kt1_m >= kt2_s) or (kt1_s >= kt2_m) or (kt2_m <= kt1_s) or (kt2_s <= kt1_m):
         MsgExit('No time overlap for Model and Track file')
-    return max(kt1_s, kt1_m), min(kt2_s, kt2_m)
+    return (max(kt1_s, kt1_m), min(kt2_s, kt2_m)), (nts, ntm)
 
 
 def scan_idx( ivt, it1, it2 ):

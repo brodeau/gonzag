@@ -46,13 +46,9 @@ if __name__ == '__main__':
     file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mod, name_lsm_mod = argument_parsing()
 
     # Time overlap between model and satellite data ?
-    Nts, dt_range_s, it_range_s = gz.GetTimeInfo( file_sat )
-    Ntm, dt_range_m, it_range_m = gz.GetTimeInfo( file_mod )
-    #
-    it1, it2 = gz.GetEpochTimeOverlap( it_range_s, it_range_m )
+    (it1,it2), (Nts,Ntm) = gz.GetEpochTimeOverlap( file_sat , file_mod )
     print(' *** Time overlap between model and satellite in UNIX epoch time: it1, it2', it1,'--',it2)
     print('   => UTC: "'+gz.EpochT2Str(it1)+'" to "'+gz.EpochT2Str(it2)+'"\n')
-    
 
 
     print('\n\n\n #####   M O D E L   2 D + T   D O M A I N   a.k.a.  S O U R C E   #####\n')
@@ -65,6 +61,9 @@ if __name__ == '__main__':
     
     print('\n\n\n #####   S A T E L L I T E   1 D   T R A C K   a.k.a.  T A R G E T   #####\n')
 
+
+    #LOLO: we must know Nts !!!
+    
     SatelliteTrack = gz.SatTrack( file_sat, it1, it2, Np=Nts, domain_bounds=ModelGrid.domain_bounds, l_0_360=ModelGrid.l360 )
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
-
-############################################################################
+#
+#   ///// https://github.com/brodeau/gonzag \\\\\
 #
 #       L. Brodeau, 2021
 #
@@ -45,7 +45,8 @@ def GetTimeInfo( ncfile ):
     it2 = timegm( dtm.strptime( dt2.strftime(cfrmt) , cfrmt ).timetuple() )
     if ldebug: print('   => first and last time records: ',dt1,'--',dt2,' (UNIX epoch: ', it1,'--',it2,')\n')
     #
-    return nt, (dt1,dt2), (it1,it2)
+    #return nt, (dt1,dt2), (it1,it2)
+    return nt, (it1,it2)
 
 
 def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
