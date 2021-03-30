@@ -10,7 +10,7 @@ non-regular structured gridded domain of an OGCM onto a satellite track.  The
 satellite track is provided as time-series of the form time(t), longitude(t),
 latitude(t), as usually found in along-track satellite data product.
 
-Both SSH `2D+time` data and along track data are provided as netCDF files and must
+Both SSH `2D+time` data of the model and along track data of the satellite are provided as netCDF files (soon Zarr!) and must
 share a common time-period.
 
 2D space interpolation is performed through the bilinear method.
