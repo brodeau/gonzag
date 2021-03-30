@@ -61,9 +61,6 @@ if __name__ == '__main__':
     
     print('\n\n\n #####   S A T E L L I T E   1 D   T R A C K   a.k.a.  T A R G E T   #####\n')
 
-
-    #LOLO: we must know Nts !!!
-    
     SatelliteTrack = gz.SatTrack( file_sat, it1, it2, Np=Nts, domain_bounds=ModelGrid.domain_bounds, l_0_360=ModelGrid.l360 )
 
 
