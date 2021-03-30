@@ -155,12 +155,14 @@ def IsGlobalLongitudeWise( X, resd=1. ):
     imin = nmp.argmin(X)%nx
     imax = nmp.argmax(X)%nx
     #
-    xminB = nmp.amin(degE_to_degWE_vctr(X)) ; # in [-180:+180] frame...
-    xmaxB = nmp.amax(degE_to_degWE_vctr(X)) ; #     "      "    
+    xb = degE_to_degWE_vctr(X)
+    xminB = nmp.amin(xb) ; # in [-180:+180] frame...
+    xmaxB = nmp.amax(xb) ; #     "      "    
     #
     l360    = True   ; # we'll be in the [0:360] frame...
-    lglobal = False    
-    if xmin<1.5*resd and xmax>360.-1.5*resd:
+    lglobal = False
+    #
+    if (xmin<1.5*resd and xmax>360.-1.5*resd) and (imax > imin):
         # Global longitude domain
         lglobal = True
         xmin=0. ; xmax=360.
@@ -171,6 +173,7 @@ def IsGlobalLongitudeWise( X, resd=1. ):
         xmin = xminB
         xmax = xmaxB
     #
+    del xb
     return lglobal, l360, xmin, xmax
 
 
