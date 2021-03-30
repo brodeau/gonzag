@@ -9,11 +9,10 @@
 
 import time ; # to report execution speed of certain parts of the code...
 #
-from .config import ldebug, if_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_save_track_on_model_grid, l_plot_meshes, rmissval
+from .config import IsZarr, ldebug, if_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_save_track_on_model_grid, l_plot_meshes, rmissval
 from .utils  import *
 from .bilin_mapping import BilinTrack
-#
-from .ncio   import GetModel2DVar, Save2Dfield, GetSatSSH, SaveTimeSeries
+
 
 
 
@@ -24,6 +23,11 @@ def Model2SatTrack( MG, name_ssh_mod, ST, name_ssh_sat, file_out='mod2sat.nc' ):
     # ST: Satellite track rid of unneeded points => "SatTrack" object (util.py)
     #
     '''
+    # To be replaced with test on file extension of MG.file & ST.file:
+    if not IsZarr:        
+        from .ncio   import GetModel2DVar, Save2Dfield, GetSatSSH, SaveTimeSeries        
+
+        
     (Nj,Ni) = MG.shape
 
     d_found_km = rfactor*MG.HResDeg*deg2km

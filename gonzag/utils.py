@@ -10,7 +10,7 @@
 from sys import exit
 from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 import numpy as nmp
-from .config import ldebug, R_eq, R_pl, deg2km
+from .config import IsZarr, ldebug, R_eq, R_pl, deg2km
 
 def MsgExit( cmsg ):
     print('\n ERROR: '+cmsg+' !\n')
@@ -181,7 +181,8 @@ def GetEpochTimeOverlap( ncfile_sat, ncfile_mod ):
     # * irange_sat: time coverage in epoch Unix time for satellite data: (int,int)
     # * irange_sat: time coverage in epoch Unix time for model     data: (int,int)
     '''
-    from .ncio import GetTimeInfo
+    if not IsZarr:
+        from .ncio import GetTimeInfo
     #
     nts, irange_sat = GetTimeInfo( ncfile_sat )
     ntm, irange_mod = GetTimeInfo( ncfile_mod )
@@ -352,7 +353,8 @@ class ModGrid:
         # * itime2: Epoch UNIX time to stop  getting time from (included) [integer]
         # * nclsm, varlsm: file and variable to get land-sea mask...
         '''
-        from .ncio import GetTimeEpochVector, GetModelCoor, GetModelLSM, Save2Dfield
+        if not IsZarr:
+            from .ncio import GetTimeEpochVector, GetModelCoor, GetModelLSM, Save2Dfield
 
         chck4f( ncfile )
 
@@ -394,7 +396,8 @@ class ModGrid:
         self.xangle = GridAngle( self.lat, self.lon )
         if ldebug: Save2Dfield( 'model_grid_disortion.nc', self.xangle, name='angle', mask=self.mask )
         
-
+        self.domain_bounds = [ lat_min, lon_min, lat_max, lon_max ]
+        
         
         # Summary:
         print('\n *** About model gridded (source) domain:')
@@ -414,7 +417,7 @@ class ModGrid:
         print('     * number of time records of interest for the interpolation to come: ', self.size)
         print('       ==> time record indices: '+str(jt1)+' to '+str(jt2)+', included\n')
 
-        self.domain_bounds = [ lat_min, lon_min, lat_max, lon_max ]
+
 
 
 
@@ -434,7 +437,8 @@ class SatTrack:
         # ** Np:     number of points (size) of track in netCDF file...
         # ** domain_bounds: bound of region we are interested in => [ lat_min, lon_min, lat_max, lon_max ]
         '''
-        from .ncio import GetTimeEpochVector, GetSatCoord
+        if not IsZarr:
+            from .ncio import GetTimeEpochVector, GetSatCoord
 
         chck4f( ncfile )
 

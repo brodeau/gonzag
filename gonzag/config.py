@@ -9,6 +9,8 @@
 
 ldebug = True
 
+IsZarr = False ; # A VIRER quand test sur extensions fichier prete!
+
 if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
 
 l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `if_talk` frequency
