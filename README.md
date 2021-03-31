@@ -38,10 +38,9 @@ The following Python3 modules/packages are needed:
 * `matplotlib`
 <br>
 
+
+
 ## How
-
-
-
 
 <!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png)  -->
 

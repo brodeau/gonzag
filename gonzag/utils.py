@@ -406,7 +406,6 @@ class ModGrid:
         print('\n *** About model gridded (source) domain:')
         print('     * shape = ',self.shape)
         print('     * horizontal resolution: ',self.HResDeg,' degrees or ',self.HResKM,' km')
-        print('     * lon_min, lon_max = ', lon_min, lon_max)
         print('     * Is this a global domain w.r.t longitude: ', self.IsLonGlobal)
         if self.IsLonGlobal:
             print('       ==> East West periodicity: ', (self.EWPer>=0), ', with an overlap of ',self.EWPer,' points')
@@ -416,6 +415,7 @@ class ModGrid:
                 print('       ==> working in the [0:360] frame...')
             else:
                 print('       ==> working in the [-180:180] frame...')
+        print('     * lon_min, lon_max = ', round(lon_min,2), round(lon_max,2))
         print('     * lat_min, lat_max = ', round(lat_min,2), round(lat_max,2))
         print('     * number of time records of interest for the interpolation to come: ', self.size)
         print('       ==> time record indices: '+str(jt1)+' to '+str(jt2)+', included\n')
