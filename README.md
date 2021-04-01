@@ -104,13 +104,11 @@ Check out the `xnp_msk.nc` file generated to see nearest-point satellite track o
 
 In the output file `results.nc`, you will find time-series of model `sossheig` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
 
-
-<!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br> -->
 <p align="center">
   <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-WestMed.svg">
 </p>
 
-_Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example..._
+_Figure 3: nearest-points of the satellite track located on the eNATL60 WestMed zoom gridded domain, as computed in this example..._
 
 <br>
 
@@ -143,7 +141,7 @@ In the output file `results.nc`, you will find time-series of model `sossheig` i
   <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
 </p>
 
-_Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example..._
+_Figure 4: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example..._
 
 <br>
 
