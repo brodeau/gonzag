@@ -86,12 +86,42 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
 
 <br>
 
-#### Heavier example, SSH in eNATL60 zoom over the Faroe Islands interpolated to SARAL-AltiKa track
+
+
+#### Hourly February SSH in a West Med Sea box of eNATL60, interpolated to SARAL-AltiKa track
+
+	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -n adt_unfiltered \
+	                            -m sossheig_box_WestMed_eNATL60-BLBT02_20170201-20170228.nc \
+	                            -v sossheig -l 0
+
+* `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc`: the file containing the 1D (time,lat,lon) satellite track
+* `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
+* `-m sossheig_box_WestMed_eNATL60-BLBT02_20170201-20170228.nc` the file containing the 2D+t model variable to interpolate, with 2D latitude and longitude arrays
+* `-v sossheig` name of variable of interest in model file
+* `-l 0` : we get the model land-sea mask from the NetCDF `_FillValue` argument of the field `sossheig`
+
+Check out the `xnp_msk.nc` file generated to see nearest-point satellite track on the 2D model grid.
+
+In the output file `results.nc`, you will find time-series of model `sossheig` interpolated on the satellite track (with bilinear and nearest point interpolation), as well as the original satellite field `adt_unfiltered` for the relevant time slice and region.
+
+
+<!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg) <br> -->
+<p align="center">
+  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-WestMed.svg">
+</p>
+
+_Figure 3: nearest-points of the satellite track located on the eNATL60 Faroe zoom gridded domain, as computed in this example..._
+
+<br>
+
+
+
+
+#### Hourly JFM SSH in eNATL60 zoom over the Faroe Islands, interpolated to SARAL-AltiKa track
 
 	./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc -n adt_unfiltered \
 	                            -m sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -v sossheig \
-	                            -l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -k tmask
-
+	                            -l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc -k tmask -D
 
 * `-s dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
@@ -99,6 +129,7 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
 * `-v sossheig` name of variable of interest in model file
 * `-l sossheig_box_Faroe_eNATL60-BLBT02_20170101-20170331.nc` : we get the model land-sea mask in this file
 * `-k tmask`: name of land-sea mask  in file `dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc` variable is `tmask`
+* `-D` : this option forces the computation of the grid distortion (local rotation) to force extra care in these regions while building bilinear mapping
 
 <!-- * `-p -1` : it's a rectangular extraction, so a regional region, so NO East-West periodicity! -->
 

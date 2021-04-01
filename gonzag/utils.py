@@ -368,7 +368,7 @@ class ModGrid:
         self.time = GetTimeEpochVector( ncfile, kt1=jt1, kt2=jt2 )
 
         self.lat  =          GetModelCoor( ncfile, 'latitude' )
-        self.lon  = nmp.mod( GetModelCoor( ncfile, 'longitude') , 360. )
+        self.lon  = nmp.mod( GetModelCoor( ncfile, 'longitude') , 360. ) ; # We start with working in 
         if self.lat.shape != self.lon.shape: MsgExit('[SatTrack()] => lat and lon disagree in shape')
         self.shape = self.lat.shape
 
@@ -405,8 +405,9 @@ class ModGrid:
             self.xangle = nmp.zeros(self.shape)    
         
         self.domain_bounds = [ lat_min, lon_min, lat_max, lon_max ]
-        
-        
+
+        if not self.l360: self.lon = degE_to_degWE_vctr( self.lon )
+                
         # Summary:
         print('\n *** About model gridded (source) domain:')
         print('     * shape = ',self.shape)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GONZAG_DATA_DIR="/MEDIA/data/gonzag_input"
+GONZAG_DATA_DIR="/MEDIA/data/GONZAG/gonzag_input"
 
 F_S="${GONZAG_DATA_DIR}/dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc"
 #F_S="${GONZAG_DATA_DIR}/saral_short_20170402.nc"

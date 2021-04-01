@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GONZAG_DATA_DIR="/MEDIA/data/gonzag_input"
+GONZAG_DATA_DIR="/MEDIA/data/GONZAG/gonzag_input"
 
 # eNATL60 Faroe:
 F_S="${GONZAG_DATA_DIR}/dt_global_alg_sla_vxxc_JFM_2017_SARAL-Altika.nc"
@@ -14,4 +14,4 @@ V_L="tmask"
 
 ./alongtrack_sat_vs_nemo.py -s ${F_S} -n adt_unfiltered \
                             -m ${F_M} -v sossheig \
-                            -l ${F_L} -k ${V_L}
+                            -l ${F_L} -k ${V_L} -D
