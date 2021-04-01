@@ -63,13 +63,14 @@ Best way is to learn from the examples! So let's perform some of the small follo
 
     ./alongtrack_sat_vs_nemo.py -s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc -n adt_unfiltered \
                                 -m ssh_ORCA1_20170101_20171231_grid_T.nc -v ssh \
-                                -l 0
+                                -l 0 -D
 
 * `-s dt_global_alg_sla_vxxc_20170402_SARAL-Altika.nc`: the file containing the 1D (time,lat,lon) satellite track
 * `-n adt_unfiltered`: name of variable of interest in satellite track file (won't be used for any calculations, will just be saved in the output file together with model-interpolated tracks
 * `-m ssh_ORCA1_20170101_20171231_grid_T.nc` the file containing the 2D+t model variable to interpolate, with 2D latitude and longitude arrays
 * `-v ssh` : name of variable of interest in model file
 * `-l 0` : we get the model land-sea mask from the NetCDF `_FillValue` argument of the field `ssh`
+* `-D` : as a global ORCA-type of grid, ORCA1 grid gets pretty distorded in the North, this option forces the computation of the grid distortion (local rotation) to force extra care in these regions while building bilinear mapping
 <!-- * `-p 2` : ORCA1 is a global NEMO ORCA-type gridded domain, so there is an East-West periodicity of 2 overlapping points ! -->
 
 Check out the `xnp_msk.nc` file generated to see nearest-point satellite track on the 2D model grid.

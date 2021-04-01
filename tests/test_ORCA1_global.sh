@@ -13,6 +13,6 @@ F_L="0"
 
 ./alongtrack_sat_vs_nemo.py -s ${F_S} -n adt_unfiltered \
                             -m ${F_M} -v ssh \
-                            -l ${F_L}
+                            -l ${F_L} -D
 
 

@@ -227,7 +227,6 @@ def GridAngle( xlat, xlon ):
     pio4   = pi/4.
     (Ny,Nx) = nmp.shape(xlat)
     #
-    print(' *** Computing angle distortion of the model grid...')
     angle = nmp.zeros((Ny,Nx))
     for ji in range(Nx):
         for jj in range(1,Ny-1):
@@ -349,7 +348,7 @@ class ModGrid:
     # mask
     # domain_bounds (= [ lat_min, lon_min, lat_max, lon_max ])
     '''
-    def __init__( self, ncfile, itime1, itime2, nclsm, varlsm ):
+    def __init__( self, ncfile, itime1, itime2, nclsm, varlsm, distorded_grid=False ):
         '''
         # * ncfile: netCDF file containing satellite track
         # * itime1: Epoch UNIX time to start getting time from (included) [integer]
@@ -396,8 +395,14 @@ class ModGrid:
         lat_max = nmp.amax(self.lat)
 
         # Local distortion angle:
-        self.xangle = GridAngle( self.lat, self.lon )
-        if ldebug: Save2Dfield( 'model_grid_disortion.nc', self.xangle, name='angle', mask=self.mask )
+        self.IsDistorded = distorded_grid
+        if distorded_grid:
+            print(' *** Computing angle distortion of the model grid ("-D" option invoked)...')
+            self.xangle = GridAngle( self.lat, self.lon )
+            if ldebug: Save2Dfield( 'model_grid_disortion.nc', self.xangle, name='angle', mask=self.mask )            
+        else:
+            print(' *** Skipping computation of angle distortion of the model grid! ("-D" option not invoked)...')
+            self.xangle = nmp.zeros(self.shape)    
         
         self.domain_bounds = [ lat_min, lon_min, lat_max, lon_max ]
         
@@ -417,6 +422,7 @@ class ModGrid:
                 print('       ==> working in the [-180:180] frame...')
         print('     * lon_min, lon_max = ', round(lon_min,2), round(lon_max,2))
         print('     * lat_min, lat_max = ', round(lat_min,2), round(lat_max,2))
+        print('     * should we pay attention to possible STRONG local distorsion in the grid: ', self.IsDistorded)
         print('     * number of time records of interest for the interpolation to come: ', self.size)
         print('       ==> time record indices: '+str(jt1)+' to '+str(jt2)+', included\n')
 
