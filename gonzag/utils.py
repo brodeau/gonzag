@@ -455,6 +455,10 @@ class SatTrack:
         self.file = ncfile
 
         print(' *** [SatTrack()] Analyzing the time vector in '+ncfile+' ...')
+
+        import time
+        startTime = time.time()
+        
         if Np<2500:
             # Can afford to read whole time vector, not a problem with such as small of number of records to read
             ivt = GetTimeEpochVector( ncfile, lquiet=True )
@@ -474,8 +478,12 @@ class SatTrack:
 
         self.jt1   = jt1
         self.jt2   = jt2
-        
+
         vtime = GetTimeEpochVector( ncfile, kt1=jt1, kt2=jt2 )
+        time_read_time = time.time() - startTime
+
+        print(' *** ROOM FOR IMPROVEMENT => time_read_time =', time_read_time,'\n')
+
         vlat  =        GetSatCoord( ncfile, 'latitude' , jt1,jt2 )
         vlon  =        GetSatCoord( ncfile, 'longitude', jt1,jt2 )
 
