@@ -367,11 +367,28 @@ class ModGrid:
         self.size = jt2 - jt1 + 1        
         self.time = GetTimeEpochVector( ncfile, kt1=jt1, kt2=jt2 )
 
-        self.lat  =          GetModelCoor( ncfile, 'latitude' )
-        self.lon  = nmp.mod( GetModelCoor( ncfile, 'longitude') , 360. ) ; # We start with working in 
-        if self.lat.shape != self.lon.shape: MsgExit('[SatTrack()] => lat and lon disagree in shape')
+        
+        zlat =          GetModelCoor( ncfile, 'latitude' )
+        zlon = nmp.mod( GetModelCoor( ncfile, 'longitude') , 360. )
+        if len(zlat.shape)==1 and len(zlon.shape)==1:
+            # Must build the 2D version:
+            print(' *** Model latitude and longitude arrays are 1D => building the 2D version!')
+            ny = len(zlat) ;  nx = len(zlon)
+            xlat = nmp.zeros((ny,nx))
+            xlon = nmp.zeros((ny,nx))
+            for jx in range(nx): xlat[:,jx] = zlat[:]
+            for jy in range(ny): xlon[jy,:] = zlon[:]
+            self.lat = xlat
+            self.lon = xlon
+            del xlat, xlon
+        else:
+            # Already 2D:
+            if zlat.shape != zlon.shape: MsgExit('[SatTrack()] => lat and lon disagree in shape')
+            self.lat = zlat
+            self.lon = zlon            
+        del zlat, zlon
+        
         self.shape = self.lat.shape
-
 
         # Land-sea mask
         chck4f( nclsm )
@@ -448,7 +465,7 @@ class SatTrack:
         # ** domain_bounds: bound of region we are interested in => [ lat_min, lon_min, lat_max, lon_max ]
         '''
         if not IsZarr:
-            from .ncio import GetTimeEpochVector, GetSatCoord
+            from .ncio import GetTimeEpochVector, GetSatCoor
 
         chck4f( ncfile )
 
@@ -484,8 +501,8 @@ class SatTrack:
 
         print(' *** ROOM FOR IMPROVEMENT => time_read_time =', time_read_time,'\n')
 
-        vlat  =        GetSatCoord( ncfile, 'latitude' , jt1,jt2 )
-        vlon  =        GetSatCoord( ncfile, 'longitude', jt1,jt2 )
+        vlat  =        GetSatCoor( ncfile, 'latitude' , jt1,jt2 )
+        vlon  =        GetSatCoor( ncfile, 'longitude', jt1,jt2 )
 
         # Make sure we are in the same convention as model data
         # (model data can be in [-180:180] range if regional domain that crosses Greenwhich meridian...

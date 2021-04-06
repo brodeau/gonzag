@@ -12,6 +12,7 @@ from netCDF4 import Dataset, num2date, default_fillvals
 from calendar import timegm
 from datetime import datetime as dtm
 from .config import ldebug, rmissval
+from .utils  import MsgExit
 
 cabout_nc = 'Created with Gonzag package => https://github.com/brodeau/gonzag'
 
@@ -38,9 +39,9 @@ def ToEpochTime( vt, units, calendar ):
         t0 = vt[0]
     else:
         t0 = vt
-    #print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
+    print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
     t0d = num2date( t0, units, calendar )
-    #print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
+    print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
 
     # We need to round this to the nearest second, because our target format is Epoch time (seconds since 1970)
     # and we want an integer!
@@ -54,8 +55,10 @@ def ToEpochTime( vt, units, calendar ):
         # we are not going to convert the whole array but instead:
         if   units[0:10] == 'days since':
             vdt = (vt[1:] - vt[0])*86400.
-        elif   units[0:13] == 'seconds since':
-            vdt = vt[1:] - vt[0]
+        elif units[0:11] == 'hours since':
+            vdt = (vt[1:] - vt[0])*3600.
+        elif units[0:13] == 'seconds since':
+            vdt =  vt[1:] - vt[0]
         else:
             MsgExit('[ToEpochTime()] => unknown time unit: '+units)
         vet = nmp.zeros(nt)
@@ -153,7 +156,7 @@ def GetModelCoor( ncfile, what ):
     if ncvar == 'none': MsgExit('could not find '+what+' array into model file (possible fix: "cv_coor_test" in "GetModelCoor()")')
     #
     nb_dim = len(id_f.variables[ncvar].dimensions)
-    if   nb_dim==1: MsgExit('FIX ME! Model '+what+' is 1D')
+    if   nb_dim==1: xwhat = id_f.variables[ncvar][:]
     elif nb_dim==2: xwhat = id_f.variables[ncvar][:,:]
     elif nb_dim==3: xwhat = id_f.variables[ncvar][0,:,:]
     else: MsgExit('FIX ME! Model '+what+' has a weird number of dimensions')
@@ -177,8 +180,9 @@ def GetModelLSM( ncfile, what ):
     ndim = len(id_f.variables[ncvar].dimensions)
     if l_fill_val:
         # Mask is constructed out of variable and its missing value
-        if ndim!=3: MsgExit(ncvar+' is expected to have 3 dimensions')
-        xmsk = 1 - id_f.variables[ncvar][0,:,:].mask
+        if not ndim in [3,4]: MsgExit(ncvar+' is expected to have 3 or 4 dimensions')
+        if ndim==3: xmsk = 1 - id_f.variables[ncvar][0,:,:].mask
+        if ndim==4: xmsk = 1 - id_f.variables[ncvar][0,0,:,:].mask
     else:
         # Mask is read in mask file...
         if   ndim==2: xmsk = id_f.variables[ncvar][:,:]
@@ -196,7 +200,12 @@ def GetModel2DVar( ncfile, ncvar, kt=0 ):
     '''
     if ldebug: print(' *** [GetModel2DVar()] Reading model "'+ncvar+'" at record kt='+str(kt)+' in '+ncfile)
     id_f = Dataset(ncfile)
-    x2d = id_f.variables[ncvar][kt,:,:]
+    nb_dim = len(id_f.variables[ncvar].dimensions)
+    if nb_dim==3:
+        x2d = id_f.variables[ncvar][kt,:,:]
+    elif nb_dim==4:
+        x2d = id_f.variables[ncvar][kt,0,:,:] ; # taking surface field!    
+    else: MsgExit('FIX ME! Model "'+ncvar+'" has a weird number of dimensions: '+str(nb_dim))
     id_f.close()
     if ldebug: print('')
     return x2d
@@ -204,7 +213,7 @@ def GetModel2DVar( ncfile, ncvar, kt=0 ):
 
 
 
-def GetSatCoord( ncfile, what,  kt1=0, kt2=0 ):
+def GetSatCoor( ncfile, what,  kt1=0, kt2=0 ):
     '''
     # Get latitude (what=='latitude') OR longitude (what=='longitude') vector
     # in the netCDF file, (from index kt1 to kt2, if these 2 are != 0!)
@@ -213,19 +222,19 @@ def GetSatCoord( ncfile, what,  kt1=0, kt2=0 ):
                               [ 'lon','longitude','LONGITUDE', 'none' ]])
     if   what ==  'latitude': ii = 0
     elif what == 'longitude': ii = 1
-    else: MsgExit('"what" argument of "GetSatCoord()" only supports "latitude" and "longitude"')
+    else: MsgExit('"what" argument of "GetSatCoor()" only supports "latitude" and "longitude"')
     #
     id_f = Dataset(ncfile)
     list_var = list(id_f.variables.keys())
     for ncvar in cv_coor_test[ii,:]:
         if ncvar in list_var: break
-    if ncvar == 'none': MsgExit('could not find '+what+' array into satellite file (possible fix: "cv_coor_test" in "GetSatCoord()")')
+    if ncvar == 'none': MsgExit('could not find '+what+' array into satellite file (possible fix: "cv_coor_test" in "GetSatCoor()")')
     #
-    if ldebug: print(' *** [GetSatCoord()] reading "'+ncvar+'" in '+ncfile+' ...')
+    if ldebug: print(' *** [GetSatCoor()] reading "'+ncvar+'" in '+ncfile+' ...')
     nb_dim = len(id_f.variables[ncvar].dimensions)
     if nb_dim==1:
         if kt1>0 and kt2>0:
-            if kt1>=kt2: MsgExit('mind the indices when calling GetSatCoord()')
+            if kt1>=kt2: MsgExit('mind the indices when calling GetSatCoor()')
             vwhat = id_f.variables[ncvar][kt1:kt2+1]
             cc = 'read...'
         else:
@@ -249,7 +258,7 @@ def GetSatSSH( ncfile, ncvar,  kt1=0, kt2=0, ikeep=[] ):
     if ldebug: print(' *** [GetSatSSH()] Reading satellite "'+ncvar+' in '+ncfile)
     id_f = Dataset(ncfile)
     if kt1>0 and kt2>0:
-        if kt1>=kt2: MsgExit('mind the indices when calling GetSatCoord()')
+        if kt1>=kt2: MsgExit('mind the indices when calling GetSatSSH()')
         vssh = id_f.variables[ncvar][kt1:kt2+1]
     else:
         vssh = id_f.variables[ncvar][:]
