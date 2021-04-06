@@ -12,40 +12,9 @@ from netCDF4 import Dataset, num2date, default_fillvals
 from calendar import timegm
 from datetime import datetime as dtm
 from .config import ldebug, rmissval
-from .util   import MsgExit
 
 cabout_nc = 'Created with Gonzag package => https://github.com/brodeau/gonzag'
 
-
-def GetTimeInfo( ncfile ):
-    '''
-    # Inspect time dimension
-    # Get number of time-records, first and last date
-    # Return them + dates as UNIX epoch time, aka "seconds since 1970-01-01 00:00:00" (integer)
-    '''
-    if ldebug: print(' *** [GetTimeInfo()] Getting calendar/time info in '+ncfile+' ...')
-    id_f = Dataset(ncfile)
-    list_dim = id_f.dimensions.keys()
-    list_var = id_f.variables.keys()
-    for cd in [ 'time', 'time_counter', 'TIME', 'record', 't', 'none' ]:
-        if cd in list_dim: break
-    if cd == 'none': MsgExit('found no time-record dimension in file '+ncfile)
-    if ldebug: print('   => time/record dimension is "'+cd+'"')
-    nt = id_f.dimensions[cd].size
-    cv = cd ; # ASSUMING VAR == DIM !!! Is it bad???
-    if not cv in list_var: MsgExit('name of time variable is different than name of time dimension')
-    clndr = id_f.variables[cv]
-    dt1 = num2date( clndr[0],    clndr.units, clndr.calendar )
-    dt2 = num2date( clndr[nt-1], clndr.units, clndr.calendar )
-    id_f.close()
-    #
-    cfrmt = '%Y-%m-%d %H:%M:%S'
-    it1 = timegm( dtm.strptime( dt1.strftime(cfrmt) , cfrmt ).timetuple() )
-    it2 = timegm( dtm.strptime( dt2.strftime(cfrmt) , cfrmt ).timetuple() )
-    if ldebug: print('   => first and last time records: ',dt1,'--',dt2,' (UNIX epoch: ', it1,'--',it2,')\n')
-    #
-    #return nt, (dt1,dt2), (it1,it2)
-    return nt, (it1,it2)
 
 
 
@@ -62,8 +31,13 @@ def ToEpochTime( vt, units, calendar ):
     '''
     cfrmt = '%Y-%m-%d %H:%M:%S'
     #
-    nt = len(vt)
-    t0  = vt[0]
+    lvect = not (nmp.shape(vt)==())
+    #
+    if lvect:
+        nt = len(vt)
+        t0 = vt[0]
+    else:
+        t0 = vt
     #print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
     t0d = num2date( t0, units, calendar )
     #print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
@@ -73,23 +47,54 @@ def ToEpochTime( vt, units, calendar ):
     rdec = t0d.microsecond*1.E-6
     #print('LOLO: rmicros ', t0d.microsecond ) ; print('LOLO: rdec =', rdec)
     # t0 as "float" UNIX time:
-    t0E = float( timegm( datetime.strptime( t0d.strftime(cfrmt) , cfrmt ).timetuple() ) + rdec )
+    t0E = float( timegm( dtm.strptime( t0d.strftime(cfrmt) , cfrmt ).timetuple() ) + rdec )
     #print(' *** [ToEpochTime()]: intitial date in "Epoch Time" => ', t0E)
 
-    # we are not going to convert the whole array but instead:
-    if   units[0:10] == 'days since':
-        vdt = (vt[1:] - vt[0])*86400.
-    elif   units[0:13] == 'seconds since':
-        vdt = vt[1:] - vt[0]
+    if lvect:
+        # we are not going to convert the whole array but instead:
+        if   units[0:10] == 'days since':
+            vdt = (vt[1:] - vt[0])*86400.
+        elif   units[0:13] == 'seconds since':
+            vdt = vt[1:] - vt[0]
+        else:
+            MsgExit('[ToEpochTime()] => unknown time unit: '+units)
+        vet = nmp.zeros(nt)
+        vet[0]  = t0E
+        vet[1:] = t0E + vdt[:]
+        del vdt
     else:
-        MsgExit('[ToEpochTime()] => unknown time unit: '+units)
-
-    vet = nmp.zeros(nt)
-    vet[0]  = t0E
-    vet[1:] = t0E + vdt[:]
+        vet = t0E
     #
-    del vdt
     return vet
+
+
+def GetTimeInfo( ncfile ):
+    '''
+    # Inspect time dimension
+    # Get number of time-records, first and last date
+    # Return them + dates as UNIX epoch time, aka "seconds since 1970-01-01 00:00:00" (float)
+    '''
+    if ldebug: print(' *** [GetTimeInfo()] Getting calendar/time info in '+ncfile+' ...')
+    id_f = Dataset(ncfile)
+    list_dim = id_f.dimensions.keys()
+    list_var = id_f.variables.keys()
+    for cd in [ 'time', 'time_counter', 'TIME', 'record', 't', 'none' ]:
+        if cd in list_dim: break
+    if cd == 'none': MsgExit('found no time-record dimension in file '+ncfile)
+    if ldebug: print('   => time/record dimension is "'+cd+'"')
+    nt = id_f.dimensions[cd].size
+    cv = cd ; # ASSUMING VAR == DIM !!! Is it bad???
+    if not cv in list_var: MsgExit('name of time variable is different than name of time dimension')
+    clndr = id_f.variables[cv]
+    dt1 = num2date( clndr[0], clndr.units, clndr.calendar ) ; dt2 = num2date( clndr[nt-1], clndr.units, clndr.calendar )
+    rt1 = ToEpochTime( clndr[0],    clndr.units, clndr.calendar )
+    rt2 = ToEpochTime( clndr[nt-1], clndr.units, clndr.calendar )    
+    id_f.close()
+    #
+    if ldebug: print('   => first and last time records: ',dt1,'--',dt2,' (UNIX epoch: ', rt1,'--',rt2,')\n')
+    #
+    return nt, (rt1,rt2)
+
 
 
 
@@ -108,26 +113,27 @@ def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
     for cv in cv_t_test:
         if cv in list_var:
             clndr = id_f.variables[cv]
+            cunt  = clndr.units
+            ccal  = clndr.calendar
             if ltalk: print(' *** [GetTimeEpochVector()] reading "'+cv+'" in '+ncfile+' and converting it to Epoch time...')
             if kt1>0 and kt2>0:
                 if kt1>=kt2: MsgExit('mind the indices when calling GetTimeEpochVector()')
-                vdate = num2date( clndr[kt1:kt2+1:isubsamp], clndr.units, clndr.calendar )
+                #vdate = num2date( clndr[kt1:kt2+1:isubsamp], clndr.units, clndr.calendar )
+                vdate = clndr[kt1:kt2+1:isubsamp]
                 cc = 'read...'
             else:
-                vdate = num2date( clndr[::isubsamp],         clndr.units, clndr.calendar )
+                #vdate = num2date( clndr[::isubsamp],         clndr.units, clndr.calendar )
+                vdate = clndr[::isubsamp]
                 cc = 'in TOTAL!'
             break
     id_f.close()
     if cv == 'none': MsgExit('found no time-record variable in file '+ncfile+' (possible fix: "cv_t_test" in "GetTimeEpochVector()")')
     #
     # Create the Unix Epoch time version:
-    nt = len(vdate)
-    ivt = nmp.zeros(nt, dtype=nmp.int64)
-    cfrmt = '%Y-%m-%d %H:%M:%S'
-    for jt in range(nt): ivt[jt] = timegm( dtm.strptime( vdate[jt].strftime(cfrmt) , cfrmt ).timetuple() )
+    rvte = ToEpochTime( vdate, cunt, ccal )
     #
-    if ltalk: print('   => '+str(nt)+' records '+cc+'\n')
-    return ivt
+    if ltalk: print('   => '+str(len(rvte))+' records '+cc+'\n')
+    return rvte
 
 
 def GetModelCoor( ncfile, what ):

@@ -187,29 +187,29 @@ def GetEpochTimeOverlap( ncfile_sat, ncfile_mod ):
     if not IsZarr:
         from .ncio import GetTimeInfo
     #
-    nts, irange_sat = GetTimeInfo( ncfile_sat )
-    ntm, irange_mod = GetTimeInfo( ncfile_mod )
+    nts, range_sat = GetTimeInfo( ncfile_sat )
+    ntm, range_mod = GetTimeInfo( ncfile_mod )
     #
-    (kt1_s,kt2_s) = irange_sat
-    (kt1_m,kt2_m) = irange_mod
-    if ldebug: print('\n *** [GetEpochTimeOverlap()] Earliest/latest dates:\n   => for satellite data:',kt1_s,kt2_s,'\n   => for model     data:',kt1_m,kt2_m,'\n')
-    if (kt1_m >= kt2_s) or (kt1_s >= kt2_m) or (kt2_m <= kt1_s) or (kt2_s <= kt1_m):
+    (zt1_s,zt2_s) = range_sat
+    (zt1_m,zt2_m) = range_mod
+    if ldebug: print('\n *** [GetEpochTimeOverlap()] Earliest/latest dates:\n   => for satellite data:',zt1_s,zt2_s,'\n   => for model     data:',zt1_m,zt2_m,'\n')
+    if (zt1_m >= zt2_s) or (zt1_s >= zt2_m) or (zt2_m <= zt1_s) or (zt2_s <= zt1_m):
         MsgExit('No time overlap for Model and Track file')
-    return (max(kt1_s, kt1_m), min(kt2_s, kt2_m)), (nts, ntm)
+    return (max(zt1_s, zt1_m), min(zt2_s, zt2_m)), (nts, ntm)
 
 
-def scan_idx( ivt, it1, it2 ):
+def scan_idx( vt, rt1, rt2 ):
     '''
     # Finding indices when we can start and stop when scanning the track file:
-    # * ivt: vector containing dates as Epoch UNIX time [integer]
-    # * it1, it2: the 2 dates of interest (first and last) [integer]
+    # * vt: vector containing dates as Epoch UNIX time [float]
+    # * rt1, rt2: the 2 dates of interest (first and last) [float]
     # RETURNS: the two corresponding position indices 
     '''
-    nt = len(ivt)
+    nt = len(vt)
     for kt1 in range(  0, nt-1):
-        if  (ivt[kt1] <= it1) and (ivt[kt1+1] > it1): break
+        if  (vt[kt1] <= rt1) and (vt[kt1+1] > rt1): break
     for kt2 in range(kt1, nt-1):
-         if (ivt[kt2] <= it2) and (ivt[kt2+1] > it2): break
+         if (vt[kt2] <= rt2) and (vt[kt2+1] > rt2): break
     kt2 = kt2 + 1
     return kt1, kt2
 
@@ -348,11 +348,11 @@ class ModGrid:
     # mask
     # domain_bounds (= [ lat_min, lon_min, lat_max, lon_max ])
     '''
-    def __init__( self, ncfile, itime1, itime2, nclsm, varlsm, distorded_grid=False ):
+    def __init__( self, ncfile, rtu1, rtu2, nclsm, varlsm, distorded_grid=False ):
         '''
         # * ncfile: netCDF file containing satellite track
-        # * itime1: Epoch UNIX time to start getting time from (included) [integer]
-        # * itime2: Epoch UNIX time to stop  getting time from (included) [integer]
+        # * rtu1: Epoch UNIX time to start getting time from (included) [float]
+        # * rtu2: Epoch UNIX time to stop  getting time from (included) [float]
         # * nclsm, varlsm: file and variable to get land-sea mask...
         '''
         if not IsZarr:
@@ -362,8 +362,8 @@ class ModGrid:
 
         self.file = ncfile
         
-        ivt = GetTimeEpochVector( ncfile )
-        jt1, jt2 = scan_idx( ivt, itime1, itime2 )
+        rvt = GetTimeEpochVector( ncfile )
+        jt1, jt2 = scan_idx( rvt, rtu1, rtu2 )
         self.size = jt2 - jt1 + 1        
         self.time = GetTimeEpochVector( ncfile, kt1=jt1, kt2=jt2 )
 
@@ -439,11 +439,11 @@ class SatTrack:
     '''
     # Will provide: size, time[:], lat[:], lon[:] of Satellite track
     '''
-    def __init__( self, ncfile, itime1, itime2, Np=0, domain_bounds=[-90.,0. , 90.,360.], l_0_360=True ):
+    def __init__( self, ncfile, rtu1, rtu2, Np=0, domain_bounds=[-90.,0. , 90.,360.], l_0_360=True ):
         '''
         # *  ncfile: netCDF file containing satellite track
-        # *  itime1: Epoch UNIX time to start getting time from (included) [integer]
-        # *  itime2: Epoch UNIX time to stop  getting time from (included) [integer]
+        # *  rtu1: Epoch UNIX time to start getting time from (included) [float]
+        # *  rtu2: Epoch UNIX time to stop  getting time from (included) [float]
         # ** Np:     number of points (size) of track in netCDF file...
         # ** domain_bounds: bound of region we are interested in => [ lat_min, lon_min, lat_max, lon_max ]
         '''
@@ -461,16 +461,16 @@ class SatTrack:
         
         if Np<2500:
             # Can afford to read whole time vector, not a problem with such as small of number of records to read
-            ivt = GetTimeEpochVector( ncfile, lquiet=True )
-            jt1, jt2 = scan_idx( ivt, itime1, itime2 )
+            rvt = GetTimeEpochVector( ncfile, lquiet=True )
+            jt1, jt2 = scan_idx( rvt, rtu1, rtu2 )
         else:
             # Subsampling with increment of 500 for first pass...
             kss = 500
-            ivt = GetTimeEpochVector( ncfile, isubsamp=kss, lquiet=True ) ; # WAY faster to read a subsampled array with NetCDF-4 !
-            j1, j2 = scan_idx( ivt, itime1, itime2 )
+            rvt = GetTimeEpochVector( ncfile, isubsamp=kss, lquiet=True ) ; # WAY faster to read a subsampled array with NetCDF-4 !
+            j1, j2 = scan_idx( rvt, rtu1, rtu2 )
             j1 = j1*kss ; j2 = j2*kss ; # shorter new range in which to search
-            ivt = GetTimeEpochVector( ncfile, kt1=j1, kt2=j2, lquiet=True ) ; # reading without subsampling but a shorter slice now!
-            jt1, jt2 = scan_idx( ivt, itime1, itime2 )
+            rvt = GetTimeEpochVector( ncfile, kt1=j1, kt2=j2, lquiet=True ) ; # reading without subsampling but a shorter slice now!
+            jt1, jt2 = scan_idx( rvt, rtu1, rtu2 )
             jt1 = jt1+j1 ; jt2 = jt2+j1 ; # convert in term of whole length
             del j1, j2, kss
         

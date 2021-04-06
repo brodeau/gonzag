@@ -7,78 +7,43 @@
 #
 ############################################################################
 
-from sys import exit
+import sys
 import numpy as nmp
+from netCDF4 import Dataset, num2date, default_fillvals
+from datetime import datetime, timedelta
+from calendar import timegm
+from geopy import distance
 
-import gonzag as gz
-from gonzag.config import ldebug
+from gonzag.ncio import ToEpochTime
 
-
-xlon = nmp.array( [ [ 0.,  60., 120., 180., 240., 300. ],
-                    [ 0.,  60., 120., 180., 240., 300. ],
-                    [ 0.,  60., 120., 180., 240., 300. ] ] )
-
-print(' Lon: ', xlon[1,:])
-dr = gz.GridResolution( xlon )
-print('  => res = ', dr)
-print(' is it global ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=dr))
-print(' EW periodicity ===>> ', gz.IsEastWestPeriodic( xlon ),'\n' )
+narg = len(sys.argv)
+if narg != 2:
+    print('Usage: '+sys.argv[0]+' <satellite_file>')
+    sys.exit(0)
+cf_sat  = sys.argv[1]
 
 
-xlon = nmp.array( [ [ 0.,  60., 120., 180., 240., 300., 360. ],
-                    [ 0.,  60., 120., 180., 240., 300., 360. ],
-                    [ 0.,  60., 120., 180., 240., 300., 360. ] ] )
+id_sat = Dataset(cf_sat)
+#
+clndr = id_sat.variables['time']
+vtime = clndr[:]
+vepoch = ToEpochTime( vtime, clndr.units, clndr.calendar )
+#
+vlat  = id_sat.variables['latitude'][:]
+vlon  = id_sat.variables['longitude'][:]
+#
+id_sat.close()
 
-print(' Lon: ', xlon[1,:])
-dr = gz.GridResolution( xlon )
-print('  => res = ', dr)
-print(' is it global ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=dr))
-print(' EW periodicity ===>> ', gz.IsEastWestPeriodic( xlon ),'\n' )
+Nt = len(vtime)
 
+vdt_e = nmp.zeros(Nt-1); #, dtype=nmp.int64)
+vdt_o = nmp.zeros(Nt-1)
+vdr = nmp.zeros(Nt-1)
 
-
-xlon = nmp.array( [ [ 0.,  60., 120., 180., 240., 300., 360., 60. ],
-                    [ 0.,  60., 120., 180., 240., 300., 360., 60. ],
-                    [ 0.,  60., 120., 180., 240., 300., 360., 60. ] ] )
-
-print(' Lon: ', xlon[1,:])
-dr = gz.GridResolution( xlon )
-print('  => res = ', dr)
-print(' is it global ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=dr))
-print(' EW periodicity ===>> ', gz.IsEastWestPeriodic( xlon ),'\n' )
-
-
-
+for jt in range(Nt-1):
+    vdt_o[jt] = 86400.*vtime[jt+1] - 86400.*vtime[jt]
+    vdt_e[jt] = vepoch[jt+1] - vepoch[jt]
+    vdr[jt] = distance.distance( (vlat[jt+1],vlon[jt+1]) , (vlat[jt],vlon[jt])).km
+    print(' jt, Dt [s], Dr [km] =', jt+1, round(vdt_e[jt],2),'s ', round(vdr[jt],2),'km ', round(vdt_o[jt],2),'s ' )
 
 
-
-exit(0)
-
-
-## Global config:
-xlon = nmp.array( [ [ 0.5, 180., 359.5 ] , [ 0.5, 180., 359.5 ] ] )
-print(' ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=1.),'\n' )
-
-
-## Regional domain with Greenwhich meridian inside:
-xlon = nmp.array( [ [ 340., 358., 5. ] , [ 341., 359., 6. ] ] )
-print(' ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=1.) )
-print('   ( must return: False, False, -20.0, 6.0 )\n')
-#exit(0)
-
-## Regional domain that has the -180:+180 tansitiion inside:
-xlon = nmp.array( [ [ 170., 178., 201. ] , [ 169., 181., 200. ] ] )
-print(' ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=1.) )
-print('   ( must return: False, True, 169, 201 )\n')
-
-
-## Normal gentle regional location near 360, no trick:
-xlon = nmp.array( [ [ 299., 324., 350. ] , [ 300., 325., 352. ] ] )
-print(' ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=1.) )
-print('   ( must return: False, True, 299., 352. )\n')
-
-
-## Normal gentle regional location near 0, no trick:
-xlon = nmp.array( [ [ 30., 40., 60. ] , [ 29., 39., 59. ] ] )
-print(' ===>> ', gz.IsGlobalLongitudeWise( xlon, resd=1.) )
-print('   ( must return: False, True, 29., 60. )\n')
