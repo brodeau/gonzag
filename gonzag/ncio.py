@@ -12,10 +12,9 @@ from netCDF4 import Dataset, num2date, default_fillvals
 from calendar import timegm
 from datetime import datetime as dtm
 from .config import ldebug, rmissval
+from .util   import MsgExit
 
 cabout_nc = 'Created with Gonzag package => https://github.com/brodeau/gonzag'
-
-
 
 
 def GetTimeInfo( ncfile ):
@@ -47,6 +46,51 @@ def GetTimeInfo( ncfile ):
     #
     #return nt, (dt1,dt2), (it1,it2)
     return nt, (it1,it2)
+
+
+
+def ToEpochTime( vt, units, calendar ):
+    '''
+    # INPUT:
+    #   * vt: time vector provided as something like: "days since ..."
+    #   * units, calendar:
+    #
+    # OUTPUT:
+    #   * vet: time vector converted to UNIX epoch time,
+    #          aka "seconds since 1970-01-01 00:00:00"
+    #          => as FLOAT !! not INTEGER !!!
+    '''
+    cfrmt = '%Y-%m-%d %H:%M:%S'
+    #
+    nt = len(vt)
+    t0  = vt[0]
+    #print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
+    t0d = num2date( t0, units, calendar )
+    #print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
+
+    # We need to round this to the nearest second, because our target format is Epoch time (seconds since 1970)
+    # and we want an integer!
+    rdec = t0d.microsecond*1.E-6
+    #print('LOLO: rmicros ', t0d.microsecond ) ; print('LOLO: rdec =', rdec)
+    # t0 as "float" UNIX time:
+    t0E = float( timegm( datetime.strptime( t0d.strftime(cfrmt) , cfrmt ).timetuple() ) + rdec )
+    #print(' *** [ToEpochTime()]: intitial date in "Epoch Time" => ', t0E)
+
+    # we are not going to convert the whole array but instead:
+    if   units[0:10] == 'days since':
+        vdt = (vt[1:] - vt[0])*86400.
+    elif   units[0:13] == 'seconds since':
+        vdt = vt[1:] - vt[0]
+    else:
+        MsgExit('[ToEpochTime()] => unknown time unit: '+units)
+
+    vet = nmp.zeros(nt)
+    vet[0]  = t0E
+    vet[1:] = t0E + vdt[:]
+    #
+    del vdt
+    return vet
+
 
 
 def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
@@ -145,7 +189,7 @@ def GetModel2DVar( ncfile, ncvar, kt=0 ):
     #   Fetches the 2D field "ncvar" at time record kt into "ncfile"
     '''
     if ldebug: print(' *** [GetModel2DVar()] Reading model "'+ncvar+'" at record kt='+str(kt)+' in '+ncfile)
-    id_f = Dataset(ncfile)    
+    id_f = Dataset(ncfile)
     x2d = id_f.variables[ncvar][kt,:,:]
     id_f.close()
     if ldebug: print('')
