@@ -115,7 +115,7 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/ORCA1_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
-_Figure 3: Spectral comparison of the virtual/model-based and satellite tracks._
+_Figure 3: Spectral-analysis comparison of the virtual/model-based and satellite tracks. The tragedy of coarse resolution (1 degree + monthly average): no eddies, no energy!_
 
 <br>
 
@@ -141,7 +141,7 @@ _Figure 4: nearest-points of the satellite track located on the GLORYS12 gridded
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/SouthWestPac_G12_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
-_Figure 5: Spectral comparison of the virtual/model-based and satellite tracks. You can see that despite the relative high resolution of the model (12<sup>th</sup> of a degree + hourly) the absence of tidal motion, and hence internal tides, in GLORYS12, yields a critical lack of energy at smaller scales!_
+_Figure 5: Spectral-analysis comparison of the virtual/model-based and satellite tracks. You can see that despite the relative high resolution of the model (12<sup>th</sup> of a degree + hourly) the absence of tidal motion, and hence internal tides, in GLORYS12, yields a critical lack of energy at smaller scales!_
 
 <br>
 
@@ -168,7 +168,7 @@ _Figure 5: nearest-points of the satellite track located on the eNATL60 zoom, as
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/WestMed_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
-_Figure 6: Spectral comparison of the virtual/model-based and satellite tracks._
+_Figure 6: Spectral-analysis comparison of the virtual/model-based and satellite tracks._
 
 <br>
 
