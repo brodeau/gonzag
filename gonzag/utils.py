@@ -21,23 +21,26 @@ def chck4f( ncfile ):
     if not exists(ncfile):
         MsgExit('File '+ncfile+' does not exist')
 
-def degE_to_degWE( x ):
+def degE_to_degWE( X ):
     '''
     # From longitude in 0 -- 360 frame to -180 -- +180 frame...
     '''
-    return copysign(1., 180.-x)*min(x, abs(x-360.))
+    if nmp.shape( X ) == ():
+        # X is a scalar
+        return     copysign(1., 180.-X)*        min(X,     abs(X-360.))
+    else:
+        # X is an array
+        return nmp.copysign(1., 180.-X)*nmp.minimum(X, nmp.abs(X-360.))
+    
 
-def degE_to_degWE_vctr( X ):
+def EpochT2Str( time ):
     '''
-    # From longitude in 0 -- 360 frame to -180 -- +180 frame...
-    '''
-    return nmp.copysign(1., 180.-X)*nmp.minimum(X, nmp.abs(X-360.))
-
-
-def EpochT2Str( itime ):
-    # Input: UNIX epoch time (integer)
+    # Input: UNIX epoch time (integer or float)
     # Returns: a string of the date understandable by mamals...
+    '''
     from datetime import datetime as dtm
+    #
+    itime = int(round(time,0))
     #
     return dtm.utcfromtimestamp(itime).strftime('%c')
 
@@ -116,9 +119,9 @@ def SearchBoxSize( res_mod, width_box ):
 #    '''
 #    X = nmp.mod(X, 360.) ; # no concern, it should already have been done earlier anyway...
 #    print( 'X =', X)
-#    print( 'X =', degE_to_degWE_vctr(X))
-#    xmin1 = nmp.amin(degE_to_degWE_vctr(X)) ; # in [-180:+180] frame...
-#    xmax1 = nmp.amax(degE_to_degWE_vctr(X)) ; #     "      "
+#    print( 'X =', degE_to_degWE(X))
+#    xmin1 = nmp.amin(degE_to_degWE(X)) ; # in [-180:+180] frame...
+#    xmax1 = nmp.amax(degE_to_degWE(X)) ; #     "      "
 #    xmin2 = nmp.amin(X) ; # in [0:360] frame...
 #    xmax2 = nmp.amax(X) ; #     "     "
 #    print(' xmin2, xmax2 =', xmin2, xmax2 )
@@ -155,7 +158,7 @@ def IsGlobalLongitudeWise( X, resd=1. ):
     imin = nmp.argmin(X)%nx
     imax = nmp.argmax(X)%nx
     #
-    xb = degE_to_degWE_vctr(X)
+    xb = degE_to_degWE(X)
     xminB = nmp.amin(xb) ; # in [-180:+180] frame...
     xmaxB = nmp.amax(xb) ; #     "      "    
     #
@@ -423,7 +426,7 @@ class ModGrid:
         
         self.domain_bounds = [ lat_min, lon_min, lat_max, lon_max ]
 
-        if not self.l360: self.lon = degE_to_degWE_vctr( self.lon )
+        if not self.l360: self.lon = degE_to_degWE( self.lon )
                 
         # Summary:
         print('\n *** About model gridded (source) domain:')
@@ -509,7 +512,7 @@ class SatTrack:
         if l_0_360:
             vlon = nmp.mod( vlon, 360. )
         else:
-            vlon = degE_to_degWE_vctr( vlon )
+            vlon = degE_to_degWE( vlon )
             
         #print(' lolo: track size before removing points outside of model domain: '+str(len(vtime)))
         [ ymin,xmin , ymax,xmax ] = domain_bounds

@@ -14,7 +14,7 @@ from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 import numpy as nmp
 
 from .config  import ldebug
-from .utils   import Haversine, find_j_i_min, degE_to_degWE, degE_to_degWE_vctr
+from .utils   import Haversine, find_j_i_min, degE_to_degWE
 
 
 def Heading( plata,plona, platb,plonb ):
@@ -81,7 +81,7 @@ def AlfaBeta( vy, vx ):
     if l_s_180:
         zvx    = nmp.zeros(5)
         zvx[:] = vx[:]        ;  # back it up...
-        vx[:]  = degE_to_degWE_vctr(zvx[:])
+        vx[:]  = degE_to_degWE(zvx[:])
 
     zres=1000. ; zdx=0.5 ; zdy=0.5 ; rA=0. ; rB=0. ; # Initialisation prior to convergence itterative loop
     jiter=0

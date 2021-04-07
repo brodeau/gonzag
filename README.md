@@ -137,6 +137,15 @@ _Figure 4: nearest-points of the satellite track located on the GLORYS12 gridded
 
 <br>
 
+<p align="center">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/SouthWestPac_G12_MEAN_NEMO--Altimetry_pow-spectrum.svg">
+</p>
+
+_Figure 5: Spectral comparison of the virtual/model-based and satellite tracks. You can see that despite the relative high resolution of the model (12<sup>th</sup> of a degree + hourly) the absence of tidal motion, and hence internal tides, in GLORYS12, yields a critical lack of energy at smaller scales!_
+
+<br>
+
+
 
 #### Example 3: regional hourly SSH of eNATL60 interpolated to Sentinel-3A track
 
