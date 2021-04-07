@@ -393,7 +393,7 @@ class ModGrid:
         # Land-sea mask
         chck4f( nclsm )
         self.mask = GetModelLSM( nclsm, varlsm ) ; 
-        if self.mask.shape != self.shape: MsgExit('model land-sea mask has a wrong shape')
+        if self.mask.shape != self.shape: MsgExit('model land-sea mask has a wrong shape => '+str(self.mask.shape))
         if ldebug: Save2Dfield( 'mask_model.nc', self.mask, name='mask' )
         
         # Horizontal resolution

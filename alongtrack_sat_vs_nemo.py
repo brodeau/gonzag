@@ -16,16 +16,16 @@ def argument_parsing():
     '''
     import argparse as ap
     #
-    parser = ap.ArgumentParser(description='Generate pixel maps of a given scalar.')
+    parser = ap.ArgumentParser(description='I interpolate, in space and time, the SSH (or any other 2D field) from a non-regular structured gridded domain of an OGCM onto a satellite track.')
     requiredNamed = parser.add_argument_group('required arguments')
-    requiredNamed.add_argument('-s', '--fsat', required=True,                help='specify the NEMO netCDF file to read from...')
-    requiredNamed.add_argument('-n', '--vsat', required=True, default="ssh", help='specify the field/diagnostic to plot (ex: SST)')
-    requiredNamed.add_argument('-m', '--fmod', required=True,                help='specify the field/diagnostic to plot (ex: SST)')
-    requiredNamed.add_argument('-v', '--vmod', required=True, default="ssh", help='specify the field/diagnostic to plot (ex: SST)')
+    requiredNamed.add_argument('-s', '--fsat', required=True,                help='satellite alongtrack data NetCDF file to read from')
+    requiredNamed.add_argument('-n', '--vsat', required=True, default="ssh", help='name of field of interest in satellite file (default="ssh")')
+    requiredNamed.add_argument('-m', '--fmod', required=True,                help='model NetCDF file to read from')
+    requiredNamed.add_argument('-v', '--vmod', required=True, default="ssh", help='name of field of interest in model file (default="ssh")')
     #
     #parser.add_argument('-p', '--ewpr', type=int, default=-1, help='East-West periodicity of the model grid (-1 => None ; >=0 => periodicity with overlap of "ewper" points!))')
-    parser.add_argument('-l', '--fmsk' , default="0",         help='specify model grid land-sea mask (<ncfile> or "0" for _FillValue)')
-    parser.add_argument('-k', '--vmsk' , default="tmask",     help='variable name of model grid land-sea mask in')
+    parser.add_argument('-l', '--fmsk' , default="0",         help='land-sea mask on model grid: "-l <ncfile>" or "-l 0" to use "_FillValue" attribute of field of interest')
+    parser.add_argument('-k', '--vmsk' , default="tmask",     help='name of land-sea mask in <ncfile> if "-l <ncfile>" used')
     #
     parser.add_argument('-D','--distgrid', dest='distgrid', action='store_true', help='take into acount possible strong local distorsion of the model grid')
     parser.set_defaults(distgrid=False)
