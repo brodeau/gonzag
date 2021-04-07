@@ -107,7 +107,7 @@ In the output file `results.nc`, you will find time-series of model `ssh` interp
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
 </p>
 
-_Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example..._
+_Figure 2: Nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example..._
 
 <br>
 
@@ -115,7 +115,7 @@ _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded do
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/ORCA1_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
-_Figure 3: Spectral-analysis comparison of the virtual/model-based and satellite tracks. The tragedy of coarse resolution (1 degree + monthly average): no eddies, no energy!_
+_Figure 3: Spectral-analysis comparison of the virtual/model-based and satellite tracks. The tragedy of model data at coarse resolution (1 degree + monthly average): no eddies, no energy!_
 
 <br>
 
@@ -133,7 +133,7 @@ Note: the `-D` option is not used here, because CMEMS provides NEMO-ORCA-based p
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_SouthWestPac_G12.svg">
 </p>
 
-_Figure 4: nearest-points of the satellite track located on the GLORYS12 gridded domain, as computed in this example..._
+_Figure 4: Nearest-points of the satellite track located on the GLORYS12 gridded domain, as computed in this example..._
 
 <br>
 
@@ -160,7 +160,7 @@ Note: the `-D` option is not used here as well, because the eNATL60 is only weak
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-WestMed.svg">
 </p>
 
-_Figure 5: nearest-points of the satellite track located on the eNATL60 zoom, as computed in this example..._
+_Figure 6: Nearest-points of the satellite track located on the eNATL60 zoom, as computed in this example..._
 
 <br>
 
@@ -168,7 +168,7 @@ _Figure 5: nearest-points of the satellite track located on the eNATL60 zoom, as
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/WestMed_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
-_Figure 6: Spectral-analysis comparison of the virtual/model-based and satellite tracks._
+_Figure 7: Spectral-analysis comparison of the virtual/model-based and satellite tracks._
 
 <br>
 
@@ -190,10 +190,17 @@ Here, hourly SSH in a [eNATL60](https://github.com/ocean-next/eNATL60) zoom over
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
 </p>
 
-_Figure 7: nearest-points of the satellite track located on the eNATL60 zoom, as computed in this example..._
+_Figure 8: Nearest-points of the satellite track located on the eNATL60 zoom, as computed in this example..._
 
 <br>
 
+<p align="center">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/Faroe_MEAN_NEMO--Altimetry_pow-spectrum.svg">
+</p>
+
+_Figure 9: Spectral-analysis comparison of the virtual/model-based and satellite tracks. Model with super high resolution and tiny box: large eddies are not represented, energy at smaller scales in excellent agreement with satellite observations!_
+
+<br>
 
 
 
