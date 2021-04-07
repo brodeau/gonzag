@@ -45,7 +45,7 @@ The following Python3 modules/packages are needed:
 <!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png)  -->
 
 <p align="center">
-  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png">
+  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/mesh_jt10500.png">
 </p>
 
 _Figure 1: Example of a plot produced in debug-mode: gonzag lets you know where each nearest- and surrounding- points, as well as the bilinear weights associated to each of the 4 surrounding points, were taken to perform the bilinear interpolation._
@@ -104,14 +104,15 @@ In the output file `results.nc`, you will find time-series of model `ssh` interp
 
 <!-- ![**plot**](https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg) <br> -->
 <p align="center">
-  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
 </p>
 
 _Figure 2: nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example..._
 
+<br>
 
 <p align="center">
-  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/ORCA1_MEAN_NEMO--Altimetry_pow-spectrum.svg">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/ORCA1_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
 _Figure 3: Spectral comparison of the virtual/model-based and satellite tracks._
@@ -129,11 +130,10 @@ Here, hourly SSH in a South-Western Pacific zoom of the GLORYS12 global reanalys
 Note: the `-D` option is not used here, because CMEMS provides NEMO-ORCA-based products on a regular `lat-lon` grid; besides, on the original ORCA12 grid, it would not have been necessary either as ORCA grids are not distorted in southern mid-latitudes.
 
 <p align="center">
-  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_SouthWestPac_G12.svg">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_SouthWestPac_G12.svg">
 </p>
 
 _Figure 4: nearest-points of the satellite track located on the GLORYS12 gridded domain, as computed in this example..._
-
 
 <br>
 
@@ -148,7 +148,7 @@ Here, hourly SSH in a West Med zoom of the [eNATL60 simulation](https://github.c
 Note: the `-D` option is not used here as well, because the eNATL60 is only weakly distorted over the Med Sea.
 
 <p align="center">
-  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-WestMed.svg">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-WestMed.svg">
 </p>
 
 _Figure 5: nearest-points of the satellite track located on the eNATL60 zoom, as computed in this example..._
@@ -156,12 +156,12 @@ _Figure 5: nearest-points of the satellite track located on the eNATL60 zoom, as
 <br>
 
 <p align="center">
-  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/doc/figs/WestMed_MEAN_NEMO--Altimetry_pow-spectrum.svg">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/WestMed_MEAN_NEMO--Altimetry_pow-spectrum.svg">
 </p>
 
 _Figure 6: Spectral comparison of the virtual/model-based and satellite tracks._
 
-
+<br>
 
 
 #### Example 4 [heavy duty]: regional hourly SSH of eNATL60 interpolated to SARAL track
@@ -178,11 +178,10 @@ Here, hourly SSH in a [eNATL60](https://github.com/ocean-next/eNATL60) zoom over
 
 
 <p align="center">
-  <img width="540" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
+  <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_eNATL60-Faroe.svg">
 </p>
 
-_Figure 7: nearest-points of the satellite track located on the GLORYS12 gridded domain, as computed in this example..._
-
+_Figure 7: nearest-points of the satellite track located on the eNATL60 zoom, as computed in this example..._
 
 <br>
 
