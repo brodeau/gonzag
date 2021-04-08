@@ -24,7 +24,6 @@ def argument_parsing():
     requiredNamed.add_argument('-m', '--fmod', required=True,                help='model NetCDF file to read from')
     requiredNamed.add_argument('-v', '--vmod', required=True, default="ssh", help='name of field of interest in model file (default="ssh")')
     #
-    #parser.add_argument('-p', '--ewpr', type=int, default=-1, help='East-West periodicity of the model grid (-1 => None ; >=0 => periodicity with overlap of "ewper" points!))')
     parser.add_argument('-l', '--fmsk' , default="0",         help='land-sea mask on model grid: "-l <ncfile>" or "-l 0" to use "_FillValue" attribute of field of interest')
     parser.add_argument('-k', '--vmsk' , default="tmask",     help='name of land-sea mask in <ncfile> if "-l <ncfile>" used')
     #
@@ -38,7 +37,6 @@ def argument_parsing():
     #
     flsm = args.fmsk
     vlsm = args.vmsk
-    #ewpr = args.ewpr
     if flsm == "0": flsm = args.fmod ; vlsm = '_FillValue'
     #
     return args.fsat, args.vsat, args.fmod, args.vmod, flsm, vlsm, args.distgrid
@@ -62,6 +60,7 @@ if __name__ == '__main__':
 
     ModelGrid = gz.ModGrid( file_mod, it1, it2, file_lsm_mod, clsm, distorded_grid=l_griddist )
 
+    
 
     print('\n\n\n #####   S A T E L L I T E   1 D   T R A C K   a.k.a.  T A R G E T   #####\n')
 
@@ -69,16 +68,11 @@ if __name__ == '__main__':
                                   domain_bounds=ModelGrid.domain_bounds, l_0_360=ModelGrid.l360 )
 
 
+    
     # Mapping and interpolation:
-
-    ##ii = gz.Model2SatTrack( ModelGrid, name_ssh_mod, SatelliteTrack, name_ssh_sat, file_out='result.nc' )
-
-    print('LOLO: Calling Model2SatTrack')
 
     RES = gz.Model2SatTrack( ModelGrid, name_ssh_mod, SatelliteTrack, name_ssh_sat )
 
-
-    print('LOLO: RES = gz.Model2SatTrack DOne!!!!')
 
     # Save the result into a NetCDF file:
     import numpy as nmp
