@@ -8,7 +8,8 @@
 ############################################################################
 
 import gonzag as gz
-from gonzag.config import ldebug
+from gonzag.config import ldebug, rmissval
+
 
 def argument_parsing():
     '''
@@ -47,7 +48,7 @@ def argument_parsing():
 if __name__ == '__main__':
 
     file_sat,  name_ssh_sat, file_mod, name_ssh_mod, file_lsm_mod, name_lsm_mod, l_griddist = argument_parsing()
-    
+
     # Time overlap between model and satellite data ?
     (it1,it2), (Nts,Ntm) = gz.GetEpochTimeOverlap( file_sat , file_mod )
     print(' *** Time overlap between model and satellite in UNIX epoch time: it1, it2', it1,'--',it2)
@@ -58,9 +59,9 @@ if __name__ == '__main__':
 
     clsm = name_lsm_mod
     if name_lsm_mod=='_FillValue': clsm = name_lsm_mod+'@'+name_ssh_mod
-    
+
     ModelGrid = gz.ModGrid( file_mod, it1, it2, file_lsm_mod, clsm, distorded_grid=l_griddist )
-    
+
 
     print('\n\n\n #####   S A T E L L I T E   1 D   T R A C K   a.k.a.  T A R G E T   #####\n')
 
@@ -69,6 +70,32 @@ if __name__ == '__main__':
 
 
     # Mapping and interpolation:
+
+    ##ii = gz.Model2SatTrack( ModelGrid, name_ssh_mod, SatelliteTrack, name_ssh_sat, file_out='result.nc' )
+
+    print('LOLO: Calling Model2SatTrack')
+
+    RES = gz.Model2SatTrack( ModelGrid, name_ssh_mod, SatelliteTrack, name_ssh_sat )
+
+
+    print('LOLO: RES = gz.Model2SatTrack DOne!!!!')
+
+    # Save the result into a NetCDF file:
+    from numpy       import array
+    from gonzag.ncio import SaveTimeSeries
     
-    ii = gz.Model2SatTrack( ModelGrid, name_ssh_mod, SatelliteTrack, name_ssh_sat, file_out='result.nc' )
+    c1     = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
+    vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           , 'distance' ]
+    vunits = [ 'deg.N'   , 'deg.E'    ,   'm'           ,          'm'          ,    'm'                   ,    'km'    ]
+    vlongN = [ 'Latitude', 'Longitude',  c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data', 'Cumulated distance since first point' ]
+
+
+
+    
+    iw = SaveTimeSeries( RES.time, \
+                         array( [RES.lat, RES.lon, RES.ssh_mod_bl, RES.ssh_mod_np, RES.ssh_sat, RES.distance] ), \
+                         vvar, 'result.nc', \
+                         time_units='seconds since 1970-01-01 00:00:00', \
+                         vunits=vunits, vlnm=vlongN, missing_val=rmissval )
+
 
