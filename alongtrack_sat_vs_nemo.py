@@ -8,7 +8,7 @@
 ############################################################################
 
 import gonzag as gz
-from gonzag.config import ldebug, rmissval
+from gonzag.config import ldebug, rmissval, l_save_track_on_model_grid
 
 
 def argument_parsing():
@@ -81,8 +81,8 @@ if __name__ == '__main__':
     print('LOLO: RES = gz.Model2SatTrack DOne!!!!')
 
     # Save the result into a NetCDF file:
-    from numpy       import array
-    from gonzag.ncio import SaveTimeSeries
+    import numpy as nmp
+    from gonzag.ncio import SaveTimeSeries, Save2Dfield
     
     c1     = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
     vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           , 'distance' ]
@@ -91,11 +91,17 @@ if __name__ == '__main__':
 
 
 
-    
+
     iw = SaveTimeSeries( RES.time, \
-                         array( [RES.lat, RES.lon, RES.ssh_mod_bl, RES.ssh_mod_np, RES.ssh_sat, RES.distance] ), \
+                         nmp.array( [RES.lat, RES.lon, RES.ssh_mod_bl, RES.ssh_mod_np, RES.ssh_sat, RES.distance] ), \
                          vvar, 'result.nc', \
                          time_units='seconds since 1970-01-01 00:00:00', \
                          vunits=vunits, vlnm=vlongN, missing_val=rmissval )
 
 
+
+    if l_save_track_on_model_grid:
+        xmsk_tmp = nmp.zeros(RES.XNPtrack.shape)
+        xmsk_tmp[nmp.where(RES.XNPtrack>-110.)] = 1
+        Save2Dfield( 'xnp_msk.nc', RES.XNPtrack, xlon=ModelGrid.lon, xlat=ModelGrid.lat, name='track', mask=xmsk_tmp )
+        del xmsk_tmp

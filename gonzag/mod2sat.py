@@ -25,8 +25,8 @@ class Model2SatTrack:
         '''
         # To be replaced with test on file extension of MG.file & ST.file:
         if not IsZarr:        
-            from .ncio   import GetModel2DVar, Save2Dfield, GetSatSSH
-            #, SaveTimeSeries        
+            from .ncio   import GetModel2DVar, GetSatSSH
+            #Save2Dfield, SaveTimeSeries        
             
         (Nj,Ni) = MG.shape
     
@@ -64,20 +64,6 @@ class Model2SatTrack:
                         PlotMesh( (ST.lon[jt],ST.lat[jt]), MG.lat, MG.lon, BT.SM[jt,:,:], BT.WB[jt,:], \
                                   fig_name='mesh_jt'+'%5.5i'%(jt)+'.png' )
         #################################################################################################
-    
-        if l_save_track_on_model_grid:
-            # Show the satellite track on the model grid:
-            xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = rmissval
-            for jt in range(Nt):
-                [jj,ji] = BT.NP[jt,:]
-                xnp_msk[jj,ji] = float(jt)
-            xnp_msk[nmp.where(MG.mask==0)] = -100.
-            xmsk_tmp = nmp.zeros((Nj,Ni))
-            xmsk_tmp[nmp.where(xnp_msk>-110.)] = 1
-            Save2Dfield( 'xnp_msk.nc', xnp_msk, xlon=MG.lon, xlat=MG.lat, name='track', mask=xmsk_tmp )
-            del xmsk_tmp
-    
-    
     
         # All bi-linear mapping stuff is done it's time
         # => read satellite SSH at time t_s
@@ -167,20 +153,14 @@ class Model2SatTrack:
         print('\n *** Time report:')
         print('     - Construction of the source-target bilinear mapping took: '+str(round(time_bl_mapping,0))+' s')
         print('     - Interpolation of model data on the '+str(Nt)+' satellite points took: '+str(round(time_bl_interp,0))+' s \n')
-    
-
-        #c1 = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
-        #vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           , 'distance' ]
-        #vunits = [ 'deg.N'   , 'deg.E'    ,   'm'           ,          'm'          ,    'm'                   ,    'km'    ]
-        #vlongN = [ 'Latitude', 'Longitude',  c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data', 'Cumulated distance since first point' ]
-    
-        #if nmp.ma.is_masked(vssh_s):
-        #    idxma = nmp.where( nmp.ma.getmask(vssh_s) )
-        #    vssh_s[idxma] = rmissval
-    
-        #iw = SaveTimeSeries( ST.time, nmp.array( [ST.lat, ST.lon, vssh_m_bl, vssh_m_np, vssh_s, vdistance] ), vvar, file_out, \
-        #                     time_units='seconds since 1970-01-01 00:00:00', \
-        #                     vunits=vunits, vlnm=vlongN, missing_val=rmissval )
 
 
-        
+        if l_save_track_on_model_grid:
+            # Save the satellite nearest-point track on the model grid:
+            xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = rmissval
+            for jt in range(Nt):
+                [jj,ji] = BT.NP[jt,:]
+                xnp_msk[jj,ji] = float(jt)
+            xnp_msk[nmp.where(MG.mask==0)] = -100.
+            #
+            self.XNPtrack = xnp_msk
