@@ -7,13 +7,15 @@
 #
 ############################################################################
 
-ldebug = True
+ldebug = False
+
+ivrb   = 0 ; # level of verbosity... [0-2]
 
 IsZarr = False ; # A VIRER quand test sur extensions fichier prete!
 
-if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
+nb_talk = 25 ; # how many times do you want to see a progression message in long loops ?
 
-l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `if_talk` frequency
+l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `nb_talk` frequency
 
 deg2km = 111.11 ; # Converts degrees to km
 

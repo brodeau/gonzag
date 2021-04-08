@@ -9,7 +9,7 @@
 
 import time ; # to report execution speed of certain parts of the code...
 #
-from .config import IsZarr, ldebug, if_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_save_track_on_model_grid, l_plot_meshes, rmissval
+from .config import IsZarr, ldebug, ivrb, nb_talk, l_plot_meshes, deg2km, rfactor, search_box_w_km, l_save_track_on_model_grid, l_plot_meshes, rmissval
 from .utils  import *
 from .bilin_mapping import BilinTrack
 
@@ -39,6 +39,7 @@ class Model2SatTrack:
         
         Nt = ST.size ; # number of satellit observation point to work with here...
     
+        if_talk = Nt//20
         
         # The BIG GUY:
         startTime = time.time()
@@ -75,7 +76,9 @@ class Model2SatTrack:
         # Time increment on the satellite time:
         ktm1   = 0   ; ktm2   = 0
         ktm1_o = -10 ; ktm2_o = -10
-    
+
+        print('\n *** Starting space-time interpolation of model data onto the '+str(Nt)+' selected track points...')
+        
         startTime = time.time()
     
         for jt in range(Nt):
@@ -91,26 +94,26 @@ class Model2SatTrack:
             ktm1 = kt ; ktm2 = kt+1
     
             if jt%if_talk==0:
-                print('\n *** Satelite time at jt = '+'%5.5i'%(jt)+' ==> ',EpochT2Str(itt), itt)
-                print('   => surounding kt for model: ', ktm1, ktm2, '(',EpochT2Str(MG.time[ktm1]),EpochT2Str(MG.time[ktm2]),') / ', \
+                print('      jt = '+'%5.5i'%(jt)+' => satelite time = '+EpochT2Str(itt))
+                if ivrb>0: print('   => surounding kt for model: ', ktm1, ktm2, '(',EpochT2Str(MG.time[ktm1]),EpochT2Str(MG.time[ktm2]),') / ', \
                       MG.time[ktm1],MG.time[ktm2] )
     
             # If first time we have these ktm1 & ktm2, getting the two surrounding fields:
             if (ktm1>ktm1_o) and (ktm2>ktm2_o):
                 if (ktm1_o == -10) or (ktm1 > ktm2_o):
-                    print(' *** Reading '+name_ssh_mod+' in '+MG.file+'\n    => at ktm1=', ktm1)
+                    if ivrb>0: print(' *** Reading '+name_ssh_mod+' in '+MG.file+'\n    => at ktm1=', ktm1)
                     Xm1 = GetModel2DVar( MG.file, name_ssh_mod, kt=ktm1 )
                 else:
                     Xm1[:,:] = Xm2[:,:]
                 #
-                print(' *** Reading '+name_ssh_mod+' in '+MG.file+'\n    => at ktm2=', ktm2)
+                if ivrb>0: print(' *** Reading '+name_ssh_mod+' in '+MG.file+'\n    => at ktm2=', ktm2)
                 Xm2 = GetModel2DVar( MG.file, name_ssh_mod, kt=ktm2 )
     
                 # slope only needs to be calculated when Xm2 and Xm1 have been updated:
                 Xa = (Xm2 - Xm1) / float(MG.time[ktm2] - MG.time[ktm1])
     
             # Linear interpolation of field at time itt:
-            if jt%if_talk==0: print('   => Model data is interpolated at current time out of model records '+str(ktm1)+' & '+str(ktm2))
+            if ivrb>0 and jt%if_talk==0: print('   => Model data is interpolated at current time out of model records '+str(ktm1)+' & '+str(ktm2))
             Xm = Xm1[:,:] + Xa[:,:]*float(itt - MG.time[ktm1])
     
             [ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ] = BT.SM[jt,:,:]
@@ -125,16 +128,19 @@ class Model2SatTrack:
                 # Bilinear interpolation:
                 Sw = nmp.sum([w1, w2, w3, w4])
                 if abs(Sw-1.)> 0.001:
-                    print('    FLAGGING MISSING VALUE at jt = '+str(jt)+' !!!')
+                    if ivrb>0: print('    FLAGGING MISSING VALUE at jt = '+str(jt)+' !!!')
                 else:
                     vssh_m_bl[jt] = w1*Xm[j1,i1] + w2*Xm[j2,i2] + w3*Xm[j3,i3] + w4*Xm[j4,i4]
     
             ktm1_o = ktm1 ; ktm2_o = ktm2
     
         # end of loop on jt
-    
+        
         time_bl_interp = time.time() - startTime
-    
+
+        print(' *** Space-time interpolation done!\n')
+
+        
         # Distance parcourue since first point:
         for jt in range(1,Nt):
             vdistance[jt] = vdistance[jt-1] + haversine_sclr( ST.lat[jt], ST.lon[jt], ST.lat[jt-1], ST.lon[jt-1] )

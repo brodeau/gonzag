@@ -11,7 +11,7 @@ import numpy as nmp
 from netCDF4 import Dataset, num2date, default_fillvals
 from calendar import timegm
 from datetime import datetime as dtm
-from .config import ldebug, rmissval
+from .config import ldebug, ivrb, rmissval
 from .utils  import MsgExit
 
 cabout_nc = 'Created with Gonzag package => https://github.com/brodeau/gonzag'
@@ -39,17 +39,15 @@ def ToEpochTime( vt, units, calendar ):
         t0 = vt[0]
     else:
         t0 = vt
-    print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
+    if ivrb>0: print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
     t0d = num2date( t0, units, calendar )
-    print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
+    if ivrb>0: print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
 
     # We need to round this to the nearest second, because our target format is Epoch time (seconds since 1970)
     # and we want an integer!
     rdec = t0d.microsecond*1.E-6
-    #print('LOLO: rmicros ', t0d.microsecond ) ; print('LOLO: rdec =', rdec)
     # t0 as "float" UNIX time:
     t0E = float( timegm( dtm.strptime( t0d.strftime(cfrmt) , cfrmt ).timetuple() ) + rdec )
-    #print(' *** [ToEpochTime()]: intitial date in "Epoch Time" => ', t0E)
 
     if lvect:
         # we are not going to convert the whole array but instead:
@@ -118,7 +116,7 @@ def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
             clndr = id_f.variables[cv]
             cunt  = clndr.units
             ccal  = clndr.calendar
-            if ltalk: print(' *** [GetTimeEpochVector()] reading "'+cv+'" in '+ncfile+' and converting it to Epoch time...')
+            if ivrb>0 and ltalk: print(' *** [GetTimeEpochVector()] reading "'+cv+'" in '+ncfile+' and converting it to Epoch time...')
             if kt1>0 and kt2>0:
                 if kt1>=kt2: MsgExit('mind the indices when calling GetTimeEpochVector()')
                 #vdate = num2date( clndr[kt1:kt2+1:isubsamp], clndr.units, clndr.calendar )
@@ -135,7 +133,7 @@ def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
     # Create the Unix Epoch time version:
     rvte = ToEpochTime( vdate, cunt, ccal )
     #
-    if ltalk: print('   => '+str(len(rvte))+' records '+cc+'\n')
+    if ivrb>0 and ltalk: print('   => '+str(len(rvte))+' records '+cc+'\n')
     return rvte
 
 

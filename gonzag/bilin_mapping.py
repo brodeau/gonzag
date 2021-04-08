@@ -13,7 +13,7 @@ from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 
 import numpy as nmp
 
-from .config  import ldebug
+from .config  import ldebug, ivrb
 from .utils   import Haversine, find_j_i_min, degE_to_degWE
 
 
@@ -167,8 +167,8 @@ def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_
         jy, jx = jy+j1, jx+i1 ; # found in the zoom box => translate to indices in whole domain:
     #
     if jy<0 or jx<0 or jy>=Ny or jx>=Nx or igo==5:
-        print(' WARNING: did not find a nearest point for target point ',yT,xT,' !')
-        print('          => last tested distance criterions =', rfnd,' km\n')
+        if ivrb>0: print(' WARNING: did not find a nearest point for target point ',yT,xT,' !')
+        if ivrb>0: print('          => last tested distance criterions =', rfnd,' km\n')
         jy, jx = -1,-1        
     return [jy,jx]
 
@@ -211,9 +211,7 @@ def Iquadran2SrcMesh( jP, iP, Ny, Nx, iqd,  k_ew_per=1 ):
     #  * Nx       : x-size of the source grid, must be provide if k_ew_per >=  0
     '''
     #
-    if not iqd in [1,2,3,4]:
-        print('ERROR: do not call sosie_bilin.Iquadran2SrcMesh() wit a non valid "iquadran"!')
-        sys.exit(0)
+    if not iqd in [1,2,3,4]: MsgExit('[Iquadran2SrcMesh()] non-valid "iquadran" value')
 
     (j2,i2), (j3,i3), (j4,i4) = (-1,-1), (-1,-1), (-1,-1) ; # Flag missing
     
@@ -281,10 +279,11 @@ def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0. ):
     if not -1 in [jPm1, jPp1, iPm1, iPp1]:
         #
         if (iPm1 < 0) or (jPm1 < 0) or (iPp1 > Nx-1):
-            print('WARNING: sosie_bilin.Iquadran() => bound problem => ',xT,yT,Nx,Ny,iP,jP)
-            print('          iPm1, iPp1, Nx =', iPm1, iPp1, Nx)
-            print('          jPm1, jPp1, Ny =', jPm1, jPp1, Ny)
-            print('         => ignoring current nearest point for i,j =', ji, jj, '(of target domain)\n')
+            if ivrb>0:
+                print('WARNING: sosie_bilin.Iquadran() => bound problem => ',xT,yT,Nx,Ny,iP,jP)
+                print('          iPm1, iPp1, Nx =', iPm1, iPp1, Nx)
+                print('          jPm1, jPp1, Ny =', jPm1, jPp1, Ny)
+                print('         => ignoring current nearest point for i,j =', ji, jj, '(of target domain)\n')
             #
         else:
             #
@@ -339,38 +338,24 @@ def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0. ):
                     break
         #
         # Checking the point is inside the polygon pointed by iquadran:
-        if ldebug and (iquadran in [1,2,3,4]):
-            # lilo: test if inside polygon:
-            (j2,i2), (j3,i3), (j4,i4) = Iquadran2SrcMesh( jP, iP, Ny, Nx, iquadran,  k_ew_per=k_ew_per )
-            if -1 in [j2,i2,j3,i3,j4,i4]: MsgExit('you should not see this! #2 [ Iquadran() ]')
-            point = Point(yT,xT)
-            polygon = Polygon([(Ys[jP,iP],Xs[jP,iP]), (Ys[j2,i2],Xs[j2,i2]), (Ys[j3,i3],Xs[j3,i3]), (Ys[j4,i4],Xs[j4,i4])])
-            if not polygon.contains(point):
-                print('WARNING / sosie_bilin.Iquadran(): point not inside polygon!')
-                print(' * Model: jP, iP =', jP, iP, ' GPS => ', Ys[jP,iP], Xs[jP,iP])
-                print('          local distortion of the grid =>', grid_s_angle,' degrees')
-                print(' * Sat:  yT, zT =', yT, zT)
-                print('Headings:')
-                print(' * direction target:      ht =', ht, '    hz =',hz)
-                print(' * direction point above: hN =', hN)
-                print(' * direction point rhs:   hE =', hE)
-                print(' * direction point below: hS =', hS)
-                print(' * direction point lhs:   hW =', hW)
-                print('   iquadran to be used =', iquadran,'\n')
-        #
-        # Final check:
-        #if not iquadran in [1,2,3,4]:
-        #    # Something is wrong!
-        #    print('ERROR / sosie_bilin.Iquadran(): could not find iquadran!'); # => falling back on 0.5,0.5!')
-        #    print(' * Model:jP, iP =', jP, iP, ' GPS => ', Ys[jP,iP], Xs[jP,iP])
-        #    print(' * Sat:  yT, zT =', yT, zT)
-        #    print('Headings:')
-        #    print(' * direction target:      ht =', ht, '    hz =',hz)
-        #    print(' * direction point above: hN =', hN)
-        #    print(' * direction point rhs:   hE =', hE)
-        #    print(' * direction point below: hS =', hS)
-        #    print(' * direction point lhs:   hW =', hW)
-        #    sys.exit(0)
+        if ldebug:
+            if iquadran in [1,2,3,4]:
+                (j2,i2), (j3,i3), (j4,i4) = Iquadran2SrcMesh( jP, iP, Ny, Nx, iquadran,  k_ew_per=k_ew_per )
+                if -1 in [j2,i2,j3,i3,j4,i4]: MsgExit('you should not see this! #2 [ Iquadran() ]')
+                point = Point(yT,xT)
+                polygon = Polygon([(Ys[jP,iP],Xs[jP,iP]), (Ys[j2,i2],Xs[j2,i2]), (Ys[j3,i3],Xs[j3,i3]), (Ys[j4,i4],Xs[j4,i4])])
+                if not polygon.contains(point):
+                    print('WARNING / sosie_bilin.Iquadran(): point not inside polygon!')
+                    print(' * Model: jP, iP =', jP, iP, ' GPS => ', Ys[jP,iP], Xs[jP,iP])
+                    print('          local distortion of the grid =>', grid_s_angle,' degrees')
+                    print(' * Sat:  yT, zT =', yT, zT)
+                    print('Headings:')
+                    print(' * direction target:      ht =', ht, '    hz =',hz)
+                    print(' * direction point above: hN =', hN)
+                    print(' * direction point rhs:   hE =', hE)
+                    print(' * direction point below: hS =', hS)
+                    print(' * direction point lhs:   hW =', hW)
+                    print('   iquadran to be used =', iquadran,'\n')
         #
     return iquadran
 
@@ -493,8 +478,9 @@ class BilinTrack:
         for jt in range(self.Nt):
             ltalk = ((jt+1)%self.ftalk==0)
 
-            if ltalk: print('      +++ Treated point: '+str(jt+1)+'/'+str(self.Nt), \
-                            '\n          ==> Sat. coordinates:    ', round(self.Yt[jt],3), round(self.Xt[jt],3))
+            if ltalk:
+                print('      +++ Treated point: '+str(jt+1)+'/'+str(self.Nt), \
+                      '\n          ==> Sat. coordinates:    ', round(self.Yt[jt],3), round(self.Xt[jt],3))
             
             [jj,ji] = NearestPoint( (self.Yt[jt],self.Xt[jt]), self.Ys, self.Xs, \
                                     rd_found_km=self.rfound, j_prv=jj, i_prv=ji, np_box_r=self.nprad )
@@ -506,8 +492,9 @@ class BilinTrack:
             
             xnp[jt,:] = [jj,ji]
 
-            if ltalk: print('          ==> Model nearest point: ', \
-                            round(self.Ys[jj,ji],3),round(self.Xs[jj,ji]%360.,3),' (',jj,ji,')')
+            if ivrb>0 and ltalk:
+                print('          ==> Model nearest point: ', \
+                      round(self.Ys[jj,ji],3),round(self.Xs[jj,ji]%360.,3),' (',jj,ji,')')
         #
         return xnp
     
