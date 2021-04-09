@@ -95,7 +95,4 @@ if __name__ == '__main__':
 
 
     if l_save_track_on_model_grid:
-        xmsk_tmp = nmp.zeros(RES.XNPtrack.shape)
-        xmsk_tmp[nmp.where(RES.XNPtrack>-110.)] = 1
-        Save2Dfield( 'xnp_msk.nc', RES.XNPtrack, xlon=ModelGrid.lon, xlat=ModelGrid.lat, name='track', mask=xmsk_tmp )
-        del xmsk_tmp
+        Save2Dfield( 'xnp_msk.nc', RES.XNPtrack, xlon=ModelGrid.lon, xlat=ModelGrid.lat, name='track', mask=RES.XNPmask )

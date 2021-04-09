@@ -492,7 +492,7 @@ class BilinTrack:
             
             xnp[jt,:] = [jj,ji]
 
-            if ivrb>0 and ltalk:
+            if ltalk:
                 print('          ==> Model nearest point: ', \
                       round(self.Ys[jj,ji],3),round(self.Xs[jj,ji]%360.,3),' (',jj,ji,')')
         #

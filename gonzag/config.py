@@ -13,7 +13,7 @@ ivrb   = 0 ; # level of verbosity... [0-2]
 
 IsZarr = False ; # A VIRER quand test sur extensions fichier prete!
 
-nb_talk = 25 ; # how many times do you want to see a progression message in long loops ?
+nb_talk = 10 ; # how many times do you want to see a progression message in long loops ?
 
 l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `nb_talk` frequency
 

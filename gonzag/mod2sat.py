@@ -163,10 +163,14 @@ class Model2SatTrack:
 
         if l_save_track_on_model_grid:
             # Save the satellite nearest-point track on the model grid:
-            xnp_msk = nmp.zeros((Nj,Ni)) ; xnp_msk[:,:] = rmissval
+            xnp = nmp.zeros((Nj,Ni)) ; xnp[:,:] = rmissval
             for jt in range(Nt):
                 [jj,ji] = BT.NP[jt,:]
-                xnp_msk[jj,ji] = float(jt)
-            xnp_msk[nmp.where(MG.mask==0)] = -100.
+                xnp[jj,ji] = float(jt)
+            xnp[nmp.where(MG.mask==0)] = -100.
+            xmsk = nmp.zeros((Nj,Ni))
+            xmsk[nmp.where(xnp>-110.)] = 1
+            #xnp = nmp.ma.masked_where(xnp>-110.)
             #
-            self.XNPtrack = xnp_msk
+            self.XNPtrack = xnp
+            self.XNPmask  = xmsk
