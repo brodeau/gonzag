@@ -39,7 +39,7 @@ class Model2SatTrack:
         
         Nt = ST.size ; # number of satellit observation point to work with here...
     
-        if_talk = Nt//20
+        if_talk = Nt//nb_talk
         
         # The BIG GUY:
         startTime = time.time()
