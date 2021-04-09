@@ -79,15 +79,15 @@ if __name__ == '__main__':
     from gonzag.ncio import SaveTimeSeries, Save2Dfield
     
     c1     = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
-    vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_bl', name_ssh_mod+'_np'    , name_ssh_sat           , 'distance' ]
-    vunits = [ 'deg.N'   , 'deg.E'    ,   'm'           ,          'm'          ,    'm'                   ,    'km'    ]
-    vlongN = [ 'Latitude', 'Longitude',  c1+'bilinear'+c2  , c1+'nearest-point'+c2 , 'Input satellite data', 'Cumulated distance since first point' ]
+    vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_np'   , name_ssh_mod+'_bl' , name_ssh_sat          , 'distance'                            ]
+    vunits = [ 'deg.N'   , 'deg.E'    ,          'm'         ,     'm'            ,    'm'                ,    'km'                               ]
+    vlongN = [ 'Latitude', 'Longitude', c1+'nearest-point'+c2,  c1+'bilinear'+c2  , 'Input satellite data', 'Cumulated distance from first point' ]
 
 
 
 
     iw = SaveTimeSeries( RES.time, \
-                         nmp.array( [RES.lat, RES.lon, RES.ssh_mod_bl, RES.ssh_mod_np, RES.ssh_sat, RES.distance] ), \
+                         nmp.array( [RES.lat, RES.lon, RES.ssh_mod_np, RES.ssh_mod, RES.ssh_sat, RES.distance] ), \
                          vvar, 'result.nc', \
                          time_units='seconds since 1970-01-01 00:00:00', \
                          vunits=vunits, vlnm=vlongN, missing_val=rmissval )
@@ -95,4 +95,5 @@ if __name__ == '__main__':
 
 
     if l_save_track_on_model_grid:
-        Save2Dfield( 'xnp_msk.nc', RES.XNPtrack, xlon=ModelGrid.lon, xlat=ModelGrid.lat, name='track', mask=RES.XNPmask )
+        xmsk = 1 - nmp.ma.getmask(RES.XNPtrack).astype(nmp.int8)
+        Save2Dfield( 'xnp_msk.nc', RES.XNPtrack, xlon=ModelGrid.lon, xlat=ModelGrid.lat, name='track', mask=xmsk )

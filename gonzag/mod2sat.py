@@ -151,8 +151,14 @@ class Model2SatTrack:
         self.time       = ST.time
         self.lat        = ST.lat        
         self.lon        = ST.lon
+
+
+        vssh_m_np = nmp.ma.masked_where( vssh_m_np<-1000.,vssh_m_np )
+        vssh_m_bl = nmp.ma.masked_where( vssh_m_bl<-1000.,vssh_m_bl )
+        vssh_s    = nmp.ma.masked_where( vssh_s   <-1000.,vssh_s    )        
+        
         self.ssh_mod_np = vssh_m_np
-        self.ssh_mod_bl = vssh_m_bl
+        self.ssh_mod    = vssh_m_bl
         self.ssh_sat    = vssh_s
         self.distance   = vdistance
         
@@ -167,10 +173,7 @@ class Model2SatTrack:
             for jt in range(Nt):
                 [jj,ji] = BT.NP[jt,:]
                 xnp[jj,ji] = float(jt)
-            xnp[nmp.where(MG.mask==0)] = -100.
-            xmsk = nmp.zeros((Nj,Ni))
-            xmsk[nmp.where(xnp>-110.)] = 1
-            #xnp = nmp.ma.masked_where(xnp>-110.)
+            xnp[nmp.where(MG.mask==0)] = -100. ; # -100 over continents, and not masked!
+            xnp = nmp.ma.masked_where( xnp== rmissval, xnp ) ; # ocean without track points are masked
             #
             self.XNPtrack = xnp
-            self.XNPmask  = xmsk
