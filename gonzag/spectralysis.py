@@ -7,24 +7,7 @@
 #
 ############################################################################
 
-from sys import exit
-#from os import path, getcwd, mkdir
-#import argparse as ap
 import numpy as nmp
-#
-#from netCDF4 import Dataset
-#
-#import matplotlib as mpl
-#mpl.use('Agg')
-#import matplotlib.pyplot as plt
-#import warnings
-#warnings.filterwarnings("ignore")
-#import time
-
-#import matplotlib.dates as mdates
-
-#import climporn as cp
-
 from .config import ivrb
 
 l_tapper      = True ; # apply tappering !
