@@ -12,3 +12,4 @@ from .config import *
 from .utils  import *
 from .bilin_mapping import BilinTrack
 from .mod2sat       import Model2SatTrack
+from .spectralysis  import *
