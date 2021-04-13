@@ -61,13 +61,13 @@ https://drive.google.com/u/1/uc?id=1XZsEp41RckN9ulBDYZ4VFlh8ycvZLbfL&export=down
 
 ### You're more into `jupyter-notebooks`
 
-Try the notebooks into the `notebook` directory.
+Try the notebooks into the `notebook/` directory.
 Currently the [Med-Sea example](https://github.com/brodeau/gonzag/blob/main/notebook/alongtrack_sat_vs_nemo.ipynb).
 
 
 ### You're more into writing scripts
 
-`./alongtrack_sat_vs_nemo.py` is a script that gets the job done!
+`alongtrack_sat_vs_nemo.py` is a script that gets the job done!
 
 ```$ ./alongtrack_sat_vs_nemo.py -h```
 
