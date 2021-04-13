@@ -9,6 +9,7 @@
 
 import numpy as nmp
 from .config import ivrb
+from .utils  import MsgExit
 
 l_tapper      = True ; # apply tappering !
 l_detrend_lin = True ; # apply a linear detrending on data segment before computing spectrum...
@@ -38,7 +39,7 @@ l_detrend_lin = True ; # apply a linear detrending on data segment before comput
 #=============== en of configurable part ================================
 
 
-def FindUnbrokenSegments( VTe, Vd, VM, Vmsk, rcut_time=1.2, rcut_dist=7.8 ):
+def FindUnbrokenSegments( VTe, Vd, VM, rcut_time=1.2, rcut_dist=7.8 ):
     '''
     #   * Vd: full series of cumulated distances in km
     '''
@@ -46,7 +47,8 @@ def FindUnbrokenSegments( VTe, Vd, VM, Vmsk, rcut_time=1.2, rcut_dist=7.8 ):
     # Will extract the N valid data segments:
     nb_seg   = 0
     idx_strt = [] ; # index of first valid point of the segment
-    idx_stop = [] ; # index of last  valid point of the segment    
+    idx_stop = [] ; # index of last  valid point of the segment
+    Vmsk = VM.mask
     jr=0
     while jr < Nr:
         # Ignoring masked values and zeros...
@@ -64,7 +66,7 @@ def FindUnbrokenSegments( VTe, Vd, VM, Vmsk, rcut_time=1.2, rcut_dist=7.8 ):
                 idx_stop.append(jr)
                 if ivrb>1: print(' => and stoping at jt='+str(jr))
         jr = jr+1
-    if len(idx_strt) != nb_seg: cp.MsgExit('[FindUnbrokenSegments()] => len(idx_strt) != nb_seg')
+    if len(idx_strt) != nb_seg: MsgExit('[FindUnbrokenSegments()] => len(idx_strt) != nb_seg')
     return nmp.array(idx_strt, dtype=nmp.int64), nmp.array(idx_stop, dtype=nmp.int64)
 
 
@@ -90,7 +92,7 @@ def SegmentSelection(IS_start, IS_stop, np_valid_seg=100):
     # 1/ ID the continuous segments that have at least "np_valid_seg" points
     (idx_ok,) = nmp.where(NbP_seg >= np_valid_seg)
     NbSeg = len(idx_ok) ; # number of selected segments we are going to work with
-    if NbSeg==0: cp.MsgExit('could not find any valid segment with np_valid_seg = '+str(np_valid_seg))
+    if NbSeg==0: MsgExit('could not find any valid segment with np_valid_seg = '+str(np_valid_seg))
     #
     # 2/ Decide of a constant length for segments to stick with => Nsl!
     rN = nmp.mean(NbP_seg[idx_ok])
@@ -222,6 +224,7 @@ def ApplyFFT( IDseg, XS, XM, dx_sample ):
     PS_s = nmp.zeros((NbS,Nsl))
     PS_m = nmp.zeros((NbS,Nsl))
 
+    print(' *** [ApplyFFT()]: Applying FFT with a dx_sample of ',dx_sample,' km')
     for js in range(NbS):
         if ivrb>0: print(' *** [ApplyFFT()]: applying FFT to segment #',js+1)
         
@@ -240,5 +243,5 @@ def ApplyFFT( IDseg, XS, XM, dx_sample ):
 
         PS_s[js,:] = vYf_s[idx]
         PS_m[js,:] = vYf_m[idx]
-        if ivrb>0: print('')
+        print('')
     return VK, PS_s, PS_m

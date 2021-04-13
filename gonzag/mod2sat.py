@@ -152,15 +152,20 @@ class Model2SatTrack:
         self.lat        = ST.lat        
         self.lon        = ST.lon
 
-
-        vssh_m_np = nmp.ma.masked_where( vssh_m_np<-1000.,vssh_m_np )
-        vssh_m_bl = nmp.ma.masked_where( vssh_m_bl<-1000.,vssh_m_bl )
-        vssh_s    = nmp.ma.masked_where( vssh_s   <-1000.,vssh_s    )        
+        imask = nmp.zeros(Nt,dtype=nmp.int8)
+        imask[nmp.where((vssh_m_bl>-100.) & (vssh_m_bl<100.))] = 1
         
+        vssh_m_np = nmp.ma.masked_where( imask==0, vssh_m_np )
+        vssh_m_bl = nmp.ma.masked_where( imask==0, vssh_m_bl )
+        vssh_s    = nmp.ma.masked_where( imask==0, vssh_s    )        
+
+        self.mask       = imask
         self.ssh_mod_np = vssh_m_np
         self.ssh_mod    = vssh_m_bl
         self.ssh_sat    = vssh_s
         self.distance   = vdistance
+
+        del imask
         
         print('\n *** Time report:')
         print('     - Construction of the source-target bilinear mapping took: '+str(round(time_bl_mapping,0))+' s')

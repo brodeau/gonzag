@@ -59,6 +59,14 @@ First download the archive containing the input files for the test suite:
 https://drive.google.com/u/1/uc?id=1XZsEp41RckN9ulBDYZ4VFlh8ycvZLbfL&export=download
 
 
+### You're more into `jupyter-notebooks`
+
+Try the notebooks into the `notebook` directory.
+Currently the [Med-Sea example](https://github.com/brodeau/gonzag/blob/main/notebook/alongtrack_sat_vs_nemo.ipynb).
+
+
+### You're more into writing scripts
+
 ```$ ./alongtrack_sat_vs_nemo.py -h```
 
     usage: alongtrack_sat_vs_nemo.py [-h] -s FSAT -n VSAT -m FMOD -v VMOD [-l FMSK] [-k VMSK] [-D] 
