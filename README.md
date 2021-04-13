@@ -67,6 +67,8 @@ Currently the [Med-Sea example](https://github.com/brodeau/gonzag/blob/main/note
 
 ### You're more into writing scripts
 
+`./alongtrack_sat_vs_nemo.py` is a script that gets the job done!
+
 ```$ ./alongtrack_sat_vs_nemo.py -h```
 
     usage: alongtrack_sat_vs_nemo.py [-h] -s FSAT -n VSAT -m FMOD -v VMOD [-l FMSK] [-k VMSK] [-D] 
