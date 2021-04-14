@@ -249,5 +249,5 @@ def ApplyFFT( IDseg, XS, XM, dx_sample ):
 
         PS_s[js,:] = vYf_s[idx]
         PS_m[js,:] = vYf_m[idx]
-        print('')
+    print('')
     return VK, PS_s, PS_m
