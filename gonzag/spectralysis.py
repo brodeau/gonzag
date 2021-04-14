@@ -44,13 +44,19 @@ def FindUnbrokenSegments( VTe, Vd, VM, rcut_time=1.2, rcut_dist=7.8 ):
     #   * Vd: full series of cumulated distances in km
     '''
     Nr = len(VTe)
+    if len(Vd) != Nr: MsgExit('[FindUnbrokenSegments()] => size of "Vd" != size of "VTe"')
+    if len(VM) != Nr: MsgExit('[FindUnbrokenSegments()] => size of "VM" != size of "VTe"')
+    
     # Will extract the N valid data segments:
     nb_seg   = 0
     idx_strt = [] ; # index of first valid point of the segment
     idx_stop = [] ; # index of last  valid point of the segment
-    Vmsk = VM.mask
+    if nmp.ma.is_masked(VM):
+        Vmsk = VM.mask
+    else:
+        Vmsk = nmp.zeros(Nr, dtype=bool)
     jr=0
-    while jr < Nr:
+    while jr < Nr-1:
         # Ignoring masked values and zeros...
         if (not Vmsk[jr]):
             vm = VM[jr]
