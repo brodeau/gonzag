@@ -4,10 +4,6 @@
 #       L. Brodeau, 2021
 ############################################################################
 
-import sys
-#from os import path, getcwd, mkdir
-#import numpy as nmp
-
 from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 #from geopy import distance as geopy_distance
 
@@ -74,7 +70,7 @@ def AlfaBeta( vy, vx ):
     '''
     nitermax = 100 ; # maximum number of iterations
     zresmax = 0.1
-    zA = nmp.zeros((2,2))
+    
 
     # when near the 0 deg line and we must work in the frame -180 180
     l_s_180 = ( abs(vx[1]-vx[4])>=180. or abs(vx[1]-vx[2])>=180. or abs(vx[1]-vx[3])>=180. )
@@ -84,6 +80,10 @@ def AlfaBeta( vy, vx ):
         vx[:]  = degE_to_degWE(zvx[:])
 
     zres=1000. ; zdx=0.5 ; zdy=0.5 ; rA=0. ; rB=0. ; # Initialisation prior to convergence itterative loop
+
+    zA = nmp.zeros((2,2))
+    zM = nmp.zeros((2,2))
+    
     jiter=0
     while (zres > zresmax) and (jiter < nitermax):
         z1 = vx[2] - vx[1]
@@ -93,32 +93,34 @@ def AlfaBeta( vy, vx ):
         zA[0,1] = -z2 + (z2 + z3 )*rA
         zA[1,0] = vy[2] - vy[1] + (vy[1] - vy[4] + vy[3] - vy[2])*rB
         zA[1,1] = vy[4] - vy[1] + (vy[1] - vy[4] + vy[3] - vy[2])*rA
-        #
-        # Determinant
-        zdeta = nmp.linalg.det( zA )
-        #
-        # Solution of
-        # |  zdx  |        | zdalp |
-        # |       | =  zA .|       |
-        # |  zdy  |        | zdbet |
-        #zdeta = ( SIGN(1.,zdeta)*MAX(ABS(zdeta), repsilon) )  # just to avoid FPE division by zero sometimes...
-        zM = nmp.zeros((2,2))
-        zM[:,0] = [zdx,zdy]
-        zM[:,1] = zA[:,1]
-        zdalp = nmp.linalg.det( zM ) / zdeta
-        zM[:,0] = zA[:,0]
-        zM[:,1] = [zdx,zdy]
-        zdbet = nmp.linalg.det( zM ) / zdeta
-        # Update residual ( loop criteria)
-        zres = sqrt( zdalp*zdalp + zdbet*zdbet )
-        # Update alpha and beta from 1rst guess :
-        rA = rA + zdalp
-        rB = rB + zdbet
-        # Update corresponding lon/lat for this alpha, beta
-        z1a = 1.-rA
-        z1b = 1.-rB
-        zdx = vx[0] - (z1a*z1b*vx[1] + rA*z1b*vx[2] + rA*rB*vx[3] + z1a*rB*vx[4])
-        zdy = vy[0] - (z1a*z1b*vy[1] + rA*z1b*vy[2] + rA*rB*vy[3] + z1a*rB*vy[4])
+        
+        zdeta = nmp.linalg.det( zA ) ; # Determinant
+
+        if zdeta==0.0:            
+            jiter == nitermax ; # Give up!
+            #
+        else:
+            # Solution of
+            # |  zdx  |        | zdalp |
+            # |       | =  zA .|       |
+            # |  zdy  |        | zdbet |
+            #zdeta = ( SIGN(1.,zdeta)*MAX(ABS(zdeta), repsilon) )  # just to avoid FPE division by zero sometimes...            
+            zM[:,0] = [zdx,zdy]
+            zM[:,1] = zA[:,1]
+            zdalp = nmp.linalg.det( zM ) / zdeta
+            zM[:,0] = zA[:,0]
+            zM[:,1] = [zdx,zdy]
+            zdbet = nmp.linalg.det( zM ) / zdeta
+            # Update residual ( loop criteria)
+            zres = sqrt( zdalp*zdalp + zdbet*zdbet )
+            # Update alpha and beta from 1rst guess :
+            rA = rA + zdalp
+            rB = rB + zdbet
+            # Update corresponding lon/lat for this alpha, beta
+            z1a = 1.-rA
+            z1b = 1.-rB
+            zdx = vx[0] - (z1a*z1b*vx[1] + rA*z1b*vx[2] + rA*rB*vx[3] + z1a*rB*vx[4])
+            zdy = vy[0] - (z1a*z1b*vy[1] + rA*z1b*vy[2] + rA*rB*vy[3] + z1a*rB*vy[4])
         #
         jiter = jiter + 1  # increment iteration counter
     # end of loop / until zres small enough (or nitermax reach )
