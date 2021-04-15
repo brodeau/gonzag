@@ -26,5 +26,6 @@ fi
 
 ${CLIMPORN_DIR}/nemo_imshow_2d_field.py ${BX} xnp_msk.nc track 1
 
-${CLIMPORN_DIR}/plot_spectra_SSH_sat_track.py -i result.nc -m ${V_M}_bl -s sla_unfiltered -B ${BX} -S "Saral-AltiKa" -M "GLORYS12-SWPac"
+${CLIMPORN_DIR}/plot_spectra_SSH_sat_track.py -i result.nc -m ${V_M}_bl -s sla_unfiltered -B ${BX} -S "Saral-AltiKa" -M "GLORYS12-SWPac" \
+                                              -b 1 -l 13
 

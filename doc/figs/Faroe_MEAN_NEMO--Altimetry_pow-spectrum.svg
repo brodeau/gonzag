@@ -29,111 +29,21 @@ z
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
      <g id="line2d_1">
-      <path clip-path="url(#pcc914ff9ce)" d="M 86.393003 602.64 
-L 86.393003 45.36 
+      <path clip-path="url(#p69ddfdc46b)" d="M 64.8 602.64 
+L 64.8 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
      <g id="line2d_2">
       <defs>
        <path d="M 0 0 
 L 0 3.5 
-" id="me9bdab1ef7" style="stroke:#000000;stroke-width:0.8;"/>
+" id="mbc333ae05a" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="86.393003" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
      <g id="text_1">
-      <!-- 1000 -->
-      <defs>
-       <path d="M 24.3125 0 
-L 24.3125 54.828125 
-L 9.765625 45.75 
-L 9.765625 54.890625 
-Q 15.28125 57.671875 21.5 62.546875 
-Q 27.734375 67.4375 31.15625 71.828125 
-L 34.078125 71.828125 
-L 34.078125 0 
-z
-" id="TrebuchetMS-49"/>
-       <path d="M 3.125 37.9375 
-Q 3.125 53.375 9.375 63.078125 
-Q 15.625 72.796875 26.953125 72.796875 
-Q 38.1875 72.796875 43.828125 64.6875 
-Q 49.46875 56.59375 49.46875 36.375 
-Q 49.46875 19 43.546875 9 
-Q 37.640625 -0.984375 26.265625 -0.984375 
-Q 14.890625 -0.984375 9 7.078125 
-Q 3.125 15.140625 3.125 37.9375 
-z
-M 12.890625 37.0625 
-Q 12.890625 7.328125 25.59375 7.328125 
-Q 32.859375 7.328125 36.28125 13.921875 
-Q 39.703125 20.515625 39.703125 37.015625 
-Q 39.703125 48.390625 38.375 53.703125 
-Q 37.0625 59.03125 34.125 61.765625 
-Q 31.203125 64.5 26.703125 64.5 
-Q 12.890625 64.5 12.890625 37.0625 
-z
-" id="TrebuchetMS-48"/>
-      </defs>
-      <g transform="translate(69.613003 621.4375)scale(0.16 -0.16)">
-       <use xlink:href="#TrebuchetMS-49"/>
-       <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
-       <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
-       <use x="157.324219" xlink:href="#TrebuchetMS-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_2">
-     <g id="line2d_3">
-      <path clip-path="url(#pcc914ff9ce)" d="M 128.635309 602.64 
-L 128.635309 45.36 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_4">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="128.635309" xlink:href="#me9bdab1ef7" y="602.64"/>
-      </g>
-     </g>
-     <g id="text_2">
-      <!-- 700 -->
-      <defs>
-       <path d="M 20.90625 0 
-L 10.0625 0 
-Q 13.671875 11.46875 22.21875 30.34375 
-Q 30.765625 49.21875 37.84375 62.546875 
-L 4.109375 62.546875 
-L 4.109375 71.828125 
-L 50.484375 71.828125 
-L 50.484375 68.015625 
-L 44.1875 55.609375 
-Q 41.015625 49.3125 37.546875 41.796875 
-Q 34.078125 34.28125 30.75 26.46875 
-Q 27.4375 18.65625 24.953125 11.96875 
-Q 22.46875 5.28125 20.90625 0 
-z
-" id="TrebuchetMS-55"/>
-      </defs>
-      <g transform="translate(116.050309 621.4375)scale(0.16 -0.16)">
-       <use xlink:href="#TrebuchetMS-55"/>
-       <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
-       <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_3">
-     <g id="line2d_5">
-      <path clip-path="url(#pcc914ff9ce)" d="M 168.484936 602.64 
-L 168.484936 45.36 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_6">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="168.484936" xlink:href="#me9bdab1ef7" y="602.64"/>
-      </g>
-     </g>
-     <g id="text_3">
       <!-- 500 -->
       <defs>
        <path d="M 11.328125 34.90625 
@@ -155,26 +65,46 @@ Q 36.671875 40.53125 23.09375 40.53125
 Q 16.546875 40.53125 11.328125 34.90625 
 z
 " id="TrebuchetMS-53"/>
+       <path d="M 3.125 37.9375 
+Q 3.125 53.375 9.375 63.078125 
+Q 15.625 72.796875 26.953125 72.796875 
+Q 38.1875 72.796875 43.828125 64.6875 
+Q 49.46875 56.59375 49.46875 36.375 
+Q 49.46875 19 43.546875 9 
+Q 37.640625 -0.984375 26.265625 -0.984375 
+Q 14.890625 -0.984375 9 7.078125 
+Q 3.125 15.140625 3.125 37.9375 
+z
+M 12.890625 37.0625 
+Q 12.890625 7.328125 25.59375 7.328125 
+Q 32.859375 7.328125 36.28125 13.921875 
+Q 39.703125 20.515625 39.703125 37.015625 
+Q 39.703125 48.390625 38.375 53.703125 
+Q 37.0625 59.03125 34.125 61.765625 
+Q 31.203125 64.5 26.703125 64.5 
+Q 12.890625 64.5 12.890625 37.0625 
+z
+" id="TrebuchetMS-48"/>
       </defs>
-      <g transform="translate(155.899936 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(52.215 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-53"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
        <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
       </g>
      </g>
     </g>
-    <g id="xtick_4">
-     <g id="line2d_7">
-      <path clip-path="url(#pcc914ff9ce)" d="M 228.983866 602.64 
-L 228.983866 45.36 
+    <g id="xtick_2">
+     <g id="line2d_3">
+      <path clip-path="url(#p69ddfdc46b)" d="M 144.160332 602.64 
+L 144.160332 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_8">
+     <g id="line2d_4">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="228.983866" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="144.160332" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
-     <g id="text_4">
+     <g id="text_2">
       <!-- 300 -->
       <defs>
        <path d="M 5.328125 5.078125 
@@ -204,25 +134,25 @@ Q 8.015625 2.59375 5.328125 5.078125
 z
 " id="TrebuchetMS-51"/>
       </defs>
-      <g transform="translate(216.398866 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(131.575332 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-51"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
        <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
       </g>
      </g>
     </g>
-    <g id="xtick_5">
-     <g id="line2d_9">
-      <path clip-path="url(#pcc914ff9ce)" d="M 277.004568 602.64 
-L 277.004568 45.36 
+    <g id="xtick_3">
+     <g id="line2d_5">
+      <path clip-path="url(#p69ddfdc46b)" d="M 207.152171 602.64 
+L 207.152171 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_10">
+     <g id="line2d_6">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="277.004568" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="207.152171" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
-     <g id="text_5">
+     <g id="text_3">
       <!-- 200 -->
       <defs>
        <path d="M 3.375 0 
@@ -244,8 +174,60 @@ L 47.3125 0
 z
 " id="TrebuchetMS-50"/>
       </defs>
-      <g transform="translate(264.419568 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(194.567171 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-50"/>
+       <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
+       <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_7">
+      <path clip-path="url(#p69ddfdc46b)" d="M 251.845592 602.64 
+L 251.845592 45.36 
+" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="251.845592" xlink:href="#mbc333ae05a" y="602.64"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <!-- 150 -->
+      <defs>
+       <path d="M 24.3125 0 
+L 24.3125 54.828125 
+L 9.765625 45.75 
+L 9.765625 54.890625 
+Q 15.28125 57.671875 21.5 62.546875 
+Q 27.734375 67.4375 31.15625 71.828125 
+L 34.078125 71.828125 
+L 34.078125 0 
+z
+" id="TrebuchetMS-49"/>
+      </defs>
+      <g transform="translate(239.260592 621.4375)scale(0.16 -0.16)">
+       <use xlink:href="#TrebuchetMS-49"/>
+       <use x="52.441406" xlink:href="#TrebuchetMS-53"/>
+       <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_9">
+      <path clip-path="url(#p69ddfdc46b)" d="M 314.837431 602.64 
+L 314.837431 45.36 
+" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use style="stroke:#000000;stroke-width:0.8;" x="314.837431" xlink:href="#mbc333ae05a" y="602.64"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <!-- 100 -->
+      <g transform="translate(302.252431 621.4375)scale(0.16 -0.16)">
+       <use xlink:href="#TrebuchetMS-49"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
        <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
       </g>
@@ -253,94 +235,71 @@ z
     </g>
     <g id="xtick_6">
      <g id="line2d_11">
-      <path clip-path="url(#pcc914ff9ce)" d="M 311.075799 602.64 
-L 311.075799 45.36 
+      <path clip-path="url(#p69ddfdc46b)" d="M 370.249377 602.64 
+L 370.249377 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
      <g id="line2d_12">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="311.075799" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="370.249377" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
      <g id="text_6">
-      <!-- 150 -->
-      <g transform="translate(298.490799 621.4375)scale(0.16 -0.16)">
-       <use xlink:href="#TrebuchetMS-49"/>
-       <use x="52.441406" xlink:href="#TrebuchetMS-53"/>
-       <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_7">
-     <g id="line2d_13">
-      <path clip-path="url(#pcc914ff9ce)" d="M 359.096501 602.64 
-L 359.096501 45.36 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_14">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="359.096501" xlink:href="#me9bdab1ef7" y="602.64"/>
-      </g>
-     </g>
-     <g id="text_7">
-      <!-- 100 -->
-      <g transform="translate(346.511501 621.4375)scale(0.16 -0.16)">
-       <use xlink:href="#TrebuchetMS-49"/>
-       <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
-       <use x="104.882812" xlink:href="#TrebuchetMS-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_8">
-     <g id="line2d_15">
-      <path clip-path="url(#pcc914ff9ce)" d="M 401.338808 602.64 
-L 401.338808 45.36 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_16">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="401.338808" xlink:href="#me9bdab1ef7" y="602.64"/>
-      </g>
-     </g>
-     <g id="text_8">
       <!-- 70 -->
-      <g transform="translate(392.948808 621.4375)scale(0.16 -0.16)">
+      <defs>
+       <path d="M 20.90625 0 
+L 10.0625 0 
+Q 13.671875 11.46875 22.21875 30.34375 
+Q 30.765625 49.21875 37.84375 62.546875 
+L 4.109375 62.546875 
+L 4.109375 71.828125 
+L 50.484375 71.828125 
+L 50.484375 68.015625 
+L 44.1875 55.609375 
+Q 41.015625 49.3125 37.546875 41.796875 
+Q 34.078125 34.28125 30.75 26.46875 
+Q 27.4375 18.65625 24.953125 11.96875 
+Q 22.46875 5.28125 20.90625 0 
+z
+" id="TrebuchetMS-55"/>
+      </defs>
+      <g transform="translate(361.859377 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-55"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
       </g>
      </g>
     </g>
-    <g id="xtick_9">
-     <g id="line2d_17">
-      <path clip-path="url(#pcc914ff9ce)" d="M 441.188434 602.64 
-L 441.188434 45.36 
+    <g id="xtick_7">
+     <g id="line2d_13">
+      <path clip-path="url(#p69ddfdc46b)" d="M 422.522691 602.64 
+L 422.522691 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_18">
+     <g id="line2d_14">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="441.188434" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="422.522691" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
-     <g id="text_9">
+     <g id="text_7">
       <!-- 50 -->
-      <g transform="translate(432.798434 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(414.132691 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-53"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
       </g>
      </g>
     </g>
-    <g id="xtick_10">
-     <g id="line2d_19">
-      <path clip-path="url(#pcc914ff9ce)" d="M 467.616134 602.64 
-L 467.616134 45.36 
+    <g id="xtick_8">
+     <g id="line2d_15">
+      <path clip-path="url(#p69ddfdc46b)" d="M 457.189602 602.64 
+L 457.189602 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_20">
+     <g id="line2d_16">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="467.616134" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="457.189602" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
-     <g id="text_10">
+     <g id="text_8">
       <!-- 40 -->
       <defs>
        <path d="M 43.0625 19.484375 
@@ -361,70 +320,51 @@ L 33.796875 27
 z
 " id="TrebuchetMS-52"/>
       </defs>
-      <g transform="translate(459.226134 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(448.799602 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-52"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
       </g>
      </g>
     </g>
-    <g id="xtick_11">
-     <g id="line2d_21">
-      <path clip-path="url(#pcc914ff9ce)" d="M 523.280367 602.64 
-L 523.280367 45.36 
+    <g id="xtick_9">
+     <g id="line2d_17">
+      <path clip-path="url(#p69ddfdc46b)" d="M 530.207952 602.64 
+L 530.207952 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_22">
+     <g id="line2d_18">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="523.280367" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="530.207952" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
-     <g id="text_11">
+     <g id="text_9">
       <!-- 25 -->
-      <g transform="translate(514.890367 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(521.817952 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-50"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-53"/>
       </g>
      </g>
     </g>
-    <g id="xtick_12">
-     <g id="line2d_23">
-      <path clip-path="url(#pcc914ff9ce)" d="M 583.779298 602.64 
-L 583.779298 45.36 
+    <g id="xtick_10">
+     <g id="line2d_19">
+      <path clip-path="url(#p69ddfdc46b)" d="M 609.568284 602.64 
+L 609.568284 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_24">
+     <g id="line2d_20">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="583.779298" xlink:href="#me9bdab1ef7" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="609.568284" xlink:href="#mbc333ae05a" y="602.64"/>
       </g>
      </g>
-     <g id="text_12">
+     <g id="text_10">
       <!-- 15 -->
-      <g transform="translate(575.389298 621.4375)scale(0.16 -0.16)">
+      <g transform="translate(601.178284 621.4375)scale(0.16 -0.16)">
        <use xlink:href="#TrebuchetMS-49"/>
        <use x="52.441406" xlink:href="#TrebuchetMS-53"/>
       </g>
      </g>
     </g>
-    <g id="xtick_13">
-     <g id="line2d_25">
-      <path clip-path="url(#pcc914ff9ce)" d="M 631.8 602.64 
-L 631.8 45.36 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_26">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="631.8" xlink:href="#me9bdab1ef7" y="602.64"/>
-      </g>
-     </g>
-     <g id="text_13">
-      <!-- 10 -->
-      <g transform="translate(623.41 621.4375)scale(0.16 -0.16)">
-       <use xlink:href="#TrebuchetMS-49"/>
-       <use x="52.441406" xlink:href="#TrebuchetMS-48"/>
-      </g>
-     </g>
-    </g>
-    <g id="text_14">
+    <g id="text_11">
      <!-- Wave-length [km] -->
      <defs>
       <path d="M 62.3125 -0.984375 
@@ -702,23 +642,23 @@ z
    </g>
    <g id="matplotlib.axis_2">
     <g id="ytick_1">
-     <g id="line2d_27">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 602.64 
+     <g id="line2d_21">
+      <path clip-path="url(#p69ddfdc46b)" d="M 64.8 602.64 
 L 631.8 602.64 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_28">
+     <g id="line2d_22">
       <defs>
        <path d="M 0 0 
 L -3.5 0 
-" id="mfb38630b91" style="stroke:#000000;stroke-width:0.8;"/>
+" id="ma1c533c1f4" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="602.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#ma1c533c1f4" y="602.64"/>
       </g>
      </g>
-     <g id="text_15">
-      <!-- $\mathregular{10^{-8}}$ -->
+     <g id="text_12">
+      <!-- $\mathregular{10^{-3}}$ -->
       <defs>
        <path d="M 46.875 34.46875 
 L 46.875 27.59375 
@@ -726,170 +666,8 @@ L 5.953125 27.59375
 L 5.953125 34.46875 
 z
 " id="TrebuchetMS-8722"/>
-       <path d="M 17.234375 39.796875 
-Q 12.703125 42.234375 9.8125 46.578125 
-Q 6.9375 50.921875 6.9375 55.5625 
-Q 6.9375 63.53125 12.328125 68.15625 
-Q 17.71875 72.796875 26.265625 72.796875 
-Q 35.5 72.796875 40.578125 68.15625 
-Q 45.65625 63.53125 45.65625 55.515625 
-Q 45.65625 50.828125 42.578125 45.96875 
-Q 39.5 41.109375 35.453125 38.8125 
-Q 48.34375 31.59375 48.34375 19.828125 
-Q 48.34375 9.90625 42.375 4.453125 
-Q 36.421875 -0.984375 26.03125 -0.984375 
-Q 4.34375 -0.984375 4.34375 19.828125 
-Q 4.34375 25.828125 8.046875 31.640625 
-Q 11.765625 37.453125 17.234375 39.796875 
-z
-M 29.203125 42.828125 
-Q 35.84375 49.078125 35.84375 55.765625 
-Q 35.84375 59.765625 33.171875 62.125 
-Q 30.515625 64.5 26.265625 64.5 
-Q 16.703125 64.5 16.703125 55.671875 
-Q 16.703125 49.125 29.203125 42.828125 
-z
-M 24.859375 35.546875 
-Q 14.109375 29.734375 14.109375 19.828125 
-Q 14.109375 14.5 17.421875 10.90625 
-Q 20.75 7.328125 26.03125 7.328125 
-Q 31.5 7.328125 35.03125 10.84375 
-Q 38.578125 14.359375 38.578125 19.828125 
-Q 38.578125 23.78125 36.125 27.265625 
-Q 33.6875 30.765625 24.859375 35.546875 
-z
-" id="TrebuchetMS-56"/>
       </defs>
       <g transform="translate(28.68 608.53875)scale(0.16 -0.16)">
-       <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-56"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_2">
-     <g id="line2d_29">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 546.912 
-L 631.8 546.912 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_30">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="546.912"/>
-      </g>
-     </g>
-     <g id="text_16">
-      <!-- $\mathregular{10^{-7}}$ -->
-      <g transform="translate(28.68 552.81075)scale(0.16 -0.16)">
-       <use transform="translate(0 0.1125)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.1125)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-55"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_3">
-     <g id="line2d_31">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 491.184 
-L 631.8 491.184 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_32">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="491.184"/>
-      </g>
-     </g>
-     <g id="text_17">
-      <!-- $\mathregular{10^{-6}}$ -->
-      <defs>
-       <path d="M 32.8125 72.796875 
-L 37.546875 67.578125 
-Q 33.25 65.875 25.125 56.03125 
-Q 17 46.1875 16.109375 40.875 
-Q 20.171875 44.78125 27.390625 44.78125 
-Q 36.859375 44.78125 42.578125 38.71875 
-Q 48.296875 32.671875 48.296875 22.078125 
-Q 48.296875 11.578125 42.40625 5.171875 
-Q 36.53125 -1.21875 27.640625 -1.21875 
-Q 4.109375 -1.21875 4.109375 29.984375 
-Q 4.109375 42.96875 13.3125 56.5625 
-Q 22.515625 70.171875 32.8125 72.796875 
-z
-M 14.359375 22.359375 
-Q 14.359375 7.078125 26.90625 7.078125 
-Q 32.171875 7.078125 35.21875 11.0625 
-Q 38.28125 15.046875 38.28125 21.578125 
-Q 38.28125 28.375 35.0625 32.421875 
-Q 31.84375 36.46875 26.765625 36.46875 
-Q 14.359375 36.46875 14.359375 22.359375 
-z
-" id="TrebuchetMS-54"/>
-      </defs>
-      <g transform="translate(28.68 497.08275)scale(0.16 -0.16)">
-       <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-54"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_4">
-     <g id="line2d_33">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 435.456 
-L 631.8 435.456 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_34">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="435.456"/>
-      </g>
-     </g>
-     <g id="text_18">
-      <!-- $\mathregular{10^{-5}}$ -->
-      <g transform="translate(28.68 441.35475)scale(0.16 -0.16)">
-       <use transform="translate(0 0.1125)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.1125)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-53"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_5">
-     <g id="line2d_35">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 379.728 
-L 631.8 379.728 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_36">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="379.728"/>
-      </g>
-     </g>
-     <g id="text_19">
-      <!-- $\mathregular{10^{-4}}$ -->
-      <g transform="translate(28.68 385.62675)scale(0.16 -0.16)">
-       <use transform="translate(0 0.1125)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.1125)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-52"/>
-      </g>
-     </g>
-    </g>
-    <g id="ytick_6">
-     <g id="line2d_37">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 324 
-L 631.8 324 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_38">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="324"/>
-      </g>
-     </g>
-     <g id="text_20">
-      <!-- $\mathregular{10^{-3}}$ -->
-      <g transform="translate(28.68 329.89875)scale(0.16 -0.16)">
        <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
        <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
        <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
@@ -897,20 +675,20 @@ L 631.8 324
       </g>
      </g>
     </g>
-    <g id="ytick_7">
-     <g id="line2d_39">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 268.272 
-L 631.8 268.272 
+    <g id="ytick_2">
+     <g id="line2d_23">
+      <path clip-path="url(#p69ddfdc46b)" d="M 64.8 463.32 
+L 631.8 463.32 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_40">
+     <g id="line2d_24">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="268.272"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#ma1c533c1f4" y="463.32"/>
       </g>
      </g>
-     <g id="text_21">
+     <g id="text_13">
       <!-- $\mathregular{10^{-2}}$ -->
-      <g transform="translate(28.68 274.17075)scale(0.16 -0.16)">
+      <g transform="translate(28.68 469.21875)scale(0.16 -0.16)">
        <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
        <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
        <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
@@ -918,20 +696,20 @@ L 631.8 268.272
       </g>
      </g>
     </g>
-    <g id="ytick_8">
-     <g id="line2d_41">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 212.544 
-L 631.8 212.544 
+    <g id="ytick_3">
+     <g id="line2d_25">
+      <path clip-path="url(#p69ddfdc46b)" d="M 64.8 324 
+L 631.8 324 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_42">
+     <g id="line2d_26">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="212.544"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#ma1c533c1f4" y="324"/>
       </g>
      </g>
-     <g id="text_22">
+     <g id="text_14">
       <!-- $\mathregular{10^{-1}}$ -->
-      <g transform="translate(28.68 218.44275)scale(0.16 -0.16)">
+      <g transform="translate(28.68 329.89875)scale(0.16 -0.16)">
        <use transform="translate(0 0.1125)" xlink:href="#TrebuchetMS-49"/>
        <use transform="translate(52.441406 0.1125)" xlink:href="#TrebuchetMS-48"/>
        <use transform="translate(105.798008 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
@@ -939,67 +717,47 @@ L 631.8 212.544
       </g>
      </g>
     </g>
-    <g id="ytick_9">
-     <g id="line2d_43">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 156.816 
-L 631.8 156.816 
+    <g id="ytick_4">
+     <g id="line2d_27">
+      <path clip-path="url(#p69ddfdc46b)" d="M 64.8 184.68 
+L 631.8 184.68 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_44">
+     <g id="line2d_28">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="156.816"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#ma1c533c1f4" y="184.68"/>
       </g>
      </g>
-     <g id="text_23">
+     <g id="text_15">
       <!-- $\mathregular{10^{0}}$ -->
-      <g transform="translate(34.44 162.71475)scale(0.16 -0.16)">
+      <g transform="translate(34.44 190.57875)scale(0.16 -0.16)">
        <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
        <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
        <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-48"/>
       </g>
      </g>
     </g>
-    <g id="ytick_10">
-     <g id="line2d_45">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 101.088 
-L 631.8 101.088 
+    <g id="ytick_5">
+     <g id="line2d_29">
+      <path clip-path="url(#p69ddfdc46b)" d="M 64.8 45.36 
+L 631.8 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
      </g>
-     <g id="line2d_46">
+     <g id="line2d_30">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="101.088"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#ma1c533c1f4" y="45.36"/>
       </g>
      </g>
-     <g id="text_24">
+     <g id="text_16">
       <!-- $\mathregular{10^{1}}$ -->
-      <g transform="translate(34.44 106.98675)scale(0.16 -0.16)">
+      <g transform="translate(34.44 51.25875)scale(0.16 -0.16)">
        <use transform="translate(0 0.1125)" xlink:href="#TrebuchetMS-49"/>
        <use transform="translate(52.441406 0.1125)" xlink:href="#TrebuchetMS-48"/>
        <use transform="translate(105.798008 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-49"/>
       </g>
      </g>
     </g>
-    <g id="ytick_11">
-     <g id="line2d_47">
-      <path clip-path="url(#pcc914ff9ce)" d="M 64.8 45.36 
-L 631.8 45.36 
-" style="fill:none;stroke:#000000;stroke-linecap:square;stroke-width:0.2;"/>
-     </g>
-     <g id="line2d_48">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="64.8" xlink:href="#mfb38630b91" y="45.36"/>
-      </g>
-     </g>
-     <g id="text_25">
-      <!-- $\mathregular{10^{2}}$ -->
-      <g transform="translate(34.44 51.25875)scale(0.16 -0.16)">
-       <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-50"/>
-      </g>
-     </g>
-    </g>
-    <g id="text_26">
+    <g id="text_17">
      <!-- SSH PSD [$\mathregular{m^2}$/(cy/km)] -->
      <defs>
       <path d="M 4.109375 3.265625 
@@ -1167,68 +925,28 @@ z
      </g>
     </g>
    </g>
-   <g id="line2d_49">
-    <path clip-path="url(#pcc914ff9ce)" d="M 189.473105 281.262637 
-L 271.565038 314.814237 
-L 319.585741 334.440664 
-L 353.656971 348.365836 
-L 380.084671 359.167038 
-L 401.677674 367.992263 
-L 419.934297 375.453885 
-L 435.748904 381.917435 
-L 449.698376 387.618691 
-L 462.176604 392.718637 
-L 473.464534 397.332101 
-L 483.769607 401.543862 
-L 493.249355 405.418308 
-L 502.02623 409.005484 
-L 510.197306 412.345065 
-L 517.840837 415.469034 
-L 525.020831 418.403552 
-L 531.790309 421.17029 
-L 538.193686 423.787399 
-L 544.268537 426.270237 
-L 550.046933 428.631911 
-L 555.556467 430.8837 
-L 560.82105 433.035375 
-L 565.86154 435.095462 
-L 570.696236 437.071439 
-L 575.341288 438.969907 
-L 579.811011 440.796717 
-L 584.118163 442.557083 
-L 588.274156 444.255669 
+   <g id="line2d_31">
+    <path clip-path="url(#p69ddfdc46b)" d="M 92.33153 495.796594 
+L 200.01679 579.675592 
+L 263.008629 628.74166 
+L 289.016625 649 
 " style="fill:none;stroke:#000000;stroke-dasharray:7.4,3.2;stroke-dashoffset:0;stroke-width:2;"/>
    </g>
-   <g id="line2d_50">
-    <path clip-path="url(#pcc914ff9ce)" d="M 189.473105 26.864873 
-L 271.565038 110.743871 
-L 319.585741 159.80994 
-L 353.656971 194.622869 
-L 380.084671 221.625875 
-L 401.677674 243.688938 
-L 419.934297 262.342991 
-L 435.748904 278.501867 
-L 449.698376 292.755006 
-L 462.176604 305.504873 
-L 473.464534 317.038531 
-L 483.769607 327.567936 
-L 493.249355 337.254049 
-L 502.02623 346.221989 
-L 510.197306 354.570942 
-L 517.840837 362.380865 
-L 525.020831 369.717161 
-L 531.790309 376.634004 
-L 538.193686 383.176777 
-L 544.268537 389.383871 
-L 550.046933 395.288057 
-L 555.556467 400.917529 
-L 560.82105 406.296717 
-L 565.86154 411.446934 
-L 570.696236 416.386877 
-L 575.341288 421.133047 
-L 579.811011 425.700072 
-L 584.118163 430.100987 
-L 588.274156 434.347451 
+   <g id="line2d_32">
+    <path clip-path="url(#p69ddfdc46b)" d="M 163.813324 -1 
+L 200.01679 69.499678 
+L 263.008629 192.164849 
+L 307.70205 279.197173 
+L 342.368961 346.704688 
+L 370.693889 401.862344 
+L 394.642275 448.497478 
+L 415.38731 488.894668 
+L 433.685728 524.527515 
+L 450.054221 556.402183 
+L 464.861324 585.236327 
+L 478.37915 611.559839 
+L 490.814344 635.775122 
+L 497.605671 649 
 " style="fill:none;stroke:#999999;stroke-dasharray:7.4,3.2;stroke-dashoffset:0;stroke-width:2;"/>
    </g>
    <g id="patch_3">
@@ -1251,36 +969,36 @@ L 631.8 602.64
 L 631.8 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;"/>
    </g>
-   <g id="line2d_51">
-    <path clip-path="url(#pcc914ff9ce)" d="M 189.473105 130.329879 
-L 271.565038 163.774585 
-L 319.585741 189.240702 
-L 353.656971 201.967005 
-L 380.084671 206.501944 
-L 401.677674 223.571226 
-L 419.934297 229.941182 
-L 435.748904 243.067878 
-L 449.698376 248.5285 
-L 462.176604 257.465727 
-L 473.464534 252.656582 
-L 483.769607 266.033386 
-L 493.249355 266.724617 
-L 502.02623 270.533631 
-L 510.197306 273.197534 
-L 517.840837 279.935203 
-L 525.020831 277.426674 
-L 531.790309 282.481828 
-L 538.193686 285.179659 
-L 544.268537 283.575814 
-L 550.046933 288.282111 
-L 555.556467 289.579295 
-L 560.82105 287.914075 
-L 565.86154 290.006793 
-L 570.696236 291.384667 
-L 575.341288 291.979493 
-L 579.811011 292.521452 
-L 584.118163 293.447512 
-L 588.274156 294.541973 
+   <g id="line2d_33">
+    <path clip-path="url(#p69ddfdc46b)" d="M 92.33153 118.465891 
+L 200.01679 202.075141 
+L 263.008629 265.742304 
+L 307.70205 297.547233 
+L 342.368961 308.882404 
+L 370.693889 351.559676 
+L 394.642275 367.493097 
+L 415.38731 400.308415 
+L 433.685728 413.958259 
+L 450.054221 436.300159 
+L 464.861324 424.278544 
+L 478.37915 457.71905 
+L 490.814344 459.447224 
+L 502.327535 468.969173 
+L 513.04606 475.627075 
+L 523.072571 492.473651 
+L 532.491029 486.205084 
+L 541.370989 498.837002 
+L 549.770709 505.585191 
+L 557.739481 501.573168 
+L 565.319374 513.341576 
+L 572.546584 516.581153 
+L 579.452476 512.419135 
+L 586.06441 517.65214 
+L 592.406392 521.097779 
+L 598.499604 522.581069 
+L 604.362828 523.939791 
+L 610.012796 526.253288 
+L 615.464477 528.989822 
 " style="fill:none;stroke:#008ab8;stroke-linecap:square;stroke-width:5;"/>
    </g>
    <g id="legend_1">
@@ -1310,13 +1028,13 @@ Q 350.395 150.605 353.595 150.605
 z
 " style="fill:#ffffff;stroke:#cccccc;stroke-linejoin:miter;"/>
     </g>
-    <g id="line2d_52">
+    <g id="line2d_34">
      <path d="M 356.795 65.9575 
 L 388.795 65.9575 
-" style="fill:none;stroke:#ffed00;stroke-linecap:square;stroke-width:4;"/>
+" style="fill:none;stroke:#ad0000;stroke-linecap:square;stroke-width:4;"/>
     </g>
-    <g id="line2d_53"/>
-    <g id="text_27">
+    <g id="line2d_35"/>
+    <g id="text_18">
      <!-- Saral-Altika ("sla_unfiltered") -->
      <defs>
       <path d="M 35.015625 43.359375 
@@ -1498,13 +1216,13 @@ z
       <use x="1272.167969" xlink:href="#TrebuchetMS-41"/>
      </g>
     </g>
-    <g id="line2d_54">
+    <g id="line2d_36">
      <path d="M 356.795 89.1 
 L 388.795 89.1 
 " style="fill:none;stroke:#008ab8;stroke-linecap:square;stroke-width:5;"/>
     </g>
-    <g id="line2d_55"/>
-    <g id="text_28">
+    <g id="line2d_37"/>
+    <g id="text_19">
      <!-- eNATL60-Faroe ("sossheig_bl") -->
      <defs>
       <path d="M 53.5625 -0.984375 
@@ -1537,6 +1255,28 @@ L 49.421875 8.796875
 L 49.421875 0 
 z
 " id="TrebuchetMS-76"/>
+      <path d="M 32.8125 72.796875 
+L 37.546875 67.578125 
+Q 33.25 65.875 25.125 56.03125 
+Q 17 46.1875 16.109375 40.875 
+Q 20.171875 44.78125 27.390625 44.78125 
+Q 36.859375 44.78125 42.578125 38.71875 
+Q 48.296875 32.671875 48.296875 22.078125 
+Q 48.296875 11.578125 42.40625 5.171875 
+Q 36.53125 -1.21875 27.640625 -1.21875 
+Q 4.109375 -1.21875 4.109375 29.984375 
+Q 4.109375 42.96875 13.3125 56.5625 
+Q 22.515625 70.171875 32.8125 72.796875 
+z
+M 14.359375 22.359375 
+Q 14.359375 7.078125 26.90625 7.078125 
+Q 32.171875 7.078125 35.21875 11.0625 
+Q 38.28125 15.046875 38.28125 21.578125 
+Q 38.28125 28.375 35.0625 32.421875 
+Q 31.84375 36.46875 26.765625 36.46875 
+Q 14.359375 36.46875 14.359375 22.359375 
+z
+" id="TrebuchetMS-54"/>
       <path d="M 17.09375 62.75 
 L 17.09375 42.875 
 L 42.234375 42.875 
@@ -1628,13 +1368,13 @@ z
       <use x="1312.017578" xlink:href="#TrebuchetMS-41"/>
      </g>
     </g>
-    <g id="line2d_56">
+    <g id="line2d_38">
      <path d="M 356.795 112.2425 
 L 388.795 112.2425 
 " style="fill:none;stroke:#000000;stroke-dasharray:7.4,3.2;stroke-dashoffset:0;stroke-width:2;"/>
     </g>
-    <g id="line2d_57"/>
-    <g id="text_29">
+    <g id="line2d_39"/>
+    <g id="text_20">
      <!-- k$^\mathregular{-2}$ -->
      <g transform="translate(401.595 117.8425)scale(0.16 -0.16)">
       <use transform="translate(0 0.760938)" xlink:href="#TrebuchetMS-107"/>
@@ -1642,13 +1382,13 @@ L 388.795 112.2425
       <use transform="translate(88.105469 39.042188)scale(0.7)" xlink:href="#TrebuchetMS-50"/>
      </g>
     </g>
-    <g id="line2d_58">
+    <g id="line2d_40">
      <path d="M 356.795 135.3225 
 L 388.795 135.3225 
 " style="fill:none;stroke:#999999;stroke-dasharray:7.4,3.2;stroke-dashoffset:0;stroke-width:2;"/>
     </g>
-    <g id="line2d_59"/>
-    <g id="text_30">
+    <g id="line2d_41"/>
+    <g id="text_21">
      <!-- k$^\mathregular{-5}$ -->
      <g transform="translate(401.595 140.9225)scale(0.16 -0.16)">
       <use transform="translate(0 0.439063)" xlink:href="#TrebuchetMS-107"/>
@@ -1657,71 +1397,55 @@ L 388.795 135.3225
      </g>
     </g>
    </g>
-   <g id="line2d_60">
-    <path clip-path="url(#pcc914ff9ce)" d="M 189.473105 212.124838 
-L 271.565038 211.973646 
-L 319.585741 211.561521 
-L 353.656971 224.499353 
-L 380.084671 230.429244 
-L 401.677674 248.974734 
-L 419.934297 247.873727 
-L 435.748904 250.172809 
-L 449.698376 262.392206 
-L 462.176604 270.326988 
-L 473.464534 276.934427 
-L 483.769607 276.404718 
-L 493.249355 282.387534 
-L 502.02623 277.34349 
-L 510.197306 273.43218 
-L 517.840837 279.807183 
-L 525.020831 283.810327 
-L 531.790309 290.871681 
-L 538.193686 284.187471 
-L 544.268537 272.674536 
-L 550.046933 281.747662 
-L 555.556467 288.92092 
-L 560.82105 278.380165 
-L 565.86154 276.676078 
-L 570.696236 270.607315 
-L 575.341288 279.401426 
-L 579.811011 276.158738 
-L 584.118163 276.366731 
-L 588.274156 282.819558 
-" style="fill:none;stroke:#ffed00;stroke-linecap:square;stroke-width:4;"/>
+   <g id="line2d_42">
+    <path clip-path="url(#p69ddfdc46b)" d="M 92.33153 322.950276 
+L 200.01679 322.571655 
+L 263.008629 321.538804 
+L 307.70205 353.888 
+L 342.368961 368.717415 
+L 370.693889 415.076633 
+L 394.642275 412.335605 
+L 415.38731 418.07793 
+L 433.685728 448.626805 
+L 450.054221 468.462288 
+L 464.861324 484.983036 
+L 478.37915 483.655586 
+L 490.814344 498.606132 
+L 502.327535 486.000473 
+L 513.04606 476.228772 
+L 523.072571 492.150486 
+L 532.491029 502.163774 
+L 541.370989 519.822745 
+L 549.770709 503.113012 
+L 557.739481 474.318165 
+L 565.319374 497.00866 
+L 572.546584 514.93898 
+L 579.452476 488.588362 
+L 586.06441 484.334183 
+L 592.406392 469.16582 
+L 598.499604 491.147025 
+L 604.362828 483.046351 
+L 610.012796 483.564007 
+L 615.464477 499.687335 
+" style="fill:none;stroke:#ad0000;stroke-linecap:square;stroke-width:4;"/>
    </g>
   </g>
   <g id="axes_2">
    <g id="matplotlib.axis_3">
-    <g id="xtick_14">
-     <g id="line2d_61">
+    <g id="xtick_11">
+     <g id="line2d_43">
       <defs>
        <path d="M 0 0 
 L 0 -3.5 
-" id="m7730768b64" style="stroke:#000000;stroke-width:0.8;"/>
+" id="md63f21b7e9" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="86.393003" xlink:href="#m7730768b64" y="45.36"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="314.837431" xlink:href="#md63f21b7e9" y="45.36"/>
       </g>
      </g>
-     <g id="text_31">
-      <!-- $\mathregular{10^{-3}}$ -->
-      <g style="fill:#4c4c4c;" transform="translate(71.833003 35.0775)scale(0.16 -0.16)">
-       <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-51"/>
-      </g>
-     </g>
-    </g>
-    <g id="xtick_15">
-     <g id="line2d_62">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="359.096501" xlink:href="#m7730768b64" y="45.36"/>
-      </g>
-     </g>
-     <g id="text_32">
+     <g id="text_22">
       <!-- $\mathregular{10^{-2}}$ -->
-      <g style="fill:#4c4c4c;" transform="translate(344.536501 35.0775)scale(0.16 -0.16)">
+      <g style="fill:#4c4c4c;" transform="translate(300.277431 35.0775)scale(0.16 -0.16)">
        <use transform="translate(0 0.434375)" xlink:href="#TrebuchetMS-49"/>
        <use transform="translate(52.441406 0.434375)" xlink:href="#TrebuchetMS-48"/>
        <use transform="translate(105.798008 37.042188)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
@@ -1729,23 +1453,7 @@ L 0 -3.5
       </g>
      </g>
     </g>
-    <g id="xtick_16">
-     <g id="line2d_63">
-      <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="631.8" xlink:href="#m7730768b64" y="45.36"/>
-      </g>
-     </g>
-     <g id="text_33">
-      <!-- $\mathregular{10^{-1}}$ -->
-      <g style="fill:#4c4c4c;" transform="translate(617.24 35.0775)scale(0.16 -0.16)">
-       <use transform="translate(0 0.1125)" xlink:href="#TrebuchetMS-49"/>
-       <use transform="translate(52.441406 0.1125)" xlink:href="#TrebuchetMS-48"/>
-       <use transform="translate(105.798008 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-8722"/>
-       <use transform="translate(142.506992 36.720313)scale(0.7)" xlink:href="#TrebuchetMS-49"/>
-      </g>
-     </g>
-    </g>
-    <g id="text_34">
+    <g id="text_23">
      <!-- Wave-number [cy/km] -->
      <g style="fill:#4c4c4c;" transform="translate(267.69 19.28)scale(0.16 -0.16)">
       <use xlink:href="#TrebuchetMS-87"/>
@@ -1790,7 +1498,7 @@ L 631.8 602.64
 L 631.8 45.36 
 " style="fill:none;stroke:#000000;stroke-linecap:square;stroke-linejoin:miter;stroke-width:0.8;"/>
    </g>
-   <g id="text_35">
+   <g id="text_24">
     <g id="patch_13">
      <path d="M 100.24 481.4528 
 L 256.08 481.4528 
@@ -2397,7 +2105,7 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="pcc914ff9ce">
+  <clipPath id="p69ddfdc46b">
    <rect height="557.28" width="567" x="64.8" y="45.36"/>
   </clipPath>
  </defs>

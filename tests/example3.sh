@@ -24,7 +24,8 @@ fi
 
 # Diags:
 
-#${CLIMPORN_DIR}/nemo_imshow_2d_field.py ${BX} xnp_msk.nc track 1
+${CLIMPORN_DIR}/nemo_imshow_2d_field.py ${BX} xnp_msk.nc track 1
 
 ${CLIMPORN_DIR}/plot_spectra_SSH_sat_track.py -i result.nc -m ${V_M}_bl -s sla_unfiltered -n 70 \
-               -B ${BX} -S "Sentinel-3A" -M "eNATL60-WestMed"
+               -B ${BX} -S "Sentinel-3A" -M "eNATL60-WestMed" \
+               -a -6 -b 0 -l 13 -L 500

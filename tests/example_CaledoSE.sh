@@ -24,11 +24,11 @@ if [ ! -f ./result.nc ]; then
 fi
 
 
-#exit
 
 # Diags:
 
-#${CLIMPORN_DIR}/nemo_imshow_2d_field.py ${BX} xnp_msk.nc track 1
+${CLIMPORN_DIR}/nemo_imshow_2d_field.py ${BX} xnp_msk.nc track 1
 
 ${CLIMPORN_DIR}/plot_spectra_SSH_sat_track.py -i result.nc -m ${V_M}_bl -s sla_unfiltered -n 50 \
-               -B ${BX} -S "SARAL-AltiKa" -M "CALED60-SouthEast"
+               -B ${BX} -S "SARAL-AltiKa" -M "CALED60-SouthEast" \
+               -a -5 -b 1 -l 13 -L 500
