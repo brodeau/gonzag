@@ -17,63 +17,59 @@ from .utils  import MsgExit
 cabout_nc = 'Created with Gonzag package => https://github.com/brodeau/gonzag'
 
 
-
-
-def ToEpochTime( vt, units, calendar ):
+def ToEpochTime( X, units, calendar ):
     '''
     # INPUT:
-    #   * vt: time vector provided as something like: "days since ..."
-    #   * units, calendar:
+    #   * X: time vector or scalar, provided as something like: "seconds/hours/days since <DATE0>"
+    #   * units, calendar: units and calendar type [char]
     #
     # OUTPUT:
-    #   * vet: time vector converted to UNIX epoch time,
+    #   * vet: time vector converted to UNIX Epoch time,
     #          aka "seconds since 1970-01-01 00:00:00"
     #          => as FLOAT !! not INTEGER !!!
     '''
     cfrmt = '%Y-%m-%d %H:%M:%S'
     #
-    lvect = not (nmp.shape(vt)==())
+    lvect = not (nmp.shape(X)==()) ; # True => X is not a scalar
     #
     if lvect:
-        nt = len(vt)
-        t0 = vt[0]
+        nt = len(X)
+        t0 = X[0]
     else:
-        t0 = vt
+        t0 = X
     if ivrb>0: print(' *** [ToEpochTime()]: original t0 as "'+units+'" => ', t0)
     t0d = num2date( t0, units, calendar )
     if ivrb>0: print(' *** [ToEpochTime()]: intitial date in datetime format => ', t0d)
-
-    # We need to round this to the nearest second, because our target format is Epoch time (seconds since 1970)
-    # and we want an integer!
-    rdec = t0d.microsecond*1.E-6
-    # t0 as "float" UNIX time:
-    t0E = float( timegm( dtm.strptime( t0d.strftime(cfrmt) , cfrmt ).timetuple() ) + rdec )
-
+    #
+    rdec = t0d.microsecond*1.E-6 ; # to convert micro seconds part to decimal part of time in seconds...
+    t0E = float( timegm( dtm.strptime( t0d.strftime(cfrmt) , cfrmt ).timetuple() ) + rdec ) ; # t0 as "float" Epoch UNIX time!
+    #
     if lvect:
-        # we are not going to convert the whole array but instead:
-        if   units[0:10] == 'days since':
-            vdt = (vt[1:] - vt[0])*86400.
+        if   units[0:13] == 'seconds since':
+            r2s = 1.
         elif units[0:11] == 'hours since':
-            vdt = (vt[1:] - vt[0])*3600.
-        elif units[0:13] == 'seconds since':
-            vdt =  vt[1:] - vt[0]
+            r2s = 3600.
+        elif units[0:10] == 'days since':
+            r2s = 86400.
         else:
-            MsgExit('[ToEpochTime()] => unknown time unit: '+units)
-        vet = nmp.zeros(nt)
+            MsgExit('[ToEpochTime()] => unsupported time unit: '+units)
+        #
+        vet     = nmp.zeros(nt)
         vet[0]  = t0E
-        vet[1:] = t0E + vdt[:]
-        del vdt
+        vet[1:] = t0E + (X[1:] - X[0])*r2s
+        #
     else:
         vet = t0E
     #
     return vet
 
 
+
 def GetTimeInfo( ncfile ):
     '''
     # Inspect time dimension
-    # Get number of time-records, first and last date
-    # Return them + dates as UNIX epoch time, aka "seconds since 1970-01-01 00:00:00" (float)
+    # Get number of time-records + first and last date
+    # Return them + dates as UNIX Epoch time, aka "seconds since 1970-01-01 00:00:00" (float)
     '''
     if ldebug: print(' *** [GetTimeInfo()] Getting calendar/time info in '+ncfile+' ...')
     id_f = Dataset(ncfile)
@@ -92,7 +88,7 @@ def GetTimeInfo( ncfile ):
     rt2 = ToEpochTime( clndr[nt-1], clndr.units, clndr.calendar )    
     id_f.close()
     #
-    if ldebug: print('   => first and last time records: ',dt1,'--',dt2,' (UNIX epoch: ', rt1,'--',rt2,')\n')
+    if ldebug: print('   => first and last time records: ',dt1,'--',dt2,' (UNIX Epoch: ', rt1,'--',rt2,')\n')
     #
     return nt, (rt1,rt2)
 
@@ -101,11 +97,16 @@ def GetTimeInfo( ncfile ):
 
 def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
     '''
-    # Get the time vector in the netCDF file, (from index kt1 to kt2, if these 2 are != 0!)
-    # returns it as:
-    # isubsamp: subsampling !!!
-    # lquiet: shut the f* up!
-    #  => ivt: time as UNIX epoch time, aka "seconds since 1970-01-01 00:00:00" (integer)
+    # Get the time vector in the netCDF file and returns it as UNIX Epoch time,
+    # aka "seconds since 1970-01-01 00:00:00" (float!)
+    #
+    # INPUT:
+    #  * kt1, kt2 : read from index kt1 to kt2 (if these 2 are != 0)
+    #  * isubsamp: subsampling !!!
+    #  * lquiet: shut the f* up!
+    #
+    # OUTPUT:
+    #  * rvte: time vector in (float) UNIX Epoch time
     '''
     ltalk = ( ldebug and not lquiet )
     cv_t_test = [ 'time', 'time_counter', 'TIME', 'record', 't', 'none' ]
@@ -119,22 +120,20 @@ def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
             if ivrb>0 and ltalk: print(' *** [GetTimeEpochVector()] reading "'+cv+'" in '+ncfile+' and converting it to Epoch time...')
             if kt1>0 and kt2>0:
                 if kt1>=kt2: MsgExit('mind the indices when calling GetTimeEpochVector()')
-                #vdate = num2date( clndr[kt1:kt2+1:isubsamp], clndr.units, clndr.calendar )
                 vdate = clndr[kt1:kt2+1:isubsamp]
                 cc = 'read...'
             else:
-                #vdate = num2date( clndr[::isubsamp],         clndr.units, clndr.calendar )
                 vdate = clndr[::isubsamp]
                 cc = 'in TOTAL!'
             break
     id_f.close()
     if cv == 'none': MsgExit('found no time-record variable in file '+ncfile+' (possible fix: "cv_t_test" in "GetTimeEpochVector()")')
-    #
-    # Create the Unix Epoch time version:
-    rvte = ToEpochTime( vdate, cunt, ccal )
+    #    
+    rvte = ToEpochTime( vdate, cunt, ccal ) ; # convert to Unix Epoch time
     #
     if ivrb>0 and ltalk: print('   => '+str(len(rvte))+' records '+cc+'\n')
     return rvte
+
 
 
 def GetModelCoor( ncfile, what ):
