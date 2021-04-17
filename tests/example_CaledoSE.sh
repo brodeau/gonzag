@@ -6,16 +6,16 @@ CLIMPORN_DIR="${HOME}/DEV/climporn/python"
 
 BX="CaledoSE"
 
-F_S="${GONZAG_DATA_DIR}/gonzag_input/SARAL_20181201-20181231.nc"
+F_S="${GONZAG_DATA_DIR}/gonzag_input/SARAL_20170101-20170331.nc"
 
 # CALEDO60 South-Eastern Caledo:
-F_M="${GONZAG_DATA_DIR}/gonzag_input/zos_${BX}_20181201_20181231.nc"
+F_M="${GONZAG_DATA_DIR}/gonzag_input/zos_${BX}_2017_JFM_hourly.nc"
 V_M="zos"
 
 if [ ! -f ./result.nc ]; then
 
-    CMD="./alongtrack_sat_vs_nemo.py -s ${F_S} -n sla_unfiltered -m ${F_M} -v ${V_M} \
-                                     -l ${F_M} -k tmask"
+    CMD="./alongtrack_sat_vs_nemo.py -s ${F_S} -n sla_unfiltered -m ${F_M} -v ${V_M} -l 0"
+
     echo
     echo "${CMD}"
     ${CMD}

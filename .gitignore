@@ -5,6 +5,7 @@ __pycache__/
 
 *.nc
 *.png
+*.svg
 
 # C extensions
 *.so
