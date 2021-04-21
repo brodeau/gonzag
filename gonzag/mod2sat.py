@@ -27,6 +27,8 @@ class Model2SatTrack:
         if not IsZarr:        
             from .ncio   import GetModel2DVar, GetSatSSH
             #Save2Dfield, SaveTimeSeries        
+        else:
+            from .zarrio import GetModel2DVar, GetSatSSH
             
         (Nj,Ni) = MG.shape
     
