@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 #
+#   ///// https://github.com/brodeau/gonzag \\\\\
+#
 #       L. Brodeau, 2021
+#
 ############################################################################
 
-ldebug = True
+ldebug = False
 
-if_talk = 500 ; # verbose frequency: we chat every if_talk time steps !!!
+ivrb   = 0 ; # level of verbosity... [0-2]
 
-l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `if_talk` frequency
+IsZarr = False ; # A VIRER quand test sur extensions fichier prete!
+
+nb_talk = 10 ; # how many times do you want to see a progression message in long loops ?
+
+l_plot_meshes = True ; # if ldebug: then will generate a plot the sources meshes at the `nb_talk` frequency
 
 deg2km = 111.11 ; # Converts degrees to km
 
@@ -27,7 +34,7 @@ search_box_w_km = 500. ; # width (in km) of the small zoom-box on the source (mo
 #                        # => see "SearchBoxSize()" in "utils.py" for more !
 
 
-l_dump_np_track_on_model_grid = True
+l_save_track_on_model_grid = True
 
 
 
