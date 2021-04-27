@@ -85,7 +85,7 @@ def GetTimeInfo( ncfile ):
     clndr = id_f.variables[cv]
     dt1 = num2date( clndr[0], clndr.units, clndr.calendar ) ; dt2 = num2date( clndr[nt-1], clndr.units, clndr.calendar )
     rt1 = ToEpochTime( clndr[0],    clndr.units, clndr.calendar )
-    rt2 = ToEpochTime( clndr[nt-1], clndr.units, clndr.calendar )    
+    rt2 = ToEpochTime( clndr[nt-1], clndr.units, clndr.calendar )
     id_f.close()
     #
     if ldebug: print('   => first and last time records: ',dt1,'--',dt2,' (UNIX Epoch: ', rt1,'--',rt2,')\n')
@@ -128,7 +128,7 @@ def GetTimeEpochVector( ncfile, kt1=0, kt2=0, isubsamp=1, lquiet=False ):
             break
     id_f.close()
     if cv == 'none': MsgExit('found no time-record variable in file '+ncfile+' (possible fix: "cv_t_test" in "GetTimeEpochVector()")')
-    #    
+    #
     rvte = ToEpochTime( vdate, cunt, ccal ) ; # convert to Unix Epoch time
     #
     if ivrb>0 and ltalk: print('   => '+str(len(rvte))+' records '+cc+'\n')
@@ -201,7 +201,7 @@ def GetModel2DVar( ncfile, ncvar, kt=0 ):
     if nb_dim==3:
         x2d = id_f.variables[ncvar][kt,:,:]
     elif nb_dim==4:
-        x2d = id_f.variables[ncvar][kt,0,:,:] ; # taking surface field!    
+        x2d = id_f.variables[ncvar][kt,0,:,:] ; # taking surface field!
     else: MsgExit('FIX ME! Model "'+ncvar+'" has a weird number of dimensions: '+str(nb_dim))
     id_f.close()
     if ldebug: print('')

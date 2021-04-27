@@ -3,14 +3,13 @@
 #
 #   ///// https://github.com/brodeau/gonzag \\\\\
 #
-#       L. Brodeau, 2021
+#       A. Albert, 2021
 #
 ############################################################################
 
 import numpy as nmp
 import xarray as xr
 from netCDF4 import num2date, default_fillvals
-from calendar import timegm
 from calendar import timegm
 from datetime import datetime as dtm
 from .config import ldebug, ivrb, rmissval
