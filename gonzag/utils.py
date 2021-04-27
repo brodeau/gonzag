@@ -189,6 +189,8 @@ def GetEpochTimeOverlap( ncfile_sat, ncfile_mod ):
     '''
     if not IsZarr:
         from .ncio import GetTimeInfo
+    else:
+        from .zarrio import GetTimeInfo
     #
     nts, range_sat = GetTimeInfo( ncfile_sat )
     ntm, range_mod = GetTimeInfo( ncfile_mod )
@@ -360,6 +362,8 @@ class ModGrid:
         '''
         if not IsZarr:
             from .ncio import GetTimeEpochVector, GetModelCoor, GetModelLSM, Save2Dfield
+        else:
+            from .zarrio import GetTimeEpochVector, GetModelCoor, GetModelLSM, Save2Dfield
 
         chck4f( ncfile )
 
@@ -469,6 +473,8 @@ class SatTrack:
         '''
         if not IsZarr:
             from .ncio import GetTimeEpochVector, GetSatCoor
+        else:
+            from .zarrio import GetTimeEpochVector, GetSatCoor
 
         chck4f( ncfile )
 

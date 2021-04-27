@@ -8,7 +8,7 @@
 ############################################################################
 
 import gonzag as gz
-from gonzag.config import ldebug, rmissval, l_save_track_on_model_grid
+from gonzag.config import IsZarr,ldebug, rmissval, l_save_track_on_model_grid
 
 
 def argument_parsing():
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     ModelGrid = gz.ModGrid( file_mod, it1, it2, file_lsm_mod, clsm, distorded_grid=l_griddist )
 
-    
+
 
     print('\n\n\n #####   S A T E L L I T E   1 D   T R A C K   a.k.a.  T A R G E T   #####\n')
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
                                   domain_bounds=ModelGrid.domain_bounds, l_0_360=ModelGrid.l360 )
 
 
-    
+
     # Mapping and interpolation:
 
     RES = gz.Model2SatTrack( ModelGrid, name_ssh_mod, SatelliteTrack, name_ssh_sat )
@@ -76,8 +76,11 @@ if __name__ == '__main__':
 
     # Save the result into a NetCDF file:
     import numpy as nmp
-    from gonzag.ncio import SaveTimeSeries, Save2Dfield
-    
+    if not IsZarr:
+        from gonzag.ncio import SaveTimeSeries, Save2Dfield
+    else:
+        from gonzag.zarrio import SaveTimeSeries, Save2Dfield
+
     c1     = 'Model SSH interpolated in space (' ; c2=') and time on satellite track'
     vvar   = [ 'latitude', 'longitude', name_ssh_mod+'_np'   , name_ssh_mod+'_bl' , name_ssh_sat          , 'distance'                            ]
     vunits = [ 'deg.N'   , 'deg.E'    ,          'm'         ,     'm'            ,    'm'                ,    'km'                               ]
