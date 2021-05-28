@@ -201,7 +201,7 @@ def GetModel2DVar( ncfile, ncvar, kt=0 ):
     else: MsgExit('FIX ME! Model "'+ncvar+'" has a weird number of dimensions: '+str(nb_dim))
     id_f.close()
     if ldebug: print('')
-    return x2d
+    return x2d.load()
 
 
 
@@ -261,7 +261,7 @@ def GetSatSSH( ncfile, ncvar,  kt1=0, kt2=0, ikeep=[] ):
     #
     if nmp.ma.is_masked(vssh): vssh[nmp.where( nmp.ma.getmask(vssh) )] = rmissval
     if ldebug: print('')
-    return vssh
+    return vssh.load()
 
 
 
