@@ -5,10 +5,10 @@ A Python3 package for the interpolation of 2D (O)GCM gridded dataset onto 1D sat
 
 ## What I do
 
-I interpolate, in space and time, the SSH (or any other 2D field) from a
-non-regular structured gridded domain of an OGCM onto a satellite track.  The
-satellite track is provided as time-series of the form time(t), longitude(t),
-latitude(t), as usually found in along-track satellite data product.
+I interpolate, in space and time, the *sea surface height* (*aka* SSH, or any other 2D field) provided onto the
+horizontal non-regular gridded domain of an ocean GCM onto a satellite track. The
+satellite track is provided as time-series of the form *time(t), longitude(t),
+latitude(t)*, as usually found for along-track satellite data products.
 
 Both SSH `2D+time` data of the model and along track data of the satellite are provided as netCDF files (soon Zarr!) and must
 share a common time-period.
@@ -21,8 +21,8 @@ As an output gonzag ...
 ## Why
 
 Ocean model horizontal grids are notorious for being twisted/distorted, hence, in gonzag,
-special effort is put on thorough research of nearest point and source mesh
-grid prior to bilinear interpolations.
+special effort is put on thorough research of nearest point and surrounding source mesh
+grid points prior to bilinear interpolations.
 <br>
 
 ## Dependencies
