@@ -50,7 +50,7 @@ def Heading( plata,plona, platb,plonb ):
 def AlfaBeta( vy, vx ):
     '''
     #----------------------------------------------------------
-    #           ***  SUBROUTINE  local_coord    ***
+    #           ***  Function AlfaBeta    ***
     #
     #  ** Purpose : Compute the local coordinate in a grid cell
     #
@@ -58,7 +58,7 @@ def AlfaBeta( vy, vx ):
     #       http://aton.cerfacs.fr/~daget/TECHREPORT/TR_CMGC_06_18_html/node8.html
     #
     # * history:
-    #      Original : J.M. Molines ( May 2007)
+    #      Original : J.M. Molines ( May 2007) for SOSIE (F90)
     #
     # INPUT:
     #         vy: vector of longitudes of length 5
@@ -70,7 +70,6 @@ def AlfaBeta( vy, vx ):
     '''
     nitermax = 100 ; # maximum number of iterations
     zresmax = 0.1
-    
 
     # when near the 0 deg line and we must work in the frame -180 180
     l_s_180 = ( abs(vx[1]-vx[4])>=180. or abs(vx[1]-vx[2])>=180. or abs(vx[1]-vx[3])>=180. )
