@@ -316,10 +316,11 @@ def Haversine( plat, plon, xlat, xlon ):
     return 2.*R*nmp.arcsin( nmp.sqrt( a1*a1 + a3 * a2*a2 ) )
 
 
-def PlotMesh( pcoor_trg, Ys, Xs, isrc_msh, wghts, fig_name='mesh.png' ):
+def PlotMesh( pcoor_trg, Ys, Xs, isrc_msh, wghts, fig_name='mesh.png', pcoor_extra=(-999.,-999.) ):
     '''
     isrc_msh: 2D integer array of shape (4,2)
     wghts:    1D real array of shape (4,)
+    pcoor_extra: just an extra point to show on the figure....
     '''
     import matplotlib as mpl
     mpl.use('Agg')
@@ -336,6 +337,12 @@ def PlotMesh( pcoor_trg, Ys, Xs, isrc_msh, wghts, fig_name='mesh.png' ):
     plt.plot( [ Xs[j2,i2] ], [ Ys[j2,i2] ], marker='o', ms=10, label='P2: w='+str(round(wb2,3)) ) ; #
     plt.plot( [ Xs[j3,i3] ], [ Ys[j3,i3] ], marker='o', ms=10, label='P3: w='+str(round(wb3,3)) ) ; # target point !
     plt.plot( [ Xs[j4,i4] ], [ Ys[j4,i4] ], marker='o', ms=10, label='P4: w='+str(round(wb4,3)) ) ; # target point !
+
+    if pcoor_extra!=(-999.,-999.):
+        (yE,xE) = pcoor_extra
+        plt.plot( [     xE    ], [     yE    ], marker='+', ms=20, color='0.5', label='extra' ) ; # target point !
+        
+    
     ax1.legend(loc='center left', bbox_to_anchor=(1.07, 0.5), fancybox=True)
     plt.savefig(fig_name, dpi=100, transparent=False)
     plt.close(1)
