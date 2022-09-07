@@ -150,7 +150,7 @@ def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_
     (yT,xT) = pcoor_trg
     (Ny,Nx) = Ys.shape
     #
-    jy, jx = -1,-1 ; # Flag value...
+    jy, jx = -1,-1 ; # "not found" flag value...
     j1=max(j_prv-np_box_r,0) ; j2=min(j_prv+np_box_r+1,Ny)
     i1=max(i_prv-np_box_r,0) ; i2=min(i_prv+np_box_r+1,Nx)
     lfound = False

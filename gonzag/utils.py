@@ -331,7 +331,7 @@ def PlotMesh( pcoor_trg, Ys, Xs, isrc_msh, wghts, fig_name='mesh.png' ):
     #
     fig = plt.figure(num = 1, figsize=[7,5], facecolor='w', edgecolor='k')
     ax1 = plt.axes([0.09, 0.07, 0.6, 0.9])
-    plt.plot( [  yT ] , [ xT ]  , marker='o', ms=15, color='k', label='target point' ) ; # target point !
+    plt.plot( [     xT    ], [     yT    ], marker='o', ms=15, color='k', label='target point' ) ; # target point !
     plt.plot( [ Xs[j1,i1] ], [ Ys[j1,i1] ], marker='o', ms=10, label='P1: w='+str(round(wb1,3)) ) ; # nearest point !
     plt.plot( [ Xs[j2,i2] ], [ Ys[j2,i2] ], marker='o', ms=10, label='P2: w='+str(round(wb2,3)) ) ; #
     plt.plot( [ Xs[j3,i3] ], [ Ys[j3,i3] ], marker='o', ms=10, label='P3: w='+str(round(wb3,3)) ) ; # target point !

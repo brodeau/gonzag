@@ -9,7 +9,7 @@
 
 ldebug = False
 
-ivrb   = 0 ; # level of verbosity... [0-2]
+ivrb   = 1 ; # level of verbosity... [0-2]
 
 IsZarr = False ; # A VIRER quand test sur extensions fichier prete!
 
