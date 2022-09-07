@@ -369,7 +369,7 @@ def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0., lforceHD=F
 
 
 
-def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=-1, grid_s_angle=0., lforceHD=False ):
+def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, iquadran=-1, k_ew_per=-1, grid_s_angle=0., lforceHD=False ):
     '''
     # * jP,iP    : nearest point on source grid
     # * k_ew_per : E-W periodicity of source grid
@@ -377,6 +377,7 @@ def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=-1, grid_s_angle=0., lforc
     # * Ys        : array of source grid latitude            2D numpy.array [real]
     # * Xs        : array of source grid longitude           2D numpy.array [real]
     # * jP,iP     : indices of nearest point on source grid  [integer],[integer]
+    # * iquadran  : if for some reasons `iquadran` is already known, save energy!
     # * k_ew_per  : east-wet periodicity of source grid:     [integer]
     #                 k_ew_per == -1 => none
     #                 k_ew_per >=  0 => yes please! with an overlap of k_ew_per points
@@ -387,7 +388,11 @@ def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=-1, grid_s_angle=0., lforc
     (yT,xT) = pcoor_trg
     (Ny,Nx) = Ys.shape
     #
-    iqdrn = Iquadran( (yT,xT), Ys, Xs, jP, iP, k_ew_per=k_ew_per, grid_s_angle=grid_s_angle, lforceHD=lforceHD )
+    if iquadran>0:
+        print("LOLO: IDSourceMesh() => skip computaion of `iquadran` as it has been provided as input!")
+        iqdrn = iquadran
+    else:
+        iqdrn = Iquadran( (yT,xT), Ys, Xs, jP, iP, k_ew_per=k_ew_per, grid_s_angle=grid_s_angle, lforceHD=lforceHD )
     #
     if iqdrn in [1,2,3,4]:
         #
