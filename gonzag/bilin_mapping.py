@@ -245,8 +245,7 @@ def Iquadran2SrcMesh( jP, iP, Ny, Nx, iqd,  k_ew_per=1 ):
     return (j2,i2), (j3,i3), (j4,i4)
 
 
-
-def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0. ):
+def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0., lforceHD=False ):
     '''
     # "iquadran" determines which of the 4 "corners" of the source-grid mesh
     # (in wich the target point is located) is the nearest point.
@@ -265,6 +264,7 @@ def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0. ):
     #                 k_ew_per == -1 => none
     #                 k_ew_per >=  0 => yes please! with an overlap of k_ew_per points
     # * grid_s_angle: local distortion of the source grid = angle [degrees]
+    # * lforceHD  : True => enforce HeavyDuty secure mode => usefull when source grid too twisted !!!
     '''
     if ldebug:
         from shapely.geometry import Point
@@ -277,92 +277,99 @@ def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0. ):
     #
     jPm1, jPp1, iPm1, iPp1 = surrounding_j_i( jP, iP, Ny, Nx,  k_ew_per=k_ew_per )
     #
-    if not -1 in [jPm1, jPp1, iPm1, iPp1]:
+    if -1 in [jPm1, jPp1, iPm1, iPp1]:
+        if ivrb>0:
+            print('WARNING: sosie_bilin.Iquadran() => a "-1" is found!')
+            print('         => ignoring current nearest point for i,j =', ji, jj, '(of target domain)\n')
+        return    
+    #
+    if (iPm1 < 0) or (jPm1 < 0) or (iPp1 > Nx-1):
+        if ivrb>0:
+            print('WARNING: sosie_bilin.Iquadran() => bound problem => ',xT,yT,Nx,Ny,iP,jP)
+            print('          iPm1, iPp1, Nx =', iPm1, iPp1, Nx)
+            print('          jPm1, jPp1, Ny =', jPm1, jPp1, Ny)
+            print('         => ignoring current nearest point for i,j =', ji, jj, '(of target domain)\n')
+        return
         #
-        if (iPm1 < 0) or (jPm1 < 0) or (iPp1 > Nx-1):
-            if ivrb>0:
-                print('WARNING: sosie_bilin.Iquadran() => bound problem => ',xT,yT,Nx,Ny,iP,jP)
-                print('          iPm1, iPp1, Nx =', iPm1, iPp1, Nx)
-                print('          jPm1, jPp1, Ny =', jPm1, jPp1, Ny)
-                print('         => ignoring current nearest point for i,j =', ji, jj, '(of target domain)\n')
-            #
-        else:
-            #
-            # Getting the 5 point of interest of the source grid:
-            lon0 = Xs[jP  ,iP  ]%360. ; lat0 = Ys[jP  ,iP  ] # nearest point
-            #
-            # Restore target point longitude between 0 and 360
-            zT = xT % 360. ; # lolo: zT don't wanna modify: xT
-            #
-            # The following HEADING stuf is aimed at finding in which source grid cell
-            # the target point is comprised with regards to the nearest point
-            # (there is actually 4 possible adjacent cells NE, SE, SW and NW)
-            #
-            # Compute heading of target point and neighbours from the nearest point
-            #     => angles in degrees !!!
-            ht = Heading(lat0,lon0,   yT,  zT)                          # target point
-            hN = Heading(lat0,lon0, Ys[jPp1,iP  ], Xs[jPp1,iP  ]%360.)  # point above
-            hE = Heading(lat0,lon0, Ys[jP  ,iPp1], Xs[jP  ,iPp1]%360.)  # point rhs
-            hS = Heading(lat0,lon0, Ys[jPm1,iP  ], Xs[jPm1,iP  ]%360.)  # point below
-            hW = Heading(lat0,lon0, Ys[jP  ,iPm1], Xs[jP  ,iPm1]%360.)  # 'west' on the grid
-            #
-            hz = degE_to_degWE(ht)  ;  # same as ht but in the [-180,+180] frame !
-            if hN > hE: hN = hN -360.
-            #
-            if hz > hN and hz <= hE: iquadran=1
-            if ht > hE and ht <= hS: iquadran=2
-            if ht > hS and ht <= hW: iquadran=3
-            if ht > hW and hz <= hN: iquadran=4
+    if not lforceHD:
+        # "light" method on "easy" grids....
         #
-        # The above method generally works fine when the grid is not too twisted
-        # however whent it's not the case, we need to guess problematic regions
-        # here we chose to look at the local rotation of the grid at the nearest point
-        if (not iquadran in [1,2,3,4]) or (abs(grid_s_angle)>45.) :
-            if ldebug:
-                print(' *** / sosie_bilin.Iquadran(): need to go for heavy-duty mode in search for "iquadran"!')
-                creason = 'first attempt did not succeed'
-                if abs(grid_s_angle)>45.:
-                    creason = 'local source grid distortion > 45 degrees! (angle = '+str(grid_s_angle)+')'
-                print('      ==> because '+creason)
-            if not ldebug:
-                from shapely.geometry import Point
-                from shapely.geometry.polygon import Polygon
-            # Using the heavy methods: testing all 4 possibilities, until point found inside the mesh polygon!
-            for iq in [4,3,2,1]:
-                (j2,i2), (j3,i3), (j4,i4) = Iquadran2SrcMesh( jP, iP, Ny, Nx, iq,  k_ew_per=k_ew_per )
-                if -1 in [j2,i2,j3,i3,j4,i4]: MsgExit('you should not see this! #1 [ Iquadran() ]')
-                point = Point(yT,xT)
-                polygon = Polygon([(Ys[jP,iP],Xs[jP,iP]), (Ys[j2,i2],Xs[j2,i2]), (Ys[j3,i3],Xs[j3,i3]), (Ys[j4,i4],Xs[j4,i4])])
-                if polygon.contains(point):
-                    if ldebug: print(' ===> FOUND! iq=',iq,' is the guy!')
-                    iquadran = iq
-                    break
+        # Getting the 5 point of interest of the source grid:
+        lon0 = Xs[jP  ,iP  ]%360. ; lat0 = Ys[jP  ,iP  ] # nearest point
         #
-        # Checking the point is inside the polygon pointed by iquadran:
+        # Restore target point longitude between 0 and 360
+        zT = xT % 360. ; # lolo: zT don't wanna modify: xT
+        #
+        # The following HEADING stuf is aimed at finding in which source grid cell
+        # the target point is comprised with regards to the nearest point
+        # (there is actually 4 possible adjacent cells NE, SE, SW and NW)
+        #
+        # Compute heading of target point and neighbours from the nearest point
+        #     => angles in degrees !!!
+        ht = Heading(lat0,lon0,   yT,  zT)                          # target point
+        hN = Heading(lat0,lon0, Ys[jPp1,iP  ], Xs[jPp1,iP  ]%360.)  # point above
+        hE = Heading(lat0,lon0, Ys[jP  ,iPp1], Xs[jP  ,iPp1]%360.)  # point rhs
+        hS = Heading(lat0,lon0, Ys[jPm1,iP  ], Xs[jPm1,iP  ]%360.)  # point below
+        hW = Heading(lat0,lon0, Ys[jP  ,iPm1], Xs[jP  ,iPm1]%360.)  # 'west' on the grid
+        #
+        hz = degE_to_degWE(ht)  ;  # same as ht but in the [-180,+180] frame !
+        if hN > hE: hN = hN -360.
+        #
+        if hz > hN and hz <= hE: iquadran=1
+        if ht > hE and ht <= hS: iquadran=2
+        if ht > hS and ht <= hW: iquadran=3
+        if ht > hW and hz <= hN: iquadran=4
+
+    # The above method generally works fine when the grid is not too twisted
+    # however whent it's not the case, we need to guess problematic regions
+    # here we chose to look at the local rotation of the grid at the nearest point
+    if (not iquadran in [1,2,3,4]) or (abs(grid_s_angle)>45.) :
         if ldebug:
-            if iquadran in [1,2,3,4]:
-                (j2,i2), (j3,i3), (j4,i4) = Iquadran2SrcMesh( jP, iP, Ny, Nx, iquadran,  k_ew_per=k_ew_per )
-                if -1 in [j2,i2,j3,i3,j4,i4]: MsgExit('you should not see this! #2 [ Iquadran() ]')
-                point = Point(yT,xT)
-                polygon = Polygon([(Ys[jP,iP],Xs[jP,iP]), (Ys[j2,i2],Xs[j2,i2]), (Ys[j3,i3],Xs[j3,i3]), (Ys[j4,i4],Xs[j4,i4])])
-                if not polygon.contains(point):
-                    print('WARNING / sosie_bilin.Iquadran(): point not inside polygon!')
-                    print(' * Model: jP, iP =', jP, iP, ' GPS => ', Ys[jP,iP], Xs[jP,iP])
-                    print('          local distortion of the grid =>', grid_s_angle,' degrees')
-                    print(' * Sat:  yT, zT =', yT, zT)
-                    print('Headings:')
-                    print(' * direction target:      ht =', ht, '    hz =',hz)
-                    print(' * direction point above: hN =', hN)
-                    print(' * direction point rhs:   hE =', hE)
-                    print(' * direction point below: hS =', hS)
-                    print(' * direction point lhs:   hW =', hW)
-                    print('   iquadran to be used =', iquadran,'\n')
+            print(' *** / sosie_bilin.Iquadran(): need to go for heavy-duty mode in search for "iquadran"!')
+            creason = 'first attempt did not succeed'
+            if abs(grid_s_angle)>45.:
+                creason = 'local source grid distortion > 45 degrees! (angle = '+str(grid_s_angle)+')'
+            print('      ==> because '+creason)
+        if not ldebug:
+            from shapely.geometry import Point
+            from shapely.geometry.polygon import Polygon
+        # Using the heavy methods: testing all 4 possibilities, until point found inside the mesh polygon!
+        for iq in [4,3,2,1]:
+            (j2,i2), (j3,i3), (j4,i4) = Iquadran2SrcMesh( jP, iP, Ny, Nx, iq,  k_ew_per=k_ew_per )
+            if -1 in [j2,i2,j3,i3,j4,i4]: MsgExit('you should not see this! #1 [ Iquadran() ]')
+            point = Point(yT,xT)
+            polygon = Polygon([(Ys[jP,iP],Xs[jP,iP]), (Ys[j2,i2],Xs[j2,i2]), (Ys[j3,i3],Xs[j3,i3]), (Ys[j4,i4],Xs[j4,i4])])
+            if polygon.contains(point):
+                if ldebug: print(' ===> FOUND! iq=',iq,' is the guy!')
+                iquadran = iq
+                break
+    #
+    # Checking the point is inside the polygon pointed by iquadran:
+    if ldebug:
+        if iquadran in [1,2,3,4]:
+            (j2,i2), (j3,i3), (j4,i4) = Iquadran2SrcMesh( jP, iP, Ny, Nx, iquadran,  k_ew_per=k_ew_per )
+            if -1 in [j2,i2,j3,i3,j4,i4]: MsgExit('you should not see this! #2 [ Iquadran() ]')
+            point = Point(yT,xT)
+            polygon = Polygon([(Ys[jP,iP],Xs[jP,iP]), (Ys[j2,i2],Xs[j2,i2]), (Ys[j3,i3],Xs[j3,i3]), (Ys[j4,i4],Xs[j4,i4])])
+            if not polygon.contains(point):
+                print('WARNING / sosie_bilin.Iquadran(): point not inside polygon!')
+                print(' * Model: jP, iP =', jP, iP, ' GPS => ', Ys[jP,iP], Xs[jP,iP])
+                print('          local distortion of the grid =>', grid_s_angle,' degrees')
+                print(' * Sat:  yT, zT =', yT, zT)
+                print('Headings:')
+                print(' * direction target:      ht =', ht, '    hz =',hz)
+                print(' * direction point above: hN =', hN)
+                print(' * direction point rhs:   hE =', hE)
+                print(' * direction point below: hS =', hS)
+                print(' * direction point lhs:   hW =', hW)
+                print('   iquadran to be used =', iquadran,'\n')
+                sys.exit(0)
         #
     return iquadran
 
 
 
-def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=-1, grid_s_angle=0. ):
+def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=-1, grid_s_angle=0., lforceHD=False ):
     '''
     # * jP,iP    : nearest point on source grid
     # * k_ew_per : E-W periodicity of source grid
@@ -374,12 +381,13 @@ def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=-1, grid_s_angle=0. ):
     #                 k_ew_per == -1 => none
     #                 k_ew_per >=  0 => yes please! with an overlap of k_ew_per points
     # * grid_s_angle: local distortion of the source grid = angle [degrees]
+    # * lforceHD:   enforce heavy duty mode in `iquadran()`....
     #
     '''
     (yT,xT) = pcoor_trg
     (Ny,Nx) = Ys.shape
     #
-    iqdrn = Iquadran( (yT,xT), Ys, Xs, jP, iP, k_ew_per=k_ew_per, grid_s_angle=grid_s_angle )
+    iqdrn = Iquadran( (yT,xT), Ys, Xs, jP, iP, k_ew_per=k_ew_per, grid_s_angle=grid_s_angle, lforceHD=lforceHD )
     #
     if iqdrn in [1,2,3,4]:
         #
