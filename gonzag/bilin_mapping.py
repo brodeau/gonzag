@@ -389,7 +389,6 @@ def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, iquadran=-1, k_ew_per=-1, grid_s_an
     (Ny,Nx) = Ys.shape
     #
     if iquadran>0:
-        print("LOLO: IDSourceMesh() => skip computaion of `iquadran` as it has been provided as input!")
         iqdrn = iquadran
     else:
         iqdrn = Iquadran( (yT,xT), Ys, Xs, jP, iP, k_ew_per=k_ew_per, grid_s_angle=grid_s_angle, lforceHD=lforceHD )
