@@ -278,7 +278,7 @@ def RadiusEarth( lat ):
     return R
 
 
-def haversine_sclr( lat1, lon1, lat2, lon2 ):
+def Haversine_sclr( lat1, lon1, lat2, lon2 ):
     '''
     Returns the distance in km at the surface of the earth
     between two GPS points (degreesN, degreesE)

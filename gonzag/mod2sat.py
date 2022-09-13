@@ -145,7 +145,7 @@ class Model2SatTrack:
         
         # Distance parcourue since first point:
         for jt in range(1,Nt):
-            vdistance[jt] = vdistance[jt-1] + haversine_sclr( ST.lat[jt], ST.lon[jt], ST.lat[jt-1], ST.lon[jt-1] )
+            vdistance[jt] = vdistance[jt-1] + Haversine_sclr( ST.lat[jt], ST.lon[jt], ST.lat[jt-1], ST.lon[jt-1] )
     
         # Satellite SSH:
         vssh_s = GetSatSSH( ST.file, name_ssh_sat,  kt1=ST.jt1, kt2=ST.jt2, ikeep=ST.keepit )
