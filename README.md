@@ -1,21 +1,19 @@
 # gonzag
 
-A Python3 package for the interpolation of 2D (O)GCM gridded dataset onto 1D satellite tracks.
+A Python3 package for the interpolation of 2D (O)GCM gridded (aka rasterized) data onto 1D satellite tracks.
 
 
 ## What I do
 
-I interpolate, in space and time, the *sea surface height* (*aka* SSH, or any other 2D field) provided onto the
-horizontal non-regular gridded domain of an ocean GCM onto a satellite track. The
-satellite track is provided as time-series of the form *time(t), longitude(t),
-latitude(t)*, as usually found for along-track satellite data products.
+I interpolate, both in space and time, the *sea surface height* (or any other 2D field) provided onto the
+horizontal grid (regular or irregular)  onto a 1-dimensional satellite track. The
+satellite track is provided as a time-series of the form `time(t), longitude(t),
+latitude(t)`, as usually found in along-track satellite data products.
 
-Both SSH `2D+time` data of the model and along track data of the satellite are provided as netCDF files (soon Zarr!) and must
-share a common time-period.
+The `2D+time` data of the model and the along-track data of the satellite must be provided in two separate netCDF files and must share a common period of time.
 
 2D space interpolation is performed through the bilinear method.
 
-As an output gonzag ...
 <br>
 
 ## Why
