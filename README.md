@@ -92,7 +92,7 @@ Best way is to learn from the examples! So let's perform some of the small follo
 
 
 
-#### Example 1 [lightweight]: monthly global ORCA1 SSH interpolated to SARAL-AltiKa track
+#### Example 1 [lightweight]: monthly global NEMO-ORCA1 SSH interpolated to SARAL-AltiKa track
 
 Here, monthly-averaged SSH from a global NEMO-ORCA1 simulation is interpolated on a 1-day-long SARAL-AltiKa track (1st of August 2017).
 
@@ -116,7 +116,7 @@ In the output file `results.nc`, you will find time-series of model `ssh` interp
   <img width="400" src="https://github.com/brodeau/gonzag/blob/main/doc/figs/track_ex_ORCA1.svg">
 </p>
 
-_Figure 2: Nearest-points of the satellite track located on the ORCA1 gridded domain, as computed in this example..._
+_Figure 2: Nearest-points of the satellite track located on the NEMO ORCA1 gridded domain, as computed in this example..._
 
 <br>
 
