@@ -10,6 +10,6 @@
 
 from .config import *
 from .utils  import *
-from .bilin_mapping import BilinTrack, NearestPoint, Iquadran, IDSourceMesh, AlfaBeta
+from .bilin_mapping import BilinTrack, NearestPoint, Iquadran, IDSourceMesh, AlfaBeta, WeightBL
 from .mod2sat       import Model2SatTrack
 from .spectralysis  import *
