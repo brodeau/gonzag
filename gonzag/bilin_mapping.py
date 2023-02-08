@@ -245,6 +245,70 @@ def Iquadran2SrcMesh( jP, iP, Ny, Nx, iqd,  k_ew_per=1 ):
     return (j2,i2), (j3,i3), (j4,i4)
 
 
+
+
+def IQH( yA, xA, yB, xB, vY, vX ):
+    '''
+    * yA, xA: lat-lon coordinates of point inside the Quadrangle
+    * yB, xB: lat-lon coordinates of point outside of the Quadrangle
+    *   vY  : (len=4)  latitudes of the 4 vertices of the Quadrangle (anti-clockwise starting at bottom left corner)
+    *   vX  : (len=4) longitudes of the 4 vertices of the Quadrangle (anti-clockwise starting at bottom left corner)
+    
+    '''
+    idir = -1
+    cdir = 'nowhere'
+    lonA,latA = xA%360. , yA
+    lonB,latB = xB%360. , yB
+    #
+    ##fixme: depending on proximity to 180 or 0 work with different frames...
+    #
+    # Compute heading of target point and neighbours from the nearest point
+    #     => angles in degrees !!!
+    ht  = Heading( latA,lonA, latB,lonB )                          # direction going from point A to point B
+    hBL = Heading( latA,lonA, vY[0], vX[0]%360. )  # direction going from point A to bottom left  corner point
+    hBR = Heading( latA,lonA, vY[1], vX[1]%360. )  # direction going from point A to bottom right corner point
+    hUR = Heading( latA,lonA, vY[2], vX[2]%360. )  # direction going from point A to  upper righ  corner point
+    hUL = Heading( latA,lonA, vY[3], vX[3]%360. )  # direction going from point A to  upper left  corner point
+    #
+    if ht>hBL and ht<hBR:
+        idir=1
+        cdir='down'
+    if ht>hBR and ht<hUR:
+        idir=2
+        cdir='right'
+    if ht>hUR and ht<hUL:
+        idir=3
+        cdir='up'
+    if ht>hUL and ht<hBL:
+        idir=4
+        cdir='left'
+    #
+    #hz = degE_to_degWE(ht)  ;  # same as ht but in the [-180,+180] frame !
+    #if hBL > hBR: hBL = hBL -360.
+    if not idir in [1,2,3,4]:
+        print('ERROR [IQH]: we fucked up!')
+        exit(0)
+    #
+    return idir, cdir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def Iquadran( pcoor_trg, Ys, Xs, jP, iP, k_ew_per=1, grid_s_angle=0., lforceHD=False ):
     '''
     # "iquadran" determines which of the 4 "corners" of the source-grid mesh
