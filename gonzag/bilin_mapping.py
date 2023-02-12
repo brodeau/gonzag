@@ -7,7 +7,7 @@
 from math import radians, cos, sin, asin, sqrt, pi, tan, log, atan2, copysign
 #from geopy import distance as geopy_distance
 
-import numpy as nmp
+import numpy as np
 
 from .config  import ldebug, ivrb
 from .utils   import Haversine, find_j_i_min, degE_to_degWE
@@ -74,14 +74,14 @@ def AlfaBeta( vy, vx ):
     # when near the 0 deg line and we must work in the frame -180 180
     l_s_180 = ( abs(vx[1]-vx[4])>=180. or abs(vx[1]-vx[2])>=180. or abs(vx[1]-vx[3])>=180. )
     if l_s_180:
-        zvx    = nmp.zeros(5)
+        zvx    = np.zeros(5)
         zvx[:] = vx[:]        ;  # back it up...
         vx[:]  = degE_to_degWE(zvx[:])
 
     zres=1000. ; zdx=0.5 ; zdy=0.5 ; rA=0. ; rB=0. ; # Initialisation prior to convergence itterative loop
 
-    zA = nmp.zeros((2,2))
-    zM = nmp.zeros((2,2))
+    zA = np.zeros((2,2))
+    zM = np.zeros((2,2))
     
     jiter=0
     while (zres > zresmax) and (jiter < nitermax):
@@ -93,7 +93,7 @@ def AlfaBeta( vy, vx ):
         zA[1,0] = vy[2] - vy[1] + (vy[1] - vy[4] + vy[3] - vy[2])*rB
         zA[1,1] = vy[4] - vy[1] + (vy[1] - vy[4] + vy[3] - vy[2])*rA
         
-        zdeta = nmp.linalg.det( zA ) ; # Determinant
+        zdeta = np.linalg.det( zA ) ; # Determinant
 
         if zdeta==0.0:            
             jiter == nitermax ; # Give up!
@@ -106,10 +106,10 @@ def AlfaBeta( vy, vx ):
             #zdeta = ( SIGN(1.,zdeta)*MAX(ABS(zdeta), repsilon) )  # just to avoid FPE division by zero sometimes...            
             zM[:,0] = [zdx,zdy]
             zM[:,1] = zA[:,1]
-            zdalp = nmp.linalg.det( zM ) / zdeta
+            zdalp = np.linalg.det( zM ) / zdeta
             zM[:,0] = zA[:,0]
             zM[:,1] = [zdx,zdy]
-            zdbet = nmp.linalg.det( zM ) / zdeta
+            zdbet = np.linalg.det( zM ) / zdeta
             # Update residual ( loop criteria)
             zres = sqrt( zdalp*zdalp + zdbet*zdbet )
             # Update alpha and beta from 1rst guess :
@@ -141,35 +141,52 @@ def AlfaBeta( vy, vx ):
     return rA, rB
 
 
-def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=100., j_prv=0, i_prv=0, np_box_r=10 ):
+def NearestPoint( pcoor_trg, Ys, Xs, rd_found_km=10., resolkm=[], j_prv=None, i_prv=None, np_box_r=10, max_itr=5 ):
     '''
     # * pcoor_trg : GPS coordinates (lat,lon) of target point    ([real],[real])
     # * Ys        : array of source grid latitude            2D numpy.array [real]
     # * Xs        : array of source grid longitude           2D numpy.array [real]
+    # * resolkm   : array of source grid approximate local resolution [km] 2D numpy.array [real]
+    #               because grids like ORCA of NEMO can have strong spatial heterogenity of resolution...
     '''
     (yT,xT) = pcoor_trg
     (Ny,Nx) = Ys.shape
     #
+    l2Dresol = ( np.shape(resolkm)==(Ny,Nx) )
+    #
+    lbox = ( j_prv and i_prv )
+    if lbox:
+        j1, j2 = max(j_prv-np_box_r,0), min(j_prv+np_box_r+1,Ny)
+        i1, i2 = max(i_prv-np_box_r,0), min(i_prv+np_box_r+1,Nx)
+    else:
+        (j1,i1 , j2,i2) = (0,0 , Ny,Nx)
+    #
     jy, jx = -1,-1 ; # "not found" flag value...
-    j1=max(j_prv-np_box_r,0) ; j2=min(j_prv+np_box_r+1,Ny)
-    i1=max(i_prv-np_box_r,0) ; i2=min(i_prv+np_box_r+1,Nx)
-    lfound = False
-    rfnd = rd_found_km
-    igo = 0
-    while (not lfound) and igo<5 :
+    lfound = False    
+    rfnd   = rd_found_km
+    igo    = 0
+    #
+    while (not lfound) and igo<max_itr :
         igo = igo + 1
-        if igo>1: (j1,i1 , j2,i2) = (0,0 , Ny,Nx) ; # Falling back on whole domain for second pass...
+        if lbox and igo>1:
+            (j1,i1 , j2,i2) = (0,0 , Ny,Nx) ; # Falling back on whole domain for second pass...
         xd = Haversine( yT, xT,  Ys[j1:j2,i1:i2], Xs[j1:j2,i1:i2] )
         jy, jx = find_j_i_min( xd )
+        #
+        if igo==1 and l2Dresol: rfnd = 0.5*resolkm[jy,jx]
+        #
+        if not lbox and igo==1: igo=2 ; # we jump one round because no need of the pass to global...
+        #
         lfound = ( xd[jy,jx] < rfnd )
         if igo>1 and not lfound:
-            rfnd = 1.25*rfnd ; # increasing validation distance criterion by 25 %
-    if igo==1:
+            rfnd = 1.2*rfnd ; # increasing validation distance criterion by 20 %
+    #
+    if lbox:
         jy, jx = jy+j1, jx+i1 ; # found in the zoom box => translate to indices in whole domain:
     #
-    if jy<0 or jx<0 or jy>=Ny or jx>=Nx or igo==5:
-        if ivrb>0: print(' WARNING: did not find a nearest point for target point ',yT,xT,' !')
-        if ivrb>0: print('          => last tested distance criterions =', rfnd,' km\n')
+    if jy<0 or jx<0 or jy>=Ny or jx>=Nx or igo==max_itr:
+        if ivrb>0: print('    WARNING [NearestPoint()]: did not find a nearest point for target point ',yT,xT,' !')
+        if ivrb>0: print('            => last tested distance criterions =', rfnd,' km')
         jy, jx = -1,-1        
     return [jy,jx]
 
@@ -466,7 +483,7 @@ def IDSourceMesh( pcoor_trg, Ys, Xs, jP, iP, iquadran=-1, k_ew_per=-1, grid_s_an
     else:
         (j1,i1), (j2,i2), (j3,i3), (j4,i4) = (-1,-1), (-1,-1), (-1,-1), (-1,-1) ; # fuck-up flag...
     #
-    return nmp.array([ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ], dtype=nmp.int64)
+    return np.array([ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ], dtype=np.int64)
 
 
 
@@ -482,7 +499,7 @@ def WeightBL( pcoor_trg, Ys, Xs, isrc_msh ):
     [ [j1,i1],[j2,i2],[j3,i3],[j4,i4] ] = isrc_msh[:,:]
     #
     if j1 >= 0:
-        vcoor = nmp.zeros((2,5))
+        vcoor = np.zeros((2,5))
         vcoor[:,0] = [    yT    ,    xT    ] ; # 0 => target point
         vcoor[:,1] = [Ys[j1,i1] , Xs[j1,i1]] ; # 1 => nearest point (source grid)
         vcoor[:,2] = [Ys[j2,i2] , Xs[j2,i2]]
@@ -507,7 +524,7 @@ def WeightBL( pcoor_trg, Ys, Xs, isrc_msh ):
             print('    * Model:jP, iP =', j1, i1, ' GPS => ', Ys[j1,i1], Xs[j1,i1])
             print('    * Sat:  yT, xT =', yT, xT)
     #
-    return nmp.array([w1, w2, w3, w4])
+    return np.array([w1, w2, w3, w4])
 
 
 class BilinTrack:
@@ -516,7 +533,7 @@ class BilinTrack:
     def __init__( self, Yt, Xt,  Ys, Xs, src_grid_local_angle=[], \
                   k_ew_per=-1, rd_found_km=100., np_box_r=4, freq_talk=0 ):
         #
-        (self.Nt,)  = nmp.shape(Yt)
+        (self.Nt,)  = np.shape(Yt)
         self.Yt     = Yt
         self.Xt     = Xt
         self.Ys     = Ys
@@ -527,9 +544,9 @@ class BilinTrack:
         self.nprad  = np_box_r
         (self.Nj,self.Ni) = Ys.shape
         
-        self.NP = nmp.zeros((self.Nt,2)  , dtype=nmp.int64) ; # nearest point
-        self.SM = nmp.zeros((self.Nt,4,2), dtype=nmp.int64) ; # source mesh
-        self.WB = nmp.zeros((self.Nt,4))                    ; # weights
+        self.NP = np.zeros((self.Nt,2)  , dtype=np.int64) ; # nearest point
+        self.SM = np.zeros((self.Nt,4,2), dtype=np.int64) ; # source mesh
+        self.WB = np.zeros((self.Nt,4))                    ; # weights
 
         self.ftalk = 2*self.Nt ; # => will never talk!
         if freq_talk>0: self.ftalk = int(freq_talk) ; # will talk every "ftalk" increments....
@@ -548,7 +565,7 @@ class BilinTrack:
         
     def nrpt( self ):
         #
-        xnp = nmp.zeros((self.Nt,2), dtype=nmp.int64)
+        xnp = np.zeros((self.Nt,2), dtype=np.int64)
         #
         [jj,ji] = [self.nprad,self.nprad] ; # stupid first guess here...
         #
@@ -577,13 +594,13 @@ class BilinTrack:
     
     def srcm( self ):
         # 
-        xsp = nmp.zeros((self.Nt,4,2), dtype=nmp.int64)
+        xsp = np.zeros((self.Nt,4,2), dtype=np.int64)
 
         for jt in range(self.Nt):
             [jP,iP] = self.NP[jt,:]
             if [jP,iP] != [-1,-1]:
                 angle = 0.
-                if nmp.shape(self.sangle) == nmp.shape(self.Ys): angle = self.sangle[jP,iP]
+                if np.shape(self.sangle) == np.shape(self.Ys): angle = self.sangle[jP,iP]
                 #
                 xsp[jt,:,:] = IDSourceMesh( (self.Yt[jt],self.Xt[jt]), self.Ys, self.Xs, jP, iP, \
                                             k_ew_per=self.kewp, grid_s_angle=angle )
@@ -592,7 +609,7 @@ class BilinTrack:
 
     def wght( self ):
         # 
-        x4w = nmp.zeros((self.Nt,4))
+        x4w = np.zeros((self.Nt,4))
         #
         for jt in range(self.Nt):
             x4w[jt,:] = WeightBL( (self.Yt[jt],self.Xt[jt]), self.Ys, self.Xs, self.SM[jt,:,:] )
