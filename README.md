@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/ID.svg)](https://zenodo.org/badge/latestdoi/ID)
+[![DOI](https://zenodo.org/badge/349754468.svg)](https://zenodo.org/badge/latestdoi/349754468)
 
 # gonzag
 
