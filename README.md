@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/ID.svg)](https://zenodo.org/badge/latestdoi/ID)
+
 # gonzag
 
 A Python3 package for the interpolation of 2D (O)GCM gridded (aka rasterized) data onto 1D satellite tracks.
